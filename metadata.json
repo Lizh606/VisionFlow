@@ -1,0 +1,5 @@
+{
+  "name": "VisionFlow Pro",
+  "description": "A high-performance, futuristic node-based workflow builder for computer vision pipelines. Features a custom canvas engine, dynamic theming, and a robust node system.",
+  "requestFramePermissions": []
+}
