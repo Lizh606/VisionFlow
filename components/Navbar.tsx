@@ -24,6 +24,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   toggleLanguage
 }) => {
   const t = translations[language].navbar;
+  const tWorkspace = translations[language].workspace;
 
   const ActionButton = ({ icon: Icon, label, primary = false }: { icon: any, label: string, primary?: boolean }) => (
     <button 
@@ -70,9 +71,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <ChevronLeft size={20} />
              </button>
              <div className="h-6 w-[1px] bg-gray-200 dark:bg-gray-700" />
-             <span className="font-bold text-sm tracking-tight hidden sm:block" style={{ color: theme.text }}>
-                {t.project}
-             </span>
+             <div className="flex flex-col sm:flex-row sm:items-center gap-0 sm:gap-2">
+                 <span className="font-bold text-sm tracking-tight" style={{ color: theme.text }}>
+                    {t.project}
+                 </span>
+                 <span className="px-1.5 py-0.5 rounded-md bg-black/5 dark:bg-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    {tWorkspace.title}
+                 </span>
+             </div>
           </div>
         )}
       </div>

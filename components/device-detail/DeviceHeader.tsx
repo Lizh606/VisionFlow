@@ -1,0 +1,1 @@
+// Moved to components/self-hosted/device-detail/DeviceHeader.tsx

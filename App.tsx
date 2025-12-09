@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Dashboard } from './components/Dashboard';
-import { WorkflowEditor } from './components/WorkflowEditor';
+import { WorkflowEditor } from './components/workflow/WorkflowEditor';
 import { LIGHT_THEME, DARK_THEME } from './constants';
 import { ThemeMode, Language, ViewMode } from './types';
 
@@ -10,7 +9,6 @@ function App() {
   const [themeMode, setThemeMode] = useState<ThemeMode>('dark');
   const [language, setLanguage] = useState<Language>('en');
   const [viewMode, setViewMode] = useState<ViewMode>('dashboard');
-  // In a real app, this would fetch data based on ID
   const [currentWorkflowId, setCurrentWorkflowId] = useState<string | null>(null);
 
   const theme = themeMode === 'dark' ? DARK_THEME : LIGHT_THEME;

@@ -1,0 +1,1 @@
+// Moved to components/self-hosted/LicenseSelectionModal.tsx
