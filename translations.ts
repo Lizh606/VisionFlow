@@ -34,12 +34,15 @@ interface Translation {
       shOverview: string;
       shDevices: string;
       shLicenses: string;
+      // Media Section
+      media: string;
     };
     headers: {
       myWorkflows: string;
       createNew: string;
       shOverview: string;
       shOverviewStats: string;
+      mediaLibrary: string;
     };
     stats: {
       totalFlows: string;
@@ -61,6 +64,31 @@ interface Translation {
       showing: string;
       of: string;
     }
+  };
+  // Media Library Translations
+  media: {
+    storage: {
+      title: string;
+      used: string;
+      total: string;
+      items: string;
+    };
+    filters: {
+      all: string;
+      images: string;
+      videos: string;
+    };
+    upload: string;
+    searchPlaceholder: string;
+    table: {
+      name: string;
+      type: string;
+      size: string;
+      date: string;
+      dimension: string;
+      actions: string;
+    };
+    empty: string;
   };
   // New Self Hosted Translations
   selfHosted: {
@@ -407,12 +435,14 @@ export const translations: Record<Language, Translation> = {
         shOverview: 'Overview',
         shDevices: 'Devices',
         shLicenses: 'Licenses',
+        media: 'Media Library',
       },
       headers: {
         myWorkflows: 'My Workflows',
         createNew: 'Create New',
         shOverview: 'Self-Hosted Overview',
         shOverviewStats: 'Overview',
+        mediaLibrary: 'Media Library',
       },
       stats: {
         totalFlows: 'Total Flows',
@@ -434,6 +464,30 @@ export const translations: Record<Language, Translation> = {
         showing: 'Showing',
         of: 'of'
       }
+    },
+    media: {
+      storage: {
+        title: 'Storage Usage',
+        used: 'Used',
+        total: 'Total',
+        items: 'Items',
+      },
+      filters: {
+        all: 'All Assets',
+        images: 'Images',
+        videos: 'Videos',
+      },
+      upload: 'Upload Files',
+      searchPlaceholder: 'Search files...',
+      table: {
+        name: 'Name',
+        type: 'Type',
+        size: 'Size',
+        date: 'Uploaded At',
+        dimension: 'Dimensions',
+        actions: 'Actions',
+      },
+      empty: 'No media assets found.',
     },
     selfHosted: {
       breadcrumbs: {
@@ -785,12 +839,14 @@ export const translations: Record<Language, Translation> = {
         shOverview: '概览',
         shDevices: '设备',
         shLicenses: '许可证',
+        media: '媒体库',
       },
       headers: {
         myWorkflows: '我的工作流',
         createNew: '新建工作流',
         shOverview: '自托管概览',
         shOverviewStats: '概览',
+        mediaLibrary: '媒体资源库',
       },
       stats: {
         totalFlows: '总工作流',
@@ -812,6 +868,30 @@ export const translations: Record<Language, Translation> = {
         showing: '显示',
         of: '共'
       }
+    },
+    media: {
+      storage: {
+        title: '存储使用',
+        used: '已用',
+        total: '总量',
+        items: '个文件',
+      },
+      filters: {
+        all: '全部资源',
+        images: '图片',
+        videos: '视频',
+      },
+      upload: '上传文件',
+      searchPlaceholder: '搜索文件...',
+      table: {
+        name: '文件名',
+        type: '类型',
+        size: '大小',
+        date: '上传时间',
+        dimension: '分辨率',
+        actions: '操作',
+      },
+      empty: '暂无媒体资源。',
     },
     selfHosted: {
       breadcrumbs: {

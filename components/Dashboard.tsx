@@ -1,9 +1,11 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { ThemeColors, ThemeMode, Language, Workflow } from '../types';
 import { 
   LayoutGrid, Settings, PieChart, Plus, Clock, Activity, MoreVertical, Search, 
   Home, FolderOpen, GitBranch, LineChart, Server, Globe, HelpCircle, Bell, ChevronRight, Upload, User,
-  ChevronsUpDown, ChevronLeft, Check, Users, LogOut, Briefcase, Box, List, FileKey, ChevronDown, Coins
+  ChevronsUpDown, ChevronLeft, Check, Users, LogOut, Briefcase, Box, List, FileKey, ChevronDown, Coins,
+  Image as ImageIcon
 } from 'lucide-react';
 import { MOCK_WORKFLOWS } from '../constants';
 import { translations } from '../translations';
@@ -11,6 +13,7 @@ import { SelfHostedOverview } from './self-hosted/SelfHostedOverview';
 import { SelfHostedDevices } from './self-hosted/SelfHostedDevices';
 import { SelfHostedDeviceDetail } from './self-hosted/SelfHostedDeviceDetail';
 import { SelfHostedLicenses } from './self-hosted/SelfHostedLicenses';
+import { MediaLibrary } from './media/MediaLibrary';
 
 interface DashboardProps {
   theme: ThemeColors;
@@ -201,6 +204,17 @@ export const Dashboard: React.FC<DashboardProps> = ({ theme, mode, language, onN
                 mode={mode} 
                 language={language} 
                 onNavigate={handleNavigate}
+                workspaceName={tWorkspace.title}
+              />
+          );
+      }
+
+      if (currentView === 'media') {
+          return (
+              <MediaLibrary 
+                theme={theme}
+                mode={mode}
+                language={language}
                 workspaceName={tWorkspace.title}
               />
           );
@@ -450,6 +464,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ theme, mode, language, onN
            
            <MenuItem icon={Home} label={t.menu.home} />
            <MenuItem icon={GitBranch} label={t.menu.workflows} active={currentView === 'workflows'} onClick={() => handleNavigate('workflows')} />
+           <MenuItem icon={ImageIcon} label={t.menu.media} active={currentView === 'media'} onClick={() => handleNavigate('media')} />
            
            <MenuItem 
               icon={Server} 
