@@ -298,8 +298,8 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
       {/* Row 2: Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Device Status Distribution */}
-          <Card theme={theme} title={t.charts.deviceStatus} className="min-h-[350px]">
-              <div className="flex-1 w-full h-[300px] mt-2">
+          <Card theme={theme} title={t.charts.deviceStatus} className="min-h-[300px]">
+              <div className="flex-1 w-full h-[240px] mt-2">
                  <StatusChart 
                     theme={theme}
                     mode={mode}
@@ -310,7 +310,7 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
                         { label: t.status.draining, value: stats.status.draining, color: theme.node.blue },
                         { label: t.status.decommissioned, value: stats.status.decommissioned, color: theme.textSecondary }
                     ]}
-                    height={300}
+                    height={240}
                  />
               </div>
           </Card>
@@ -319,7 +319,7 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
           <Card 
             theme={theme} 
             title={t.charts.usageTrend} 
-            className="min-h-[350px]" 
+            className="min-h-[300px]" 
             noPadding 
             contentClassName="px-5 pb-5"
           >
@@ -349,7 +349,7 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
                 </div>
               </div>
               
-              <div className="w-full h-[220px]">
+              <div className="w-full h-[200px]">
                  <UsageChart 
                     theme={theme}
                     mode={mode}

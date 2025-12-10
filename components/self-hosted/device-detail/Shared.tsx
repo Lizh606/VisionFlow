@@ -217,8 +217,8 @@ export const UsageChart: React.FC<UsageChartProps> = ({
             backgroundColor: 'transparent',
             grid: {
                 top: showLegend ? 30 : 10,
-                right: hasSecondAxis ? 10 : 10,
-                bottom: showXAxis ? 20 : 5, 
+                right: hasSecondAxis ? 15 : 10,
+                bottom: 10,
                 left: 0,
                 containLabel: true
             },
@@ -353,65 +353,89 @@ export const StatusChart: React.FC<StatusChartProps> = ({
         const option: echarts.EChartsOption = {
             backgroundColor: 'transparent',
             grid: {
-                top: 0,
-                right: 30,
-                bottom: 0,
-                left: 0,
+                top: 40,
+                right: 25,
+                bottom: 10,
+                left: 10,
                 containLabel: true
             },
             tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' },
-                backgroundColor: mode === 'dark' ? 'rgba(255,255,255,0.95)' : 'rgba(20,20,20,0.9)',
+                trigger: 'item',
+                backgroundColor: mode === 'dark' ? 'rgba(255,255,255,0.9)' : 'rgba(20,20,20,0.8)',
                 borderColor: 'transparent',
                 textStyle: {
                     color: mode === 'dark' ? '#000' : '#fff',
                     fontSize: 12
                 },
+                padding: [8, 12],
                 borderRadius: 8,
-                shadowBlur: 10
+                formatter: (params: any) => {
+                     const val = params.value;
+                     const label = params.name;
+                     const marker = params.marker;
+                     return `${marker} <span style="font-weight:bold">${label}</span>: ${val}`;
+                }
             },
             xAxis: {
-                type: 'value',
-                show: false
-            },
-            yAxis: {
                 type: 'category',
                 data: data.map(d => d.label),
                 axisLine: { show: false },
                 axisTick: { show: false },
                 axisLabel: {
                     color: theme.textSecondary,
-                    fontSize: 10,
-                    width: 90,
-                    overflow: 'truncate'
+                    fontSize: 11,
+                    fontWeight: 500,
+                    interval: 0,
+                    margin: 10,
+                    // width: 80, // Removed fixed width constraint
+                    // overflow: 'break', // Removed break constraint
+                    hideOverlap: true
+                }
+            },
+            yAxis: {
+                type: 'value',
+                show: true,
+                name: 'Count',
+                nameTextStyle: {
+                     color: theme.textSecondary,
+                     fontSize: 10,
+                     padding: [0, 0, 0, 0]
                 },
-                inverse: true
+                minInterval: 1,
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
+                        type: 'dashed'
+                    }
+                },
+                axisLabel: {
+                    color: theme.textSecondary,
+                    fontSize: 10
+                }
             },
             series: [
                 {
-                    name: 'Count',
                     type: 'bar',
                     data: data.map(d => ({
                         value: d.value,
-                        itemStyle: { color: d.color }
+                        itemStyle: { 
+                            color: d.color,
+                            borderRadius: [6, 6, 0, 0]
+                        }
                     })),
-                    barWidth: 8,
-                    itemStyle: {
-                        borderRadius: 4
-                    },
+                    barWidth: '24px',
                     label: {
                         show: true,
-                        position: 'right',
+                        position: 'top',
                         color: theme.text,
-                        fontSize: 10,
-                        formatter: '{c}'
+                        fontSize: 13,
+                        fontWeight: 'bold',
+                        formatter: '{c}',
+                        distance: 5
                     },
-                    backgroundStyle: {
-                        color: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
-                        borderRadius: 4
-                    },
-                    showBackground: true
+                    showBackground: false,
+                    animationDelay: (idx: number) => idx * 100
                 }
             ]
         };
