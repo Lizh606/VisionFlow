@@ -5,7 +5,7 @@ import {
   LayoutGrid, Settings, PieChart, Plus, Clock, Activity, MoreVertical, Search, 
   Home, FolderOpen, GitBranch, LineChart, Server, Globe, HelpCircle, Bell, ChevronRight, Upload, User,
   ChevronsUpDown, ChevronLeft, Check, Users, LogOut, Briefcase, Box, List, FileKey, ChevronDown, Coins,
-  Image as ImageIcon
+  Image as ImageIcon, Menu, X
 } from 'lucide-react';
 import { MOCK_WORKFLOWS } from '../constants';
 import { translations } from '../translations';
@@ -42,6 +42,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ theme, mode, language, onN
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({
     'selfHosted': false
   });
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   const workspaceRef = useRef<HTMLDivElement>(null);
 
@@ -89,6 +90,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ theme, mode, language, onN
       if (id) {
           setSelectedDeviceId(id);
       }
+      setIsMobileMenuOpen(false);
   };
 
   const MenuItem = ({ 
@@ -348,12 +350,39 @@ export const Dashboard: React.FC<DashboardProps> = ({ theme, mode, language, onN
   };
 
   return (
-    <div className="flex-1 flex overflow-hidden">
+    <div className="flex-1 flex overflow-hidden relative">
+      
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
+          <div 
+            className="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm md:hidden animate-in fade-in"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+      )}
+
+      {/* Sidebar */}
       <div 
-        className="w-64 border-r flex flex-col hidden md:flex flex-shrink-0 relative z-30"
+        className={`
+          w-64 border-r flex flex-col flex-shrink-0 z-40
+          bg-surface border-stroke
+          fixed inset-y-0 left-0 transition-transform duration-300 ease-in-out
+          md:relative md:translate-x-0 md:flex
+          ${isMobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}
+        `}
         style={{ background: theme.surface, borderColor: theme.stroke }}
       >
         <div className="p-4 pb-2 relative z-50" ref={workspaceRef}>
+            <div className="flex items-center justify-between mb-2 md:hidden">
+                <span className="text-xs font-bold uppercase tracking-wider opacity-60" style={{ color: theme.textSecondary }}>Menu</span>
+                <button 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
+                    style={{ color: theme.text }}
+                >
+                    <X size={18} />
+                </button>
+            </div>
+
             <button 
                 onClick={() => setIsWorkspaceOpen(!isWorkspaceOpen)}
                 className={`w-full flex items-center gap-3 p-2 rounded-xl transition-all border group hover:shadow-md ${isWorkspaceOpen ? 'bg-black/5 dark:bg-white/5' : ''}`}
@@ -533,7 +562,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ theme, mode, language, onN
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-8 custom-scrollbar relative">
+      <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar relative">
          <div 
             className="absolute inset-0 pointer-events-none opacity-[0.03]"
             style={{ 
@@ -541,6 +570,20 @@ export const Dashboard: React.FC<DashboardProps> = ({ theme, mode, language, onN
                backgroundSize: '40px 40px'
             }}
          />
+
+         {/* Mobile Menu Toggle */}
+         <div className="md:hidden flex items-center gap-3 mb-6">
+            <button 
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors border"
+                style={{ color: theme.text, borderColor: theme.stroke }}
+            >
+                <Menu size={20} />
+            </button>
+            <div className="font-bold text-lg" style={{ color: theme.text }}>
+                {tWorkspace.title}
+            </div>
+         </div>
          
          {renderMainContent()}
       </div>

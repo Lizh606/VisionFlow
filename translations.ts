@@ -257,6 +257,12 @@ interface Translation {
                 policy: string;
                 save: string;
                 cancel: string;
+                versionStrategy: string;
+                strategies: {
+                  latest: string;
+                  specific: string;
+                };
+                selectVersion: string;
             }
         };
         usage: {
@@ -655,6 +661,12 @@ export const translations: Record<Language, Translation> = {
                 policy: 'Run Policy',
                 save: 'Save Changes',
                 cancel: 'Cancel',
+                versionStrategy: 'Version Strategy',
+                strategies: {
+                  latest: 'Latest',
+                  specific: 'Specific Version'
+                },
+                selectVersion: 'Select Version',
             }
         },
         usage: {
@@ -1059,6 +1071,12 @@ export const translations: Record<Language, Translation> = {
                 policy: '运行策略',
                 save: '保存配置',
                 cancel: '取消',
+                versionStrategy: '版本策略',
+                strategies: {
+                  latest: '最新版',
+                  specific: '指定版本'
+                },
+                selectVersion: '选择版本',
             }
         },
         usage: {

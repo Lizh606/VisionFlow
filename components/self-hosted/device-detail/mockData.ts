@@ -1,4 +1,6 @@
 
+
+
 export const getMockDevice = (id?: string) => {
     // Simulate "Pending" devices based on IDs from SelfHostedDevices list (4, 5, 6)
     if (id && ['4', '5', '6'].includes(id)) {
@@ -45,7 +47,7 @@ export const getMockDevice = (id?: string) => {
 export const MOCK_STREAMS = [
     { id: 'str_1', name: 'Main Gate Cam', input: 'RTSP', workflowId: 'wf_person_cnt', workflowVer: 'v12', status: 'RUNNING', telemetry: 'METRICS_ONLY', updated: '2h ago' },
     { id: 'str_2', name: 'Lobby Cam', input: 'HTTP', workflowId: 'wf_face_rec', workflowVer: 'v4', status: 'RUNNING', telemetry: 'HEARTBEAT', updated: '1d ago' },
-    { id: 'str_3', name: 'Warehouse Feed', input: 'RTSP', workflowId: 'wf_safety', workflowVer: 'stable', status: 'PAUSED', telemetry: 'DIAGNOSTIC', updated: '5m ago' },
+    { id: 'str_3', name: 'Warehouse Feed', input: 'RTSP', workflowId: 'wf_safety', workflowVer: 'v2.1', status: 'PAUSED', telemetry: 'DIAGNOSTIC', updated: '5m ago' },
 ];
 
 export const MOCK_LOGS = [
@@ -111,3 +113,16 @@ export const MOCK_USAGE_DETAILS = [
     { id: 'wf_face_rec', name: 'Face Recognition', type: 'workflow', image_count: 12030, video_seconds: 0, calls: 12000, error_rate: '0.00%', mode: 'CLOUD' },
     { id: 'wf_safety', name: 'Safety Monitoring', type: 'workflow', image_count: 88200, video_seconds: 400, calls: 5000, error_rate: '0.05%', mode: 'EDGE' },
 ];
+
+// Mock data for available versions per workflow
+export const MOCK_WORKFLOW_OPTS: Record<string, { versions: string[] }> = {
+    'wf_person_cnt': {
+        versions: ['v12 (Current)', 'v11', 'v10', 'v9', 'v8', 'v1.0.0'],
+    },
+    'wf_face_rec': {
+        versions: ['v5', 'v4 (Current)', 'v3', 'v2', 'v1'],
+    },
+    'wf_safety': {
+        versions: ['v2.1', 'v2.0', 'v1.5', 'v1.0'],
+    }
+};

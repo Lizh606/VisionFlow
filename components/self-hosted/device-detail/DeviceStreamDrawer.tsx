@@ -1,7 +1,10 @@
 
-import React from 'react';
+
+
+import React, { useState, useEffect } from 'react';
 import { ThemeColors, ThemeMode } from '../../types';
-import { X, Check } from 'lucide-react';
+import { X, Check, Layers, GitCommit } from 'lucide-react';
+import { MOCK_WORKFLOW_OPTS } from './mockData';
 
 interface DeviceStreamDrawerProps {
     isOpen: boolean;
@@ -15,6 +18,33 @@ interface DeviceStreamDrawerProps {
 export const DeviceStreamDrawer: React.FC<DeviceStreamDrawerProps> = ({
     isOpen, onClose, theme, mode, t, editingStream
 }) => {
+    // State for Version Selection
+    const [selectedWorkflowId, setSelectedWorkflowId] = useState<string>('wf_person_cnt');
+    const [versionStrategy, setVersionStrategy] = useState<'LATEST' | 'SPECIFIC'>('LATEST');
+    const [selectedVersion, setSelectedVersion] = useState<string>('');
+
+    // Update state when editingStream changes or drawer opens
+    useEffect(() => {
+        if (isOpen && editingStream) {
+            setSelectedWorkflowId(editingStream.workflowId);
+            // Simple heuristic to determine strategy from mock data
+            if (editingStream.workflowVer === 'latest') {
+                setVersionStrategy('LATEST');
+            } else {
+                setVersionStrategy('SPECIFIC');
+                setSelectedVersion(editingStream.workflowVer);
+            }
+        } else if (isOpen) {
+             // Reset for new stream
+             setVersionStrategy('LATEST');
+             setSelectedWorkflowId('wf_person_cnt');
+             setSelectedVersion('');
+        }
+    }, [isOpen, editingStream]);
+
+    // Get available versions based on selected workflow
+    const workflowOptions = MOCK_WORKFLOW_OPTS[selectedWorkflowId] || { versions: [] };
+
     return (
         <div className={`fixed top-0 bottom-0 right-0 w-[480px] border-l shadow-2xl transform transition-transform duration-300 z-[60] flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`} style={{ background: theme.surface, borderColor: theme.stroke }}>
             <div className="p-5 border-b flex items-center justify-between" style={{ borderColor: theme.stroke }}>
@@ -23,7 +53,7 @@ export const DeviceStreamDrawer: React.FC<DeviceStreamDrawerProps> = ({
                 </h2>
                 <button onClick={onClose} className="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded"><X size={18} style={{ color: theme.text }} /></button>
             </div>
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
                  {/* Basic Info */}
                  <div className="space-y-4">
                      <h3 className="text-xs font-bold uppercase tracking-wider opacity-60" style={{ color: theme.textSecondary }}>{t.deployment.drawer.basic}</h3>
@@ -53,24 +83,69 @@ export const DeviceStreamDrawer: React.FC<DeviceStreamDrawerProps> = ({
                      </div>
                  </div>
 
-                 {/* Workflow */}
+                 {/* Workflow & Versioning */}
                  <div className="space-y-4 pt-4 border-t" style={{ borderColor: theme.stroke }}>
                      <h3 className="text-xs font-bold uppercase tracking-wider opacity-60" style={{ color: theme.textSecondary }}>{t.deployment.drawer.workflow}</h3>
+                     
                      <div className="space-y-1.5">
                          <label className="text-xs font-medium" style={{ color: theme.text }}>Select Workflow</label>
-                         <select defaultValue={editingStream?.workflowId} className="w-full px-3 py-2 rounded-lg border bg-transparent text-sm outline-none focus:ring-2 focus:ring-blue-500/20" style={{ borderColor: theme.stroke, color: theme.text }}>
+                         <select 
+                            value={selectedWorkflowId}
+                            onChange={(e) => {
+                                setSelectedWorkflowId(e.target.value);
+                                // Reset version selection on workflow change
+                                setVersionStrategy('LATEST');
+                                setSelectedVersion('');
+                            }}
+                            className="w-full px-3 py-2 rounded-lg border bg-transparent text-sm outline-none focus:ring-2 focus:ring-blue-500/20" 
+                            style={{ borderColor: theme.stroke, color: theme.text }}
+                         >
                              <option value="wf_person_cnt">wf_person_cnt (Person Counting)</option>
                              <option value="wf_face_rec">wf_face_rec (Face Recognition)</option>
                              <option value="wf_safety">wf_safety (Safety Monitoring)</option>
                          </select>
                      </div>
-                     <div className="space-y-1.5">
-                         <label className="text-xs font-medium" style={{ color: theme.text }}>Version Tag</label>
-                         <div className="flex gap-2">
-                             <button className="px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-500 text-xs font-bold border border-blue-500/20">LATEST</button>
-                             <button className="px-3 py-1.5 rounded-lg border text-xs font-bold opacity-60" style={{ borderColor: theme.stroke, color: theme.text }}>STABLE</button>
-                             <button className="px-3 py-1.5 rounded-lg border text-xs font-bold opacity-60" style={{ borderColor: theme.stroke, color: theme.text }}>SPECIFIC...</button>
+
+                     <div className="space-y-2">
+                         <label className="text-xs font-medium" style={{ color: theme.text }}>{t.deployment.drawer.versionStrategy}</label>
+                         
+                         {/* Strategy Selector */}
+                         <div className="flex bg-black/5 dark:bg-white/5 p-1 rounded-lg border" style={{ borderColor: theme.stroke }}>
+                             <button
+                                onClick={() => setVersionStrategy('LATEST')}
+                                className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all ${versionStrategy === 'LATEST' ? 'bg-white dark:bg-gray-800 text-blue-500 shadow-sm' : 'opacity-60 hover:opacity-100'}`}
+                                style={{ color: versionStrategy === 'LATEST' ? theme.primary : theme.text }}
+                             >
+                                 <Layers size={12} />
+                                 {t.deployment.drawer.strategies.latest}
+                             </button>
+                             <button
+                                onClick={() => setVersionStrategy('SPECIFIC')}
+                                className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all ${versionStrategy === 'SPECIFIC' ? 'bg-white dark:bg-gray-800 text-blue-500 shadow-sm' : 'opacity-60 hover:opacity-100'}`}
+                                style={{ color: versionStrategy === 'SPECIFIC' ? theme.primary : theme.text }}
+                             >
+                                 <GitCommit size={12} />
+                                 {t.deployment.drawer.strategies.specific}
+                             </button>
                          </div>
+
+                         {/* Conditional Inputs */}
+                         {versionStrategy === 'SPECIFIC' && (
+                             <div className="animate-in slide-in-from-top-1 fade-in duration-200">
+                                 <label className="text-[10px] font-bold opacity-60 mb-1 block" style={{ color: theme.textSecondary }}>{t.deployment.drawer.selectVersion}</label>
+                                 <select 
+                                    value={selectedVersion}
+                                    onChange={(e) => setSelectedVersion(e.target.value)}
+                                    className="w-full px-3 py-2 rounded-lg border bg-transparent text-sm outline-none focus:ring-2 focus:ring-blue-500/20 font-mono" 
+                                    style={{ borderColor: theme.stroke, color: theme.text }}
+                                 >
+                                     <option value="" disabled>-- {t.deployment.drawer.selectVersion} --</option>
+                                     {workflowOptions.versions.map(ver => (
+                                         <option key={ver} value={ver}>{ver}</option>
+                                     ))}
+                                 </select>
+                             </div>
+                         )}
                      </div>
                  </div>
 
