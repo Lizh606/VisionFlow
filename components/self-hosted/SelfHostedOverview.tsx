@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+
+import React, { useState, useMemo } from 'react';
 import { ThemeColors, ThemeMode, Language } from '../../types';
 import { translations } from '../../translations';
 import { 
   Server, CreditCard, Activity, AlertTriangle, ChevronRight, 
-  HardDrive, Cloud, AlertCircle, FileKey, List, Calendar
+  HardDrive, Cloud, AlertCircle, FileKey, List, Calendar,
+  Image as ImageIcon, Video
 } from 'lucide-react';
+import { UsageChart, StatusChart, Card, StatusTag } from './device-detail/Shared';
 
 interface SelfHostedOverviewProps {
   theme: ThemeColors;
@@ -30,6 +33,26 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
   const t = translations[language].selfHosted;
   const tAlertLevels = t.alerts.levels;
   const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('24h');
+  const [trendMetric, setTrendMetric] = useState<'image' | 'video'>('image');
+  const [summaryMetric, setSummaryMetric] = useState<'image' | 'video'>('image');
+
+  // Dynamic Chart Data based on Time Range
+  const chartData = useMemo(() => {
+      const points = timeRange === '24h' ? 24 : timeRange === '7d' ? 7 : 30;
+      const xAxis = Array.from({ length: points }, (_, i) => {
+          if (timeRange === '24h') return `${i}:00`;
+          return `Day ${i+1}`;
+      });
+      
+      // Generate data for both metrics
+      const edgeImages = Array.from({ length: points }, () => Math.floor(Math.random() * 5000) + 3000);
+      const cloudImages = Array.from({ length: points }, () => Math.floor(Math.random() * 2000) + 500);
+      
+      const edgeVideo = Array.from({ length: points }, () => Math.floor(Math.random() * 1000) + 200);
+      const cloudVideo = Array.from({ length: points }, () => Math.floor(Math.random() * 100) + 10);
+
+      return { xAxis, edgeImages, cloudImages, edgeVideo, cloudVideo };
+  }, [timeRange]);
 
   const stats = {
     totalDevices: 24,
@@ -46,41 +69,25 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
       expiring: 2
     },
     usage: {
-      edge: '1.2M', 
-      cloud: '54k'  
+      image: { edge: 1250000, cloud: 54000 },
+      video: { edge: 450000, cloud: 12400 }
     }
   };
 
-  const Card = ({ children, className = '' }: { children?: React.ReactNode, className?: string }) => (
-    <div 
-      className={`rounded-2xl border p-5 relative overflow-hidden transition-all duration-300 hover:shadow-lg ${className}`}
-      style={{ background: theme.surface, borderColor: theme.stroke }}
-    >
-        {children}
-    </div>
-  );
+  const formatCount = (n: number) => {
+    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+    if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+    return n.toLocaleString();
+  };
 
   const StatusDot = ({ color, label, count }: { color: string, label: string, count: number }) => (
       <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 rounded-full" style={{ background: color }} />
           <span className="text-xs font-medium opacity-70" style={{ color: theme.textSecondary }}>{label}</span>
-          <span className="text-xs font-bold ml-auto" style={{ color: theme.text }}>{count}</span>
+          <span className="text-xs font-bold ml-auto" style={{ color: theme.text }}>
+            {stats.totalDevices > 0 ? Math.round((count / stats.totalDevices) * 100) : 0}%
+          </span>
       </div>
-  );
-
-  const UsageBar = ({ label, value, color, icon: Icon }: any) => (
-     <div className="space-y-2">
-         <div className="flex justify-between items-center text-xs">
-             <div className="flex items-center gap-1.5 font-medium" style={{ color: theme.text }}>
-                 <Icon size={14} className={mode === 'dark' ? 'text-white' : 'text-black'} />
-                 {label}
-             </div>
-             <span className="font-bold font-mono">{value}</span>
-         </div>
-         <div className="h-1.5 w-full bg-black/5 dark:bg-white/10 rounded-full overflow-hidden">
-             <div className="h-full rounded-full" style={{ width: '65%', background: color }} />
-         </div>
-     </div>
   );
 
   const AlertItem: React.FC<{ alert: any }> = ({ alert }) => {
@@ -110,16 +117,16 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
     return (
         <button 
             onClick={handleClick}
-            className="w-full flex items-center gap-4 p-3 rounded-xl border transition-all hover:bg-black/5 dark:hover:bg-white/5 group text-left" 
+            className="w-full flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-3 rounded-xl border transition-all hover:bg-black/5 dark:hover:bg-white/5 group text-left" 
             style={{ borderColor: theme.stroke }}
         >
-           <div className={`px-2 py-1 rounded text-[9px] font-bold ${bg} ${text} shrink-0 min-w-[60px] text-center border ${border}`}>
+           <div className={`px-2 py-1 rounded text-[9px] font-bold ${bg} ${text} shrink-0 w-fit text-center border ${border} mt-0.5 sm:mt-0`}>
                {label}
            </div>
 
-           <div className="flex-1 min-w-0 flex items-center justify-between gap-4">
-               <div className="flex flex-col">
-                  <div className="text-xs font-bold truncate group-hover:text-blue-500 transition-colors mb-0.5" style={{ color: theme.text }}>
+           <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-4">
+               <div className="flex flex-col min-w-0">
+                  <div className="text-xs font-bold truncate group-hover:text-blue-500 transition-colors mb-0.5 leading-tight" style={{ color: theme.text }}>
                       {alert.msg}
                   </div>
                   <div className="text-[10px] opacity-60 font-mono" style={{ color: theme.textSecondary }}>
@@ -127,34 +134,69 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
                   </div>
                </div>
                
-               <div className="flex items-center gap-2">
-                   <span className="text-[10px] font-bold opacity-50 uppercase tracking-wider hidden sm:inline" style={{ color: theme.textSecondary }}>Target:</span>
+               <div className="flex items-center gap-2 shrink-0">
+                   <span className="text-xs font-bold opacity-50 uppercase tracking-wider hidden sm:inline" style={{ color: theme.textSecondary }}>Target:</span>
                    <span 
-                      className="font-mono text-[10px] font-medium bg-black/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
-                      style={{ color: theme.text }}
-                   >
+                      className="font-mono text-[10px] font-medium bg-black/5 dark:bg-white/10 px-1.5 py-0.5 rounded truncate max-w-[120px]"
+                      style={{ color: theme.text }}>
                       {alert.entityId}
                    </span>
                </div>
            </div>
            
-           <ChevronRight size={14} className="opacity-30 group-hover:opacity-100 transition-opacity shrink-0" />
+           <ChevronRight size={14} className="opacity-30 group-hover:opacity-100 transition-opacity shrink-0 mt-1 sm:mt-0 hidden sm:block" />
         </button>
     )
+  }
+
+  const renderUsageSummaryContent = () => {
+    const isImage = summaryMetric === 'image';
+    const valueEdge = isImage ? stats.usage.image.edge : stats.usage.video.edge;
+    const valueCloud = isImage ? stats.usage.image.cloud : stats.usage.video.cloud;
+    const max = Math.max(valueEdge, valueCloud) * 1.2;
+    const colorEdge = theme.node.teal;
+    const colorCloud = theme.node.purple;
+
+    return (
+        <div className="space-y-6 pt-2">
+             <div className="space-y-1.5">
+                 <div className="flex items-center justify-between text-[10px] font-medium">
+                     <span className="opacity-60" style={{ color: theme.textSecondary }}>EDGE</span>
+                     <span style={{ color: theme.text }}>{formatCount(valueEdge)}</span>
+                 </div>
+                 <div className="h-2 w-full bg-black/5 dark:bg-white/10 rounded-full overflow-hidden">
+                     <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${Math.min(100, (valueEdge / max) * 100)}%`, background: colorEdge }} />
+                 </div>
+             </div>
+
+             <div className="space-y-1.5">
+                 <div className="flex items-center justify-between text-[10px] font-medium">
+                     <span className="opacity-60" style={{ color: theme.textSecondary }}>CLOUD</span>
+                     <span style={{ color: theme.text }}>{formatCount(valueCloud)}</span>
+                 </div>
+                 <div className="h-2 w-full bg-black/5 dark:bg-white/10 rounded-full overflow-hidden">
+                     <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${Math.min(100, (valueCloud / max) * 100)}%`, background: colorCloud }} />
+                 </div>
+             </div>
+        </div>
+    );
   }
 
   return (
     <div className="max-w-7xl mx-auto space-y-6 pb-10">
       
+      {/* Breadcrumbs */}
+      <div className="flex items-center gap-2 text-xs font-medium mb-1 opacity-60" style={{ color: theme.textSecondary }}>
+            <span>{workspaceName}</span>
+            <ChevronRight size={12} />
+            <span>{t.breadcrumbs.root}</span>
+            <ChevronRight size={12} />
+            <span style={{ color: theme.text }}>{t.breadcrumbs.overview}</span>
+      </div>
+
+      {/* Header & Time Range */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-              <div className="flex items-center gap-2 text-xs font-medium mb-1 opacity-60" style={{ color: theme.textSecondary }}>
-                 <span>{workspaceName}</span>
-                 <ChevronRight size={12} />
-                 <span>{t.breadcrumbs.root}</span>
-                 <ChevronRight size={12} />
-                 <span style={{ color: theme.text }}>{t.breadcrumbs.overview}</span>
-              </div>
               <h1 className="text-2xl font-bold tracking-tight" style={{ color: theme.text }}>{translations[language].dashboard.headers.shOverview}</h1>
           </div>
 
@@ -183,13 +225,11 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
           </div>
       </div>
 
+      {/* Row 1: Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card>
+          <Card theme={theme} title={t.cards.totalDevices}>
              <div className="flex justify-between items-start mb-4">
-                 <div>
-                     <div className="text-3xl font-bold mb-1" style={{ color: theme.text }}>{stats.totalDevices}</div>
-                     <div className="text-xs font-bold uppercase tracking-wider opacity-60" style={{ color: theme.textSecondary }}>{t.cards.totalDevices}</div>
-                 </div>
+                 <div className="text-3xl font-bold mb-1" style={{ color: theme.text }}>{stats.totalDevices}</div>
                  <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-500">
                      <Server size={20} />
                  </div>
@@ -201,13 +241,12 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
              </div>
           </Card>
 
-          <Card>
+          <Card theme={theme} title={t.cards.licenseUsage}>
               <div className="flex justify-between items-start mb-4">
                  <div>
                      <div className="text-3xl font-bold mb-1" style={{ color: theme.text }}>
                          {stats.license.used}<span className="text-lg opacity-40 font-medium">/{stats.license.total}</span>
                      </div>
-                     <div className="text-xs font-bold uppercase tracking-wider opacity-60" style={{ color: theme.textSecondary }}>{t.cards.licenseUsage}</div>
                  </div>
                  <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-500">
                      <FileKey size={20} />
@@ -225,80 +264,114 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
              </div>
           </Card>
 
-          <Card>
-              <div className="flex justify-between items-start mb-4">
-                 <div className="text-xs font-bold uppercase tracking-wider opacity-60" style={{ color: theme.textSecondary }}>{t.cards.usageSummary}</div>
-                 <div className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-500">
-                     <Activity size={20} />
-                 </div>
+          <Card 
+            theme={theme} 
+            title={t.cards.usageSummary} 
+            action={
+                <div className="flex bg-black/5 dark:bg-white/5 p-0.5 rounded-lg border border-transparent">
+                    <button 
+                        onClick={() => setSummaryMetric('image')}
+                        className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-bold transition-all ${summaryMetric === 'image' ? 'bg-white dark:bg-gray-800 shadow-sm text-blue-500' : 'opacity-60 hover:opacity-100'}`}
+                        style={{ color: summaryMetric === 'image' ? theme.primary : theme.text }}
+                    >
+                        <ImageIcon size={12} />
+                        Images
+                    </button>
+                    <button 
+                        onClick={() => setSummaryMetric('video')}
+                        className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-bold transition-all ${summaryMetric === 'video' ? 'bg-white dark:bg-gray-800 shadow-sm text-blue-500' : 'opacity-60 hover:opacity-100'}`}
+                        style={{ color: summaryMetric === 'video' ? theme.primary : theme.text }}
+                    >
+                        <Video size={12} />
+                        Video
+                    </button>
+                </div>
+            }
+          >
+             <div className="flex justify-between items-start mb-2">
+                 {/* Placeholder for alignment if needed, or remove if unnecessary */}
              </div>
-             <div className="space-y-4">
-                 <UsageBar icon={HardDrive} label={t.cards.edge} value={stats.usage.edge} color={theme.node.teal} />
-                 <UsageBar icon={Cloud} label={t.cards.cloud} value={stats.usage.cloud} color={theme.node.purple} />
-             </div>
+             {renderUsageSummaryContent()}
           </Card>
       </div>
 
+      {/* Row 2: Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className="min-h-[300px] flex flex-col">
-              <h3 className="font-bold text-sm mb-6" style={{ color: theme.text }}>{t.charts.deviceStatus}</h3>
-              <div className="flex-1 flex items-end justify-between px-4 pb-4 gap-4">
-                  {[
-                      { h: '80%', l: t.status.online, c: theme.node.green },
-                      { h: '10%', l: t.status.pending, c: theme.node.orange },
-                      { h: '5%', l: t.status.offline, c: theme.node.red },
-                      { h: '2%', l: t.status.draining, c: theme.node.blue },
-                      { h: '3%', l: t.status.decommissioned, c: theme.textSecondary }
-                  ].map((bar, i) => (
-                      <div key={i} className="flex flex-col items-center gap-2 flex-1 group">
-                          <div className="w-full relative h-40 bg-black/5 dark:bg-white/5 rounded-lg overflow-hidden flex items-end">
-                              <div 
-                                className="w-full transition-all duration-1000 ease-out opacity-80 group-hover:opacity-100" 
-                                style={{ height: bar.h, background: bar.c }} 
-                              />
-                          </div>
-                          <span className="text-[10px] font-bold opacity-60 text-center leading-tight">{bar.l}</span>
-                      </div>
-                  ))}
+          {/* Device Status Distribution */}
+          <Card theme={theme} title={t.charts.deviceStatus} className="min-h-[350px]">
+              <div className="flex-1 w-full h-[300px] mt-2">
+                 <StatusChart 
+                    theme={theme}
+                    mode={mode}
+                    data={[
+                        { label: t.status.online, value: stats.status.online, color: theme.node.green },
+                        { label: t.status.pending, value: stats.status.pending, color: theme.node.orange },
+                        { label: t.status.offline, value: stats.status.offline, color: theme.node.red },
+                        { label: t.status.draining, value: stats.status.draining, color: theme.node.blue },
+                        { label: t.status.decommissioned, value: stats.status.decommissioned, color: theme.textSecondary }
+                    ]}
+                    height={300}
+                 />
               </div>
           </Card>
 
-          <Card className="min-h-[300px] flex flex-col">
-              <h3 className="font-bold text-sm mb-6 flex justify-between items-center" style={{ color: theme.text }}>
-                 {t.charts.usageTrend}
-                 <div className="flex gap-2">
-                     <span className="flex items-center gap-1 text-[10px] font-bold opacity-60"><div className="w-2 h-2 rounded-full bg-teal-500" />EDGE</span>
-                     <span className="flex items-center gap-1 text-[10px] font-bold opacity-60"><div className="w-2 h-2 rounded-full bg-purple-500" />CLOUD</span>
-                 </div>
-              </h3>
-              <div className="flex-1 relative border-l border-b m-2" style={{ borderColor: theme.stroke }}>
-                 <svg className="absolute inset-0 w-full h-full overflow-visible p-2" viewBox="0 0 100 100" preserveAspectRatio="none">
-                     <path 
-                        d="M0,80 C20,75 40,60 60,70 S80,40 100,50" 
-                        fill="none" 
-                        stroke={theme.node.teal} 
-                        strokeWidth="2"
-                        vectorEffect="non-scaling-stroke"
-                     />
-                     <path 
-                        d="M0,95 C10,95 20,90 30,95 S40,20 50,80 S80,90 100,85" 
-                        fill="none" 
-                        stroke={theme.node.purple} 
-                        strokeWidth="2"
-                        vectorEffect="non-scaling-stroke"
-                        strokeDasharray="4 4"
-                     />
-                 </svg>
+          {/* Usage Trend */}
+          <Card 
+            theme={theme} 
+            title={t.charts.usageTrend} 
+            className="min-h-[350px]" 
+            noPadding 
+            contentClassName="px-5 pb-5"
+          >
+              <div className="p-5 pb-0">
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex gap-4">
+                        <span className="flex items-center gap-1.5 text-[10px] font-bold opacity-80"><div className="w-2 h-2 rounded-full" style={{background: theme.node.teal}} />EDGE</span>
+                        <span className="flex items-center gap-1.5 text-[10px] font-bold opacity-80"><div className="w-2 h-2 rounded-full" style={{background: theme.node.purple}} />CLOUD</span>
+                    </div>
+                    
+                    <div className="flex bg-black/5 dark:bg-white/5 p-1 rounded-lg border" style={{ borderColor: theme.stroke }}>
+                        <button 
+                            onClick={() => setTrendMetric('image')}
+                            className={`px-3 py-1 rounded-md text-[10px] font-bold transition-all flex items-center gap-1.5 ${trendMetric === 'image' ? 'bg-white dark:bg-gray-800 shadow-sm text-blue-500' : 'opacity-60 hover:opacity-100'}`}
+                            style={{ color: trendMetric === 'image' ? theme.primary : theme.text }}
+                        >
+                            <ImageIcon size={12} /> Images
+                        </button>
+                        <button 
+                            onClick={() => setTrendMetric('video')}
+                            className={`px-3 py-1 rounded-md text-[10px] font-bold transition-all flex items-center gap-1.5 ${trendMetric === 'video' ? 'bg-white dark:bg-gray-800 shadow-sm text-blue-500' : 'opacity-60 hover:opacity-100'}`}
+                            style={{ color: trendMetric === 'video' ? theme.primary : theme.text }}
+                        >
+                            <Video size={12} /> Video
+                        </button>
+                    </div>
+                </div>
+              </div>
+              
+              <div className="w-full h-[220px]">
+                 <UsageChart 
+                    theme={theme}
+                    mode={mode}
+                    xAxisData={chartData.xAxis}
+                    series={trendMetric === 'image' ? [
+                        { name: 'EDGE Images', data: chartData.edgeImages, color: theme.node.teal, area: true },
+                        { name: 'CLOUD Images', data: chartData.cloudImages, color: theme.node.purple, area: true }
+                    ] : [
+                        { name: 'EDGE Video', data: chartData.edgeVideo, color: theme.node.teal, area: true },
+                        { name: 'CLOUD Video', data: chartData.cloudVideo, color: theme.node.purple, area: true }
+                    ]}
+                    height="100%"
+                    showXAxis={true}
+                    showYAxis={true}
+                 />
               </div>
           </Card>
       </div>
 
+      {/* Row 3: Alerts & Shortcuts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
-              <h3 className="font-bold text-sm mb-4 flex items-center gap-2" style={{ color: theme.text }}>
-                  <AlertTriangle size={16} className="text-orange-500" />
-                  {t.alerts.title}
-              </h3>
+          <Card theme={theme} title={t.alerts.title}>
               <div className="space-y-3">
                  {MOCK_GLOBAL_ALERTS.map((alert, i) => (
                      <AlertItem key={i} alert={alert} />
@@ -306,12 +379,11 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
               </div>
           </Card>
 
-          <Card>
-              <h3 className="font-bold text-sm mb-4" style={{ color: theme.text }}>{t.shortcuts.title}</h3>
-              <div className="grid grid-cols-2 gap-3">
+          <Card theme={theme} title={t.shortcuts.title}>
+              <div className="grid grid-cols-2 gap-3 h-full">
                   <button 
                     onClick={() => onNavigate && onNavigate('selfhosted-devices')}
-                    className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border border-dashed transition-all hover:border-solid hover:bg-blue-500/5 hover:border-blue-500 hover:text-blue-500" 
+                    className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border border-dashed transition-all hover:border-solid hover:bg-blue-500/5 hover:border-blue-500 hover:text-blue-500 h-24" 
                     style={{ borderColor: theme.stroke, color: theme.text }}
                   >
                       <List size={20} />
@@ -319,14 +391,14 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
                   </button>
                   <button 
                     onClick={() => onNavigate && onNavigate('selfhosted-licenses')}
-                    className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border border-dashed transition-all hover:border-solid hover:bg-purple-500/5 hover:border-purple-500 hover:text-purple-500" 
+                    className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border border-dashed transition-all hover:border-solid hover:bg-purple-500/5 hover:border-purple-500 hover:text-purple-500 h-24" 
                     style={{ borderColor: theme.stroke, color: theme.text }}
                   >
                       <FileKey size={20} />
                       <span className="text-xs font-bold">{t.shortcuts.viewLicenses}</span>
                   </button>
                   <button 
-                    className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border border-dashed transition-all hover:border-solid hover:bg-green-500/5 hover:border-green-500 hover:text-green-500 col-span-2" 
+                    className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border border-dashed transition-all hover:border-solid hover:bg-green-500/5 hover:border-green-500 hover:text-green-500 col-span-2 h-20" 
                     style={{ borderColor: theme.stroke, color: theme.text }}
                   >
                        <Activity size={20} />

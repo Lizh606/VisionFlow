@@ -1,7 +1,7 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ThemeColors } from '../../../types';
-import { Card, TimeRangePicker, TrendChart } from './Shared';
+import { Card, TimeRangePicker, UsageChart } from './Shared';
 import { BarChart2, Check } from 'lucide-react';
 import { MOCK_STREAMS, MOCK_DEVICE_ALERTS } from './mockData';
 
@@ -19,6 +19,43 @@ export const DeviceOverview: React.FC<DeviceOverviewProps> = ({
     device, theme, t, tCommon, setActiveTab, usageTimeRange, setUsageTimeRange
 }) => {
     
+    // Generate mock data for the chart
+    const chartData = useMemo(() => {
+        let length = 24;
+        let xLabels: string[] = [];
+        
+        const today = new Date();
+        
+        if (usageTimeRange === '24h') {
+             length = 24;
+             // Current hour backwards
+             const currentHour = today.getHours();
+             xLabels = Array.from({length}, (_, i) => {
+                 const h = (currentHour - (length - 1) + i + 24) % 24;
+                 return `${h}:00`;
+             });
+        } else if (usageTimeRange === '7d') {
+             length = 7;
+             xLabels = Array.from({length}, (_, i) => {
+                 const d = new Date();
+                 d.setDate(today.getDate() - (length - 1) + i);
+                 return `${d.getMonth() + 1}/${d.getDate()}`;
+             });
+        } else {
+             length = 30;
+             xLabels = Array.from({length}, (_, i) => {
+                 const d = new Date();
+                 d.setDate(today.getDate() - (length - 1) + i);
+                 // Show Date only, simplify label
+                 return `${d.getMonth() + 1}/${d.getDate()}`;
+             });
+        }
+
+        const data1 = Array.from({ length }, () => Math.floor(Math.random() * 5000) + 1000); // Image Count
+        const data2 = Array.from({ length }, () => Math.floor(Math.random() * 200) + 50); // Video Seconds
+        return { xAxis: xLabels, data1, data2 };
+    }, [usageTimeRange]);
+
     const AlertItem: React.FC<{ alert: any }> = ({ alert }) => {
         let bg = 'bg-blue-500/10';
         let text = 'text-blue-500';
@@ -67,7 +104,8 @@ export const DeviceOverview: React.FC<DeviceOverviewProps> = ({
                             labels={tCommon.timeRange}
                         />
                     }
-                    className="h-auto" 
+                    className="h-auto"
+                    noPadding 
                 >
                     {device.status === 'PENDING_LICENSE' ? (
                     <div className="flex flex-col items-center justify-center py-12 opacity-50">
@@ -75,33 +113,45 @@ export const DeviceOverview: React.FC<DeviceOverviewProps> = ({
                         <span className="text-sm">Usage data unavailable for unbound device</span>
                     </div>
                     ) : (
-                    <div className="flex flex-col gap-6">
-                        {/* Stats Row */}
-                        <div className="flex items-center gap-12 px-1">
+                    <div className="flex flex-col gap-4">
+                        {/* Stats Row - Responsive */}
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-12 px-5 pt-4 sm:pt-2">
                             <div className="flex items-center gap-4">
                                 <div className="text-3xl font-bold font-mono" style={{ color: theme.text }}>
                                     {usageTimeRange === '24h' ? '14,240' : usageTimeRange === '7d' ? '98,520' : '420,100'}
                                 </div>
                                 <div className="text-xs font-bold uppercase opacity-60 flex items-center gap-2" style={{ color: theme.textSecondary }}>
-                                    <div className="w-2 h-2 rounded-full bg-blue-500" />
+                                    <div className="w-3 h-1.5 rounded-sm bg-blue-500" />
                                     {t.overview.imageCount}
                                 </div>
                             </div>
-                            <div className="h-8 w-px bg-gray-500/20" />
+                            <div className="hidden sm:block h-8 w-px bg-gray-500/20" />
                             <div className="flex items-center gap-4">
                                 <div className="text-3xl font-bold font-mono" style={{ color: theme.text }}>
                                     {usageTimeRange === '24h' ? '450' : usageTimeRange === '7d' ? '3,200' : '12,500'}
                                 </div>
                                 <div className="text-xs font-bold uppercase opacity-60 flex items-center gap-2" style={{ color: theme.textSecondary }}>
-                                    <div className="w-2 h-2 rounded-full bg-purple-500" />
+                                    <div className="w-3 h-1.5 rounded-sm bg-purple-500" />
                                     {t.overview.videoSeconds}
                                 </div>
                             </div>
                         </div>
                         
-                        {/* SVG Chart Container */}
-                        <div className="w-full h-32 border-b border-l" style={{ borderColor: theme.stroke }}>
-                            <TrendChart theme={theme} color1={theme.node.blue} color2={theme.node.purple} />
+                        {/* EChart Container */}
+                        <div className="w-full px-2 pb-2">
+                            <UsageChart 
+                                theme={theme}
+                                mode={'dark'}
+                                height={240}
+                                xAxisData={chartData.xAxis}
+                                series={[
+                                    { name: 'Image Count', data: chartData.data1, color: theme.node.blue, type: 'line', yAxisIndex: 0, area: true },
+                                    { name: 'Video Seconds', data: chartData.data2, color: theme.node.purple, type: 'line', yAxisIndex: 1, area: true }
+                                ]}
+                                showXAxis={true}
+                                showYAxis={true}
+                                showLegend={false} // Labels are already large above
+                            />
                         </div>
                     </div>
                     )}

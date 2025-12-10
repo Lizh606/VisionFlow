@@ -1,7 +1,8 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { ThemeColors } from '../../../types';
+import { ThemeColors, ThemeMode } from '../../../types';
 import { Cpu, Cloud, ChevronDown, Check, Calendar } from 'lucide-react';
+import * as echarts from 'echarts';
 
 export const StatusTag = ({ status, tStatus }: { status: string, tStatus: any }) => {
     let styles = "bg-gray-500 text-white";
@@ -97,13 +98,13 @@ export const ModeSelector = ({ currentMode, onChange, theme }: { currentMode: st
     );
 };
 
-export const Card = ({ children, title, action, className = '', theme }: any) => (
-    <div className={`rounded-2xl border p-5 flex flex-col h-full ${className}`} style={{ background: theme.surface, borderColor: theme.stroke }}>
-        <div className="flex justify-between items-center mb-4 shrink-0">
+export const Card = ({ children, title, action, className = '', theme, noPadding = false, contentClassName = '' }: any) => (
+    <div className={`rounded-2xl border flex flex-col h-full relative overflow-hidden group ${className}`} style={{ background: theme.surface, borderColor: theme.stroke }}>
+        <div className={`flex justify-between items-center shrink-0 ${noPadding ? 'p-5 pb-2' : 'p-5 pb-4'}`}>
             <h3 className="text-xs font-bold uppercase tracking-wider opacity-60" style={{ color: theme.textSecondary }}>{title}</h3>
             {action}
         </div>
-        <div className="flex-1">{children}</div>
+        <div className={`flex-1 ${noPadding ? '' : 'px-5 pb-5'} ${contentClassName}`}>{children}</div>
     </div>
 );
 
@@ -151,85 +152,284 @@ export const TimeRangePicker = ({
     )
 }
 
-export const TrendChart = ({ theme, color1, color2 }: { theme: ThemeColors, color1: string, color2: string }) => {
-    const points1 = [10, 40, 30, 70, 50, 90, 80, 50, 70, 100, 80, 60, 40, 60, 80, 60, 40, 20, 40, 60];
-    const points2 = [30, 20, 40, 30, 50, 40, 60, 40, 50, 30, 20, 40, 30, 50, 40, 30, 20, 10, 20, 30];
-    
-    const width = 1000;
-    const height = 100;
-    
-    const makePath = (data: number[]) => {
-        const max = 100;
-        const step = width / (data.length - 1);
-        return data.map((val, i) => {
-            const x = i * step;
-            const y = height - (val / max) * height;
-            return `${x},${y}`;
-        }).join(' L ');
-    };
+interface SeriesData {
+    name: string;
+    data: number[];
+    color: string;
+    area?: boolean;
+    type?: 'line' | 'bar';
+    yAxisIndex?: number;
+}
 
-    const path1 = `M 0,${height} L ${makePath(points1)} L ${width},${height} Z`;
-    const path2 = `M 0,${height} L ${makePath(points2)} L ${width},${height} Z`;
-    const stroke1 = `M ${makePath(points1)}`;
-    const stroke2 = `M ${makePath(points2)}`;
+interface UsageChartProps {
+    theme: ThemeColors;
+    mode: ThemeMode;
+    series: SeriesData[];
+    xAxisData: string[];
+    height?: number | string;
+    showLegend?: boolean;
+    showYAxis?: boolean;
+    showXAxis?: boolean;
+}
 
-    return (
-        <div className="w-full h-full relative overflow-hidden">
-            <svg viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" className="w-full h-full overflow-visible">
-                 <defs>
-                     <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stopColor={color1} stopOpacity={0.3} />
-                        <stop offset="100%" stopColor={color1} stopOpacity={0} />
-                     </linearGradient>
-                     <linearGradient id="grad2" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stopColor={color2} stopOpacity={0.3} />
-                        <stop offset="100%" stopColor={color2} stopOpacity={0} />
-                     </linearGradient>
-                 </defs>
-                 <path d={path2} fill="url(#grad2)" />
-                 <path d={stroke2} fill="none" stroke={color2} strokeWidth="3" vectorEffect="non-scaling-stroke" />
-                 <path d={path1} fill="url(#grad1)" />
-                 <path d={stroke1} fill="none" stroke={color1} strokeWidth="3" vectorEffect="non-scaling-stroke" />
-            </svg>
-        </div>
-    );
+export const UsageChart: React.FC<UsageChartProps> = ({ 
+    theme, 
+    mode, 
+    series, 
+    xAxisData, 
+    height = 200, 
+    showLegend = false,
+    showYAxis = true,
+    showXAxis = true
+}) => {
+    const chartRef = useRef<HTMLDivElement>(null);
+    const chartInstance = useRef<echarts.ECharts | null>(null);
+
+    useEffect(() => {
+        if (!chartRef.current) return;
+
+        if (!chartInstance.current) {
+            chartInstance.current = echarts.init(chartRef.current, null, { renderer: 'svg' });
+        }
+
+        const hasSecondAxis = series.some(s => s.yAxisIndex === 1);
+
+        const yAxisBase = {
+            type: 'value' as const,
+            show: showYAxis,
+            splitLine: {
+                show: true,
+                lineStyle: {
+                    color: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'
+                }
+            },
+            axisLabel: {
+                color: theme.textSecondary,
+                fontSize: 10,
+                formatter: (value: number) => {
+                    if (value >= 1000) return (value / 1000).toFixed(0) + 'k';
+                    return value.toString();
+                }
+            }
+        };
+
+        const option: echarts.EChartsOption = {
+            backgroundColor: 'transparent',
+            grid: {
+                top: showLegend ? 30 : 10,
+                right: hasSecondAxis ? 10 : 10,
+                bottom: showXAxis ? 20 : 5, 
+                left: 0,
+                containLabel: true
+            },
+            tooltip: {
+                trigger: 'axis',
+                // High contrast tooltip: Dark tooltip on light mode, Light tooltip on dark mode
+                backgroundColor: mode === 'dark' ? 'rgba(255,255,255,0.95)' : 'rgba(20,20,20,0.9)',
+                borderColor: 'transparent',
+                textStyle: {
+                    color: mode === 'dark' ? '#000' : '#fff',
+                    fontSize: 12,
+                    fontWeight: 500
+                },
+                axisPointer: {
+                    type: 'line',
+                    lineStyle: {
+                        color: theme.primary,
+                        type: 'dashed'
+                    }
+                },
+                padding: [8, 12],
+                borderRadius: 8,
+                shadowBlur: 10,
+                shadowColor: 'rgba(0,0,0,0.2)'
+            },
+            legend: {
+                show: showLegend,
+                top: 0,
+                right: 0,
+                icon: 'circle',
+                textStyle: {
+                    color: theme.textSecondary,
+                    fontSize: 10
+                },
+                itemWidth: 8,
+                itemHeight: 8
+            },
+            xAxis: {
+                type: 'category',
+                data: xAxisData,
+                show: showXAxis,
+                axisLine: { show: false },
+                axisTick: { show: false },
+                axisLabel: {
+                    color: theme.textSecondary,
+                    fontSize: 10,
+                    margin: 10,
+                    interval: 'auto' // Let echarts decide interval to avoid clutter
+                }
+            },
+            yAxis: hasSecondAxis ? [
+                {
+                    ...yAxisBase,
+                    position: 'left' as const,
+                },
+                {
+                    ...yAxisBase,
+                    position: 'right' as const,
+                    splitLine: { show: false }
+                }
+            ] : yAxisBase,
+            series: series.map(s => ({
+                name: s.name,
+                type: s.type || 'line',
+                yAxisIndex: s.yAxisIndex || 0,
+                data: s.data,
+                smooth: true,
+                showSymbol: false,
+                symbol: 'circle',
+                symbolSize: 6,
+                lineStyle: {
+                    width: 2,
+                    color: s.color
+                },
+                itemStyle: {
+                    color: s.color,
+                    borderRadius: s.type === 'bar' ? [3, 3, 0, 0] : 0
+                },
+                barWidth: s.type === 'bar' ? 12 : undefined,
+                areaStyle: (s.area && (!s.type || s.type === 'line')) ? {
+                    opacity: 0.15,
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: s.color },
+                        { offset: 1, color: 'rgba(0,0,0,0)' }
+                    ])
+                } : undefined
+            }))
+        };
+
+        chartInstance.current.setOption(option);
+
+        const handleResize = () => {
+            chartInstance.current?.resize();
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            chartInstance.current?.dispose();
+            chartInstance.current = null;
+        };
+    }, [theme, mode, series, xAxisData, height, showLegend, showXAxis, showYAxis]);
+
+    return <div ref={chartRef} style={{ height, width: '100%' }} />;
 };
 
-export const MultiLineChart = ({ theme, series, height = 150 }: { theme: ThemeColors, series: { label: string, color: string, data: number[] }[], height?: number }) => {
-    const width = 1000;
-    const maxVal = Math.max(...series.flatMap(s => s.data), 1);
 
-    const makePath = (data: number[]) => {
-        const step = width / (data.length - 1);
-        return data.map((val, i) => {
-            const x = i * step;
-            const y = height - (val / maxVal) * height; 
-            return `${x},${y}`;
-        }).join(' L ');
-    };
+interface StatusChartProps {
+    theme: ThemeColors;
+    mode: ThemeMode;
+    data: { label: string, value: number, color: string }[];
+    height?: number;
+}
 
-    return (
-        <div className="w-full h-full relative overflow-hidden">
-            <svg viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" className="w-full h-full overflow-visible">
-                {series.map((s, i) => (
-                    <path 
-                        key={i}
-                        d={`M ${makePath(s.data)}`} 
-                        fill="none" 
-                        stroke={s.color} 
-                        strokeWidth="2.5" 
-                        vectorEffect="non-scaling-stroke"
-                        className="opacity-80 hover:opacity-100 hover:stroke-[4px] transition-all duration-300"
-                    />
-                ))}
-            </svg>
-            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-10">
-                <div className="border-t border-current w-full" />
-                <div className="border-t border-current w-full" />
-                <div className="border-t border-current w-full" />
-                <div className="border-t border-current w-full" />
-                <div className="border-b border-current w-full h-full" />
-            </div>
-        </div>
-    );
+export const StatusChart: React.FC<StatusChartProps> = ({ 
+    theme, 
+    mode, 
+    data,
+    height = 200
+}) => {
+    const chartRef = useRef<HTMLDivElement>(null);
+    const chartInstance = useRef<echarts.ECharts | null>(null);
+
+    useEffect(() => {
+        if (!chartRef.current) return;
+
+        if (!chartInstance.current) {
+            chartInstance.current = echarts.init(chartRef.current, null, { renderer: 'svg' });
+        }
+
+        const option: echarts.EChartsOption = {
+            backgroundColor: 'transparent',
+            grid: {
+                top: 0,
+                right: 30,
+                bottom: 0,
+                left: 0,
+                containLabel: true
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                backgroundColor: mode === 'dark' ? 'rgba(255,255,255,0.95)' : 'rgba(20,20,20,0.9)',
+                borderColor: 'transparent',
+                textStyle: {
+                    color: mode === 'dark' ? '#000' : '#fff',
+                    fontSize: 12
+                },
+                borderRadius: 8,
+                shadowBlur: 10
+            },
+            xAxis: {
+                type: 'value',
+                show: false
+            },
+            yAxis: {
+                type: 'category',
+                data: data.map(d => d.label),
+                axisLine: { show: false },
+                axisTick: { show: false },
+                axisLabel: {
+                    color: theme.textSecondary,
+                    fontSize: 10,
+                    width: 90,
+                    overflow: 'truncate'
+                },
+                inverse: true
+            },
+            series: [
+                {
+                    name: 'Count',
+                    type: 'bar',
+                    data: data.map(d => ({
+                        value: d.value,
+                        itemStyle: { color: d.color }
+                    })),
+                    barWidth: 8,
+                    itemStyle: {
+                        borderRadius: 4
+                    },
+                    label: {
+                        show: true,
+                        position: 'right',
+                        color: theme.text,
+                        fontSize: 10,
+                        formatter: '{c}'
+                    },
+                    backgroundStyle: {
+                        color: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
+                        borderRadius: 4
+                    },
+                    showBackground: true
+                }
+            ]
+        };
+
+        chartInstance.current.setOption(option);
+
+        const handleResize = () => {
+            chartInstance.current?.resize();
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            chartInstance.current?.dispose();
+            chartInstance.current = null;
+        };
+    }, [theme, mode, data, height]);
+
+    return <div ref={chartRef} style={{ height, width: '100%' }} />;
 };

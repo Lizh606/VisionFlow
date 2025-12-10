@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { ThemeColors, ThemeMode, Language } from '../../types';
 import { translations } from '../../translations';
@@ -134,17 +135,20 @@ export const SelfHostedDevices: React.FC<SelfHostedDevicesProps> = ({
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto space-y-6 pb-10">
       
+      {/* Breadcrumbs */}
+      <div className="flex items-center gap-2 text-xs font-medium mb-1 opacity-60" style={{ color: theme.textSecondary }}>
+            <span>{workspaceName}</span>
+            <ChevronRight size={12} />
+            <span>{tCommon.breadcrumbs.root}</span>
+            <ChevronRight size={12} />
+            <span style={{ color: theme.text }}>{tCommon.breadcrumbs.devices}</span>
+      </div>
+
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
           <div>
-              <div className="flex items-center gap-2 text-xs font-medium mb-1 opacity-60" style={{ color: theme.textSecondary }}>
-                 <span>{workspaceName}</span>
-                 <ChevronRight size={12} />
-                 <span>{tCommon.breadcrumbs.root}</span>
-                 <ChevronRight size={12} />
-                 <span style={{ color: theme.text }}>{tCommon.breadcrumbs.devices}</span>
-              </div>
               <h1 className="text-2xl font-bold tracking-tight" style={{ color: theme.text }}>{t.title}</h1>
           </div>
           

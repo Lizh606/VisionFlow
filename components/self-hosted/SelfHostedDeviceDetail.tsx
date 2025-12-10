@@ -83,7 +83,7 @@ export const SelfHostedDeviceDetail: React.FC<SelfHostedDeviceDetailProps> = ({
   return (
     <div className="max-w-7xl mx-auto space-y-6 pb-20 relative">
         {/* Breadcrumbs */}
-        <div className="flex items-center gap-2 text-xs font-medium mb-6 opacity-60" style={{ color: theme.textSecondary }}>
+        <div className="flex items-center gap-2 text-xs font-medium mb-1 opacity-60" style={{ color: theme.textSecondary }}>
             <span>{workspaceName}</span>
             <ChevronRight size={12} />
             <span>{tCommon.breadcrumbs.root}</span>

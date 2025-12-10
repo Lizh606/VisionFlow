@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { ThemeColors, ThemeMode } from '../../types';
+import { ThemeColors, ThemeMode } from '../../../types';
 import { Cloud, Activity, ImageIcon, Video } from 'lucide-react';
-import { TimeRangePicker, MultiLineChart } from './Shared';
+import { TimeRangePicker, UsageChart } from './Shared';
 import { MOCK_USAGE_DETAILS } from './mockData';
 
 interface DeviceUsageProps {
@@ -35,6 +35,9 @@ export const DeviceUsage: React.FC<DeviceUsageProps> = ({
     // Derived data for Chart based on selection
     const filteredUsageData = tableUsageData
         .filter(d => selectedUsageRow === null || d.id === selectedUsageRow);
+
+    // Generate mock X-Axis data based on time range
+    const xAxisData = Array.from({ length: 20 }, (_, i) => `${i}:00`);
 
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -153,43 +156,29 @@ export const DeviceUsage: React.FC<DeviceUsageProps> = ({
                         </div>
                         
                         {/* Chart Render */}
-                        <div className="flex-1 w-full relative border-l border-b min-h-[250px]" style={{ borderColor: theme.stroke }}>
+                        <div className="flex-1 w-full relative min-h-[250px]">
                             {device.status === 'PENDING_LICENSE' ? (
                                 <div className="absolute inset-0 flex items-center justify-center opacity-30">No Data</div>
                             ) : (
-                                <>
-                                    {/* Legend */}
-                                    <div className="absolute top-2 right-2 flex flex-col gap-1 z-10">
-                                        {filteredUsageData.slice(0, 5).map((item, i) => {
-                                            const colors = [theme.node.blue, theme.node.purple, theme.node.green];
-                                            return (
-                                                <div key={item.id} className="flex items-center gap-2 text-xs font-bold bg-surface/80 backdrop-blur px-2 py-1 rounded shadow-sm border" style={{ borderColor: theme.stroke, color: theme.text }}>
-                                                    <div className="w-2.5 h-2.5 rounded-full" style={{ background: colors[i % colors.length] }} />
-                                                    {item.name}
-                                                </div>
-                                            )
-                                        })}
-                                        {filteredUsageData.length > 5 && (
-                                            <div className="text-[10px] font-medium opacity-50 text-right">+ {filteredUsageData.length - 5} more</div>
-                                        )}
-                                    </div>
-                                    
-                                    <MultiLineChart 
-                                        theme={theme} 
-                                        height={250}
-                                        series={filteredUsageData.map((item, i) => {
-                                            const colors = [theme.node.blue, theme.node.purple, theme.node.green];
-                                            const dummyData = Array.from({length: 20}, (_, idx) => 
-                                                Math.max(10, Math.sin(idx + i) * 50 + 50 + (Math.random() * 20))
-                                            );
-                                            return {
-                                                label: item.name,
-                                                color: colors[i % colors.length],
-                                                data: dummyData
-                                            };
-                                        })} 
-                                    />
-                                </>
+                                <UsageChart 
+                                    theme={theme}
+                                    mode={mode}
+                                    height={250}
+                                    showLegend={true}
+                                    xAxisData={xAxisData}
+                                    series={filteredUsageData.map((item, i) => {
+                                        const colors = [theme.node.blue, theme.node.purple, theme.node.green];
+                                        // Mock random data generation consistent with chart type
+                                        const dummyData = Array.from({length: 20}, (_, idx) => 
+                                            Math.floor(Math.max(10, Math.sin(idx + i) * 50 + 50 + (Math.random() * 20)) * (detailMetric === 'image' ? 100 : 1))
+                                        );
+                                        return {
+                                            name: item.name,
+                                            color: colors[i % colors.length],
+                                            data: dummyData
+                                        };
+                                    })} 
+                                />
                             )}
                         </div>
                     </div>
