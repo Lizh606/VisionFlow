@@ -1,5 +1,4 @@
 
-
 import React, { useState, useMemo } from 'react';
 import { ThemeColors, ThemeMode, Language } from '../../types';
 import { translations } from '../../translations';
@@ -65,7 +64,7 @@ const AlertItem: React.FC<{ alert: any, theme: ThemeColors, onNavigate?: (view: 
             className="w-full flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-3 rounded-xl border transition-all hover:bg-black/5 dark:hover:bg-white/5 group text-left" 
             style={{ borderColor: theme.stroke }}
         >
-           <div className={`px-2 py-1 rounded text-[9px] font-bold ${bg} ${text} shrink-0 w-fit text-center border ${border} mt-0.5 sm:mt-0`}>
+           <div className={`px-2 py-1 rounded text-[9px] font-bold ${bg} ${text} shrink-0 w-20 flex items-center justify-center border ${border} mt-0.5 sm:mt-0`}>
                {label}
            </div>
 
@@ -208,7 +207,7 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
                      <span className="opacity-60" style={{ color: theme.textSecondary }}>EDGE</span>
                      <span style={{ color: theme.text }}>{formatCount(valueEdge)}</span>
                  </div>
-                 <div className="h-2 w-full bg-black/5 dark:bg-white/10 rounded-full overflow-hidden">
+                 <div className="h-2.5 w-full bg-black/5 dark:bg-white/10 rounded-full overflow-hidden">
                      <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${Math.min(100, (valueEdge / max) * 100)}%`, background: colorEdge }} />
                  </div>
              </div>
@@ -218,7 +217,7 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
                      <span className="opacity-60" style={{ color: theme.textSecondary }}>CLOUD</span>
                      <span style={{ color: theme.text }}>{formatCount(valueCloud)}</span>
                  </div>
-                 <div className="h-2 w-full bg-black/5 dark:bg-white/10 rounded-full overflow-hidden">
+                 <div className="h-2.5 w-full bg-black/5 dark:bg-white/10 rounded-full overflow-hidden">
                      <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${Math.min(100, (valueCloud / max) * 100)}%`, background: colorCloud }} />
                  </div>
              </div>
@@ -299,7 +298,7 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
                  </div>
              </div>
              <div className="pt-4 border-t flex flex-col items-center gap-3" style={{ borderColor: theme.stroke }}>
-                 <div className="w-full h-1.5 bg-black/5 dark:bg-white/10 rounded-full overflow-hidden">
+                 <div className="w-full h-2.5 bg-black/5 dark:bg-white/10 rounded-full overflow-hidden">
                      <div 
                         className="h-full bg-purple-500 rounded-full transition-all duration-1000" 
                         style={{ width: `${(stats.license.used / stats.license.total) * 100}%` }} 

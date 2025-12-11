@@ -6,7 +6,7 @@ import { LIGHT_THEME, DARK_THEME } from './constants';
 import { ThemeMode, Language, ViewMode } from './types';
 
 function App() {
-  const [themeMode, setThemeMode] = useState<ThemeMode>('dark');
+  const [themeMode, setThemeMode] = useState<ThemeMode>('light');
   const [language, setLanguage] = useState<Language>('en');
   const [viewMode, setViewMode] = useState<ViewMode>('dashboard');
   const [currentWorkflowId, setCurrentWorkflowId] = useState<string | null>(null);
