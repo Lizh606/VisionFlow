@@ -3,11 +3,10 @@ import React, { useState, useMemo } from 'react';
 import { ThemeColors, ThemeMode, Language } from '../../types';
 import { translations } from '../../translations';
 import { 
-  Server, CreditCard, Activity, AlertTriangle, ChevronRight, 
-  HardDrive, Cloud, AlertCircle, FileKey, List, Calendar,
-  Image as ImageIcon, Video
+  Server, Activity, AlertCircle, FileKey, List, Calendar,
+  Image as ImageIcon, Video, ChevronRight
 } from 'lucide-react';
-import { UsageChart, StatusChart, Card, StatusTag } from './device-detail/Shared';
+import { UsageChart, StatusChart, Card } from './device-detail/Shared';
 
 interface SelfHostedOverviewProps {
   theme: ThemeColors;
@@ -23,74 +22,19 @@ const MOCK_GLOBAL_ALERTS = [
     { level: 'INFO', msg: 'Cloud usage spike detected', entityId: 'billing', entityType: 'BILLING', time: '4h ago' }
 ];
 
-export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({ 
-  theme, 
-  mode, 
-  language, 
-  onNavigate,
-  workspaceName = 'Workspace' 
-}) => {
-  const t = translations[language].selfHosted;
-  const tAlertLevels = t.alerts.levels;
-  const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('24h');
-  const [trendMetric, setTrendMetric] = useState<'image' | 'video'>('image');
-  const [summaryMetric, setSummaryMetric] = useState<'image' | 'video'>('image');
+// Extracted Component: StatusDot
+const StatusDot = ({ color, label, count, total, theme }: { color: string, label: string, count: number, total: number, theme: ThemeColors }) => (
+    <div className="flex items-center gap-2">
+        <div className="w-2.5 h-2.5 rounded-full" style={{ background: color }} />
+        <span className="text-xs font-medium opacity-70" style={{ color: theme.textSecondary }}>{label}</span>
+        <span className="text-xs font-bold ml-auto" style={{ color: theme.text }}>
+          {total > 0 ? Math.round((count / total) * 100) : 0}%
+        </span>
+    </div>
+);
 
-  // Dynamic Chart Data based on Time Range
-  const chartData = useMemo(() => {
-      const points = timeRange === '24h' ? 24 : timeRange === '7d' ? 7 : 30;
-      const xAxis = Array.from({ length: points }, (_, i) => {
-          if (timeRange === '24h') return `${i}:00`;
-          return `Day ${i+1}`;
-      });
-      
-      // Generate data for both metrics
-      const edgeImages = Array.from({ length: points }, () => Math.floor(Math.random() * 5000) + 3000);
-      const cloudImages = Array.from({ length: points }, () => Math.floor(Math.random() * 2000) + 500);
-      
-      const edgeVideo = Array.from({ length: points }, () => Math.floor(Math.random() * 1000) + 200);
-      const cloudVideo = Array.from({ length: points }, () => Math.floor(Math.random() * 100) + 10);
-
-      return { xAxis, edgeImages, cloudImages, edgeVideo, cloudVideo };
-  }, [timeRange]);
-
-  const stats = {
-    totalDevices: 24,
-    status: {
-      online: 18,
-      offline: 1,
-      pending: 3,
-      draining: 1,
-      decommissioned: 1
-    },
-    license: {
-      used: 24,
-      total: 50,
-      expiring: 2
-    },
-    usage: {
-      image: { edge: 1250000, cloud: 54000 },
-      video: { edge: 450000, cloud: 12400 }
-    }
-  };
-
-  const formatCount = (n: number) => {
-    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
-    if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
-    return n.toLocaleString();
-  };
-
-  const StatusDot = ({ color, label, count }: { color: string, label: string, count: number }) => (
-      <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full" style={{ background: color }} />
-          <span className="text-xs font-medium opacity-70" style={{ color: theme.textSecondary }}>{label}</span>
-          <span className="text-xs font-bold ml-auto" style={{ color: theme.text }}>
-            {stats.totalDevices > 0 ? Math.round((count / stats.totalDevices) * 100) : 0}%
-          </span>
-      </div>
-  );
-
-  const AlertItem: React.FC<{ alert: any }> = ({ alert }) => {
+// Extracted Component: AlertItem
+const AlertItem: React.FC<{ alert: any, theme: ThemeColors, onNavigate?: (view: string, id?: string) => void, tAlertLevels: any }> = ({ alert, theme, onNavigate, tAlertLevels }) => {
     let bg = 'bg-blue-500/10';
     let text = 'text-blue-500';
     let border = 'border-blue-500/20';
@@ -147,8 +91,114 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
            <ChevronRight size={14} className="opacity-30 group-hover:opacity-100 transition-opacity shrink-0 mt-1 sm:mt-0 hidden sm:block" />
         </button>
     )
-  }
+};
 
+export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({ 
+  theme, 
+  mode, 
+  language, 
+  onNavigate,
+  workspaceName = 'Workspace' 
+}) => {
+  const t = translations[language].selfHosted;
+  const tAlertLevels = t.alerts.levels;
+  
+  // 1. Global Time Range State (Affects ALL data)
+  const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('24h');
+  
+  // 2. Independent Panel Metric States (Affects ONLY their respective panel)
+  const [trendMetric, setTrendMetric] = useState<'image' | 'video'>('image');
+  const [summaryMetric, setSummaryMetric] = useState<'image' | 'video'>('image');
+
+  // Dynamic Chart Data based on Global Time Range
+  const chartData = useMemo(() => {
+      const points = timeRange === '24h' ? 24 : timeRange === '7d' ? 7 : 30;
+      const xAxis = Array.from({ length: points }, (_, i) => {
+          if (timeRange === '24h') return `${i}:00`;
+          return `Day ${i+1}`;
+      });
+      
+      // Generate data for both metrics
+      const edgeImages = Array.from({ length: points }, () => Math.floor(Math.random() * 5000) + 3000);
+      const cloudImages = Array.from({ length: points }, () => Math.floor(Math.random() * 2000) + 500);
+      
+      const edgeVideo = Array.from({ length: points }, () => Math.floor(Math.random() * 1000) + 200);
+      const cloudVideo = Array.from({ length: points }, () => Math.floor(Math.random() * 100) + 10);
+
+      return { xAxis, edgeImages, cloudImages, edgeVideo, cloudVideo };
+  }, [timeRange]);
+
+  // Dynamic Stats based on Global Time Range
+  const stats = useMemo(() => {
+    // Base multiplier
+    const m = timeRange === '24h' ? 1 : timeRange === '7d' ? 7 : 30;
+    
+    // Add some randomization to make it feel alive
+    const r = (val: number) => Math.floor(val * m * (1 + (Math.random() * 0.1 - 0.05)));
+
+    return {
+        totalDevices: 24,
+        status: {
+            online: 18,
+            offline: 1,
+            pending: 3,
+            draining: 1,
+            decommissioned: 1
+        },
+        license: {
+            used: 24,
+            total: 50,
+            expiring: 2
+        },
+        usage: {
+            image: { 
+                edge: r(52000), 
+                cloud: r(2400) 
+            },
+            video: { 
+                edge: r(18000), 
+                cloud: r(600)
+            }
+        }
+    };
+  }, [timeRange]);
+
+  const formatCount = (n: number) => {
+    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+    if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+    return n.toLocaleString();
+  };
+
+  // Memoized Data for StatusChart to prevent re-renders when switching unrelated tabs
+  const statusChartData = useMemo(() =>{
+    console.log(stats.status,[
+      { label: t.status.online, value: stats.status.online, color: theme.node.green },
+      { label: t.status.pending, value: stats.status.pending, color: theme.node.orange },
+      { label: t.status.offline, value: stats.status.offline, color: theme.node.red },
+      { label: t.status.draining, value: stats.status.draining, color: theme.node.blue },
+      { label: t.status.decommissioned, value: stats.status.decommissioned, color: theme.textSecondary }
+  ])
+    return  [
+      { label: t.status.online, value: stats.status.online, color: theme.node.green },
+      { label: t.status.pending, value: stats.status.pending, color: theme.node.orange },
+      { label: t.status.offline, value: stats.status.offline, color: theme.node.red },
+      { label: t.status.draining, value: stats.status.draining, color: theme.node.blue },
+      { label: t.status.decommissioned, value: stats.status.decommissioned, color: theme.textSecondary }
+  ]
+  }, [stats.status]);
+
+  // Memoized Data for UsageTrendChart
+  const usageTrendSeries = useMemo(() => {
+      return trendMetric === 'image' ? [
+        { name: 'EDGE Images', data: chartData.edgeImages, color: theme.node.teal, area: true },
+        { name: 'CLOUD Images', data: chartData.cloudImages, color: theme.node.purple, area: true }
+    ] : [
+        { name: 'EDGE Video', data: chartData.edgeVideo, color: theme.node.teal, area: true },
+        { name: 'CLOUD Video', data: chartData.cloudVideo, color: theme.node.purple, area: true }
+    ];
+  }, [trendMetric, chartData, theme.node]);
+
+  // Renders Summary content based on Independent `summaryMetric`
   const renderUsageSummaryContent = () => {
     const isImage = summaryMetric === 'image';
     const valueEdge = isImage ? stats.usage.image.edge : stats.usage.video.edge;
@@ -194,7 +244,7 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
             <span style={{ color: theme.text }}>{t.breadcrumbs.overview}</span>
       </div>
 
-      {/* Header & Time Range */}
+      {/* Header & GLOBAL Time Range Selector */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
               <h1 className="text-2xl font-bold tracking-tight" style={{ color: theme.text }}>{translations[language].dashboard.headers.shOverview}</h1>
@@ -227,6 +277,7 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
 
       {/* Row 1: Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Panel 1: Device Status - Affected by Global Time Only */}
           <Card theme={theme} title={t.cards.totalDevices}>
              <div className="flex justify-between items-start mb-4">
                  <div className="text-3xl font-bold mb-1" style={{ color: theme.text }}>{stats.totalDevices}</div>
@@ -235,12 +286,13 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
                  </div>
              </div>
              <div className="space-y-1.5 pt-2 border-t" style={{ borderColor: theme.stroke }}>
-                 <StatusDot color={theme.node.green} label={t.status.online} count={stats.status.online} />
-                 <StatusDot color={theme.node.orange} label={t.status.pending} count={stats.status.pending} />
-                 <StatusDot color={theme.node.red} label={t.status.offline} count={stats.status.offline} />
+                 <StatusDot theme={theme} color={theme.node.green} label={t.status.online} count={stats.status.online} total={stats.totalDevices} />
+                 <StatusDot theme={theme} color={theme.node.orange} label={t.status.pending} count={stats.status.pending} total={stats.totalDevices} />
+                 <StatusDot theme={theme} color={theme.node.red} label={t.status.offline} count={stats.status.offline} total={stats.totalDevices} />
              </div>
           </Card>
 
+          {/* Panel 2: License Usage - Affected by Global Time Only */}
           <Card theme={theme} title={t.cards.licenseUsage}>
               <div className="flex justify-between items-start mb-4">
                  <div>
@@ -264,6 +316,7 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
              </div>
           </Card>
 
+          {/* Panel 3: Usage Summary - Affected by Global Time + LOCAL Metric Toggle */}
           <Card 
             theme={theme} 
             title={t.cards.usageSummary} 
@@ -289,7 +342,7 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
             }
           >
              <div className="flex justify-between items-start mb-2">
-                 {/* Placeholder for alignment if needed, or remove if unnecessary */}
+                 {/* This content updates when Global Time or Local Metric changes */}
              </div>
              {renderUsageSummaryContent()}
           </Card>
@@ -297,25 +350,19 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
 
       {/* Row 2: Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Device Status Distribution */}
+          {/* Panel 4: Device Status - Affected by Global Time Only */}
           <Card theme={theme} title={t.charts.deviceStatus} className="min-h-[300px]">
               <div className="flex-1 w-full h-[240px] mt-2">
                  <StatusChart 
                     theme={theme}
                     mode={mode}
-                    data={[
-                        { label: t.status.online, value: stats.status.online, color: theme.node.green },
-                        { label: t.status.pending, value: stats.status.pending, color: theme.node.orange },
-                        { label: t.status.offline, value: stats.status.offline, color: theme.node.red },
-                        { label: t.status.draining, value: stats.status.draining, color: theme.node.blue },
-                        { label: t.status.decommissioned, value: stats.status.decommissioned, color: theme.textSecondary }
-                    ]}
+                    data={statusChartData}
                     height={240}
                  />
               </div>
           </Card>
 
-          {/* Usage Trend */}
+          {/* Panel 5: Usage Trend - Affected by Global Time + LOCAL Metric Toggle */}
           <Card 
             theme={theme} 
             title={t.charts.usageTrend} 
@@ -330,6 +377,7 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
                         <span className="flex items-center gap-1.5 text-[10px] font-bold opacity-80"><div className="w-2 h-2 rounded-full" style={{background: theme.node.purple}} />CLOUD</span>
                     </div>
                     
+                    {/* Local Toggle: trendMetric - Affects only this chart */}
                     <div className="flex bg-black/5 dark:bg-white/5 p-1 rounded-lg border" style={{ borderColor: theme.stroke }}>
                         <button 
                             onClick={() => setTrendMetric('image')}
@@ -349,19 +397,14 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
                 </div>
               </div>
               
-              <div className="w-full h-[200px]">
+              <div className="w-full">
                  <UsageChart 
                     theme={theme}
                     mode={mode}
                     xAxisData={chartData.xAxis}
-                    series={trendMetric === 'image' ? [
-                        { name: 'EDGE Images', data: chartData.edgeImages, color: theme.node.teal, area: true },
-                        { name: 'CLOUD Images', data: chartData.cloudImages, color: theme.node.purple, area: true }
-                    ] : [
-                        { name: 'EDGE Video', data: chartData.edgeVideo, color: theme.node.teal, area: true },
-                        { name: 'CLOUD Video', data: chartData.cloudVideo, color: theme.node.purple, area: true }
-                    ]}
-                    height="100%"
+                    // Series data is selected based on local trendMetric
+                    series={usageTrendSeries}
+                    height={200}
                     showXAxis={true}
                     showYAxis={true}
                  />
@@ -374,7 +417,7 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
           <Card theme={theme} title={t.alerts.title}>
               <div className="space-y-3">
                  {MOCK_GLOBAL_ALERTS.map((alert, i) => (
-                     <AlertItem key={i} alert={alert} />
+                     <AlertItem key={i} alert={alert} theme={theme} onNavigate={onNavigate} tAlertLevels={tAlertLevels} />
                  ))}
               </div>
           </Card>
