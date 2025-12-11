@@ -1,4 +1,5 @@
 
+
 import React, { useState, useMemo } from 'react';
 import { ThemeColors, ThemeMode, Language } from '../../types';
 import { translations } from '../../translations';
@@ -171,13 +172,6 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
 
   // Memoized Data for StatusChart to prevent re-renders when switching unrelated tabs
   const statusChartData = useMemo(() =>{
-    console.log(stats.status,[
-      { label: t.status.online, value: stats.status.online, color: theme.node.green },
-      { label: t.status.pending, value: stats.status.pending, color: theme.node.orange },
-      { label: t.status.offline, value: stats.status.offline, color: theme.node.red },
-      { label: t.status.draining, value: stats.status.draining, color: theme.node.blue },
-      { label: t.status.decommissioned, value: stats.status.decommissioned, color: theme.textSecondary }
-  ])
     return  [
       { label: t.status.online, value: stats.status.online, color: theme.node.green },
       { label: t.status.pending, value: stats.status.pending, color: theme.node.orange },
@@ -304,13 +298,17 @@ export const SelfHostedOverview: React.FC<SelfHostedOverviewProps> = ({
                      <FileKey size={20} />
                  </div>
              </div>
-             <div className="pt-2 border-t flex items-center gap-2" style={{ borderColor: theme.stroke }}>
-                 <div className="flex-1 h-2 bg-black/5 dark:bg-white/10 rounded-full overflow-hidden">
-                     <div className="h-full bg-purple-500 w-[48%]" />
+             <div className="pt-4 border-t flex flex-col items-center gap-3" style={{ borderColor: theme.stroke }}>
+                 <div className="w-full h-1.5 bg-black/5 dark:bg-white/10 rounded-full overflow-hidden">
+                     <div 
+                        className="h-full bg-purple-500 rounded-full transition-all duration-1000" 
+                        style={{ width: `${(stats.license.used / stats.license.total) * 100}%` }} 
+                     />
                  </div>
                  {stats.license.expiring > 0 && (
-                     <div className="text-[10px] font-bold text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded-full flex items-center gap-1">
-                         <AlertCircle size={10} /> {stats.license.expiring} {t.cards.expiring}
+                     <div className="text-[10px] font-bold text-orange-500 bg-orange-500/10 px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm border border-orange-500/20 w-full justify-center">
+                         <AlertCircle size={12} strokeWidth={2.5} /> 
+                         <span>{stats.license.expiring} {t.cards.expiring}</span>
                      </div>
                  )}
              </div>
