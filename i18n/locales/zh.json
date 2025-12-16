@@ -1,0 +1,15 @@
+
+{
+  "app": {
+    "title": "VisionFlow"
+  },
+  "menu": {
+    "workflows": "工作流",
+    "selfHosted": "自托管"
+  },
+  "header": {
+    "themeLight": "亮色模式",
+    "themeDark": "暗色模式",
+    "language": "语言"
+  }
+}

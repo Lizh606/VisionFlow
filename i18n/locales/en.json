@@ -1,0 +1,15 @@
+
+{
+  "app": {
+    "title": "VisionFlow"
+  },
+  "menu": {
+    "workflows": "Workflows",
+    "selfHosted": "Self-hosted"
+  },
+  "header": {
+    "themeLight": "Light Mode",
+    "themeDark": "Dark Mode",
+    "language": "Language"
+  }
+}
