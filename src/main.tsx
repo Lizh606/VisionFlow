@@ -1,7 +1,10 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './src/app/App';
-import './src/styles/tokens.css';
+// Initialize Dayjs plugins before rendering App
+import './config/dayjsConfig';
+import App from './app/App';
+import './styles/tokens.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
