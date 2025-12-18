@@ -6,31 +6,26 @@ import { WorkflowsPage } from '../pages/WorkflowsPage';
 import { SelfHostedOverviewPage } from '../pages/SelfHostedOverviewPage';
 import { DevicesPage } from '../features/selfhosted/devices/ui/DevicesPage';
 import { LicensesPage } from '../features/selfhosted/licenses/ui/LicensesPage';
+import { DeviceDetailPage } from '../features/selfhosted/devices/ui/DeviceDetailPage';
 
-// Import i18n configuration to ensure it initializes
 import '../i18n/config';
 
 const App: React.FC = () => {
-  // Simple state-based router for demonstration
-  // In a real app, use react-router-dom
   const [currentPath, setCurrentPath] = useState('workflows');
 
   const renderContent = () => {
-    switch (currentPath) {
-      case 'workflows':
-        return <WorkflowsPage />;
-      case 'sh-overview':
-        return <SelfHostedOverviewPage onNavigate={setCurrentPath} />;
-      case 'sh-devices':
-        return <DevicesPage />;
-      case 'sh-license':
-        return <LicensesPage />;
-      case 'upload-license':
-        // Reuse LicensesPage but potentially with a modal open state passed in
-        return <LicensesPage />;
-      default:
-        return <WorkflowsPage />;
+    // Basic route matching logic
+    if (currentPath === 'workflows') return <WorkflowsPage />;
+    if (currentPath === 'sh-overview') return <SelfHostedOverviewPage onNavigate={setCurrentPath} />;
+    if (currentPath === 'sh-devices') return <DevicesPage onDeviceClick={(id) => setCurrentPath(`sh-device-detail-${id}`)} />;
+    if (currentPath === 'sh-license') return <LicensesPage />;
+    
+    if (currentPath.startsWith('sh-device-detail-')) {
+      const deviceId = currentPath.split('sh-device-detail-')[1];
+      return <DeviceDetailPage deviceId={deviceId} onBack={() => setCurrentPath('sh-devices')} />;
     }
+
+    return <WorkflowsPage />;
   };
 
   return (

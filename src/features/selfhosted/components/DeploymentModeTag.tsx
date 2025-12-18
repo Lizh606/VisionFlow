@@ -18,13 +18,13 @@ export const DeploymentModeTag: React.FC<Props> = ({ mode }) => {
       icon: <Server size={12} />,
       label: t('selfhosted.mode.edge'),
       desc: t('selfhosted.mode.edgeDesc'),
-      variant: 'teal' as const, 
+      variant: 'teal' as const, // ✅ 统一使用 Teal
     },
     CLOUD: {
       icon: <Cloud size={12} />,
       label: t('selfhosted.mode.cloud'),
       desc: t('selfhosted.mode.cloudDesc'),
-      variant: 'brand' as const,
+      variant: 'info' as const, // ✅ 切换为 Blue (info)
     },
   };
 
@@ -32,7 +32,6 @@ export const DeploymentModeTag: React.FC<Props> = ({ mode }) => {
 
   return (
     <Tooltip title={current.desc}>
-      {/* Wrapper needed because Tooltip needs a single child ref */}
       <span className="inline-block">
         <VFTag 
           variant={current.variant} 
@@ -40,7 +39,7 @@ export const DeploymentModeTag: React.FC<Props> = ({ mode }) => {
           icon={current.icon}
           className="font-mono tracking-tight"
         >
-          {mode} {/* Keep the label brief (ENUM value) in the tag, description is in tooltip */}
+          {mode}
         </VFTag>
       </span>
     </Tooltip>

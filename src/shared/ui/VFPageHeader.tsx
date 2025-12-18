@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Breadcrumb } from 'antd';
-import { ChevronRight } from 'lucide-react';
+import { Breadcrumb, Button } from 'antd';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ItemType } from 'antd/es/breadcrumb/Breadcrumb';
 
 interface VFPageHeaderProps {
@@ -9,6 +9,7 @@ interface VFPageHeaderProps {
   description?: string;
   breadcrumbs?: ItemType[];
   actions?: React.ReactNode;
+  onBack?: () => void;
   className?: string;
 }
 
@@ -17,6 +18,7 @@ export const VFPageHeader: React.FC<VFPageHeaderProps> = ({
   description, 
   breadcrumbs, 
   actions,
+  onBack,
   className = ''
 }) => {
   return (
@@ -31,16 +33,26 @@ export const VFPageHeader: React.FC<VFPageHeaderProps> = ({
       )}
 
       {/* Row 2: Title & Actions */}
-      <div className="flex flex-col  md:flex-row md:items-center md:justify-between  gap-4">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold text-text-primary m-0 tracking-tight leading-tight">
-            {title}
-          </h1>
-          {description && (
-            <p className="text-text-secondary m-0 text-sm max-w-3xl leading-relaxed">
-              {description}
-            </p>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="flex items-center gap-4">
+          {onBack && (
+            <Button 
+              type="text" 
+              icon={<ChevronLeft size={20} />} 
+              onClick={onBack}
+              className="flex items-center justify-center w-9 h-9 rounded-control hover:bg-action-hover text-text-secondary"
+            />
           )}
+          <div className="flex flex-col gap-1">
+            <h1 className="text-2xl font-bold text-text-primary m-0 tracking-tight leading-tight">
+              {title}
+            </h1>
+            {description && (
+              <p className="text-text-secondary m-0 text-sm max-w-3xl leading-relaxed">
+                {description}
+              </p>
+            )}
+          </div>
         </div>
         
         {actions && (

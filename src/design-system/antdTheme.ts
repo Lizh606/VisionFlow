@@ -3,15 +3,14 @@ import { theme } from "antd";
 import type { ThemeConfig } from "antd";
 import type { VFMode } from "./tokens";
 
-// Define strict color palette mirroring tokens.css
 const vfColors = {
   light: {
-    brand: '#6D29D9',       // --vf-brand
-    brandHover: '#7F3DFF',  // --vf-brand-hover
-    brandActive: '#5B21B6', // --vf-brand-active
+    brand: '#6D29D9',
+    brandHover: '#7F3DFF',
+    brandActive: '#5B21B6',
     brandSoft: 'rgba(109, 41, 217, 0.1)', 
     
-    info: '#4285F4',     
+    info: '#818CF8',     /* 柔和靛青 */
     success: '#0F9D58',  
     warning: '#FBBC04',  
     error: '#EA4335',    
@@ -29,12 +28,12 @@ const vfColors = {
     divider: '#E5EAF2',
   },
   dark: {
-    brand: '#9B63FF',       // --vf-brand (dark)
-    brandHover: '#B98CFF',  // --vf-brand-hover (dark)
-    brandActive: '#7F3DFF', // --vf-brand-active (dark)
+    brand: '#9B63FF',
+    brandHover: '#B98CFF',
+    brandActive: '#7F3DFF',
     brandSoft: 'rgba(155, 99, 255, 0.15)',
 
-    info: '#4285F4',
+    info: '#A5B4FC',    /* 暗色模式靛青 */
     success: '#0F9D58',
     warning: '#FBBC04',
     error: '#EA4335',
@@ -43,12 +42,14 @@ const vfColors = {
     bgCard: '#111522',   
     bgOverlay: '#1E2330',
     
+    /* 核心修复：提升暗色模式文字亮度系数 */
     textPrimary: 'rgba(255, 255, 255, 1)',
-    textSecondary: 'rgba(255, 255, 255, 0.65)',
-    textTertiary: 'rgba(255, 255, 255, 0.45)',
-    textDisabled: 'rgba(255, 255, 255, 0.25)',
+    textSecondary: 'rgba(255, 255, 255, 0.78)', /* 0.65 -> 0.78 */
+    textTertiary: 'rgba(255, 255, 255, 0.62)',  /* 0.45 -> 0.62 */
+    textDisabled: 'rgba(255, 255, 255, 0.35)',  /* 0.25 -> 0.35 */
     
-    border: 'rgba(255, 255, 255, 0.16)',
+    /* 核心修复：显著提升边框可见度 */
+    border: 'rgba(255, 255, 255, 0.16)',        /* 0.16 使 Select/Input 轮廓清晰 */
     divider: 'rgba(255, 255, 255, 0.12)',
   }
 };
@@ -60,43 +61,33 @@ export function getAntdTheme(mode: VFMode): ThemeConfig {
   return {
     algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
     token: {
-      // --- Global Tokens ---
-      // Setting colorPrimary here is the Single Source of Truth.
-      // Ant Design will automatically derive Button, Input, Spin, etc. from this.
       colorPrimary: colors.brand,
       colorPrimaryHover: colors.brandHover,
       colorPrimaryActive: colors.brandActive,
       
-      // Functional Colors
       colorInfo: colors.info,
       colorSuccess: colors.success,
       colorWarning: colors.warning,
       colorError: colors.error,
 
-      // Backgrounds
       colorBgLayout: colors.bgPage,
       colorBgContainer: colors.bgCard,
       colorBgElevated: colors.bgOverlay,
       
-      // Text
       colorText: colors.textPrimary,
       colorTextSecondary: colors.textSecondary,
       colorTextTertiary: colors.textTertiary,
       colorTextDisabled: colors.textDisabled,
 
-      // Borders
       colorBorder: colors.border,
       colorSplit: colors.divider,
 
-      // Shape
       borderRadius: 8,
       controlHeight: 40,
       controlHeightSM: 32,
     },
 
     components: {
-      // --- Component Specific Tokens ---
-      
       Button: {
         borderRadius: 8,
         primaryShadow: '0 2px 0 rgba(0, 0, 0, 0.05)',
@@ -114,7 +105,6 @@ export function getAntdTheme(mode: VFMode): ThemeConfig {
         itemBg: 'transparent',
         subMenuItemBg: 'transparent',
         activeBarBorderWidth: 0,
-        // For Menu, explicit overrides are still good because they have specific logic
         itemSelectedBg: colors.brandSoft,
         itemSelectedColor: colors.brand,
         itemBorderRadius: 8,
@@ -124,11 +114,15 @@ export function getAntdTheme(mode: VFMode): ThemeConfig {
       },
       DatePicker: {
         colorBgElevated: colors.bgOverlay,
-        controlItemBgActive: colors.brandSoft, 
+        controlItemBgActive: colors.brandSoft,
+        /* 增加输入框内部背景深浅区分 */
+        colorBgContainer: isDark ? 'rgba(255, 255, 255, 0.04)' : '#FFFFFF',
       },
       Select: {
         optionSelectedBg: colors.brandSoft,
         optionSelectedColor: colors.brand,
+        /* 增加输入框内部背景深浅区分 */
+        colorBgContainer: isDark ? 'rgba(255, 255, 255, 0.04)' : '#FFFFFF',
       },
       Table: {
         headerBg: colors.bgPage,
@@ -138,6 +132,11 @@ export function getAntdTheme(mode: VFMode): ThemeConfig {
       Input: {
         activeBorderColor: colors.brand,
         hoverBorderColor: colors.brandHover,
+        colorBgContainer: isDark ? 'rgba(255, 255, 255, 0.04)' : '#FFFFFF',
+      },
+      Segmented: {
+        trackBg: isDark ? 'rgba(255, 255, 255, 0.06)' : colors.bgPage,
+        itemSelectedBg: colors.bgCard,
       }
     },
   };

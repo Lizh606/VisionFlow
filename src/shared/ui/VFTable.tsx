@@ -37,15 +37,13 @@ export function VFTable<T extends object>({ className, ...props }: VFTableProps<
           color: rgb(var(--vf-text-secondary)) !important;
           font-weight: 600 !important;
           font-size: 13px !important;
-          /* FIX: Added alpha channel to avoid harsh white border in dark mode */
-          border-bottom: 1px solid rgb(var(--vf-border) / var(--vf-border-alpha)) !important;
+          border-bottom: 1px solid rgb(var(--vf-divider) / var(--vf-divider-alpha)) !important;
           padding: 12px 16px !important;
         }
         
         /* Pattern Layer: Table Body */
         .vf-table-wrapper .ant-table-tbody > tr > td {
           padding: 16px 16px !important;
-          /* FIX: Corrected variable name from vf-border-divider to vf-divider and added alpha */
           border-bottom: 1px solid rgb(var(--vf-divider) / var(--vf-divider-alpha)) !important;
           color: rgb(var(--vf-text-primary)) !important;
           font-size: 14px !important;
@@ -60,7 +58,6 @@ export function VFTable<T extends object>({ className, ...props }: VFTableProps<
         .vf-table-wrapper .ant-pagination {
           padding: 16px !important;
           margin: 0 !important;
-          /* FIX: Added alpha channel */
           border-top: 1px solid rgb(var(--vf-divider) / var(--vf-divider-alpha));
         }
       `}</style>

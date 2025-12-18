@@ -8,6 +8,8 @@ export interface VFCardProps {
   className?: string;
   noPadding?: boolean;
   bordered?: boolean; // Default true per spec
+  // Added onClick prop to support interactivity and fix type errors in consuming components
+  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export const VFCard: React.FC<VFCardProps> = ({ 
@@ -16,28 +18,33 @@ export const VFCard: React.FC<VFCardProps> = ({
   children, 
   className = '',
   noPadding = false,
-  bordered = true
+  bordered = true,
+  onClick
 }) => {
   return (
-    <div className={`
+    <div 
+      // Attach the onClick handler to the container element
+      onClick={onClick}
+      className={`
       bg-bg-card rounded-card 
       flex flex-col overflow-hidden
       transition-shadow duration-300
       ${bordered ? 'border border-border shadow-card hover:shadow-overlay' : ''}
+      ${onClick ? 'cursor-pointer' : ''}
       ${className}
     `}>
       {(title || extra) && (
         <div className="
           flex items-center justify-between 
           px-6 
-          border-b border-border-divider 
-          h-16 min-h-[64px]
+          border-b border-divider 
+          h-14 min-h-[56px]
           bg-bg-card
           gap-4 flex-nowrap
         ">
           {/* Title Area: Allow truncation if space is tight */}
           {title && (
-            <div className="text-lg font-semibold text-text-primary tracking-tight truncate min-w-0 flex items-center h-full">
+            <div className="text-sm font-bold text-text-primary uppercase tracking-wider truncate min-w-0 flex items-center h-full">
               {title}
             </div>
           )}

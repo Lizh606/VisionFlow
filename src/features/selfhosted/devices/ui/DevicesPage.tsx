@@ -2,14 +2,12 @@
 import React, { useState, useMemo } from 'react';
 import { Button, Input, Select, Tooltip, Dropdown } from 'antd';
 import { 
-  Search, RefreshCw, Download, Filter, 
+  Search, RefreshCw, Download, 
   MoreVertical, AlertTriangle, Link, XCircle 
 } from 'lucide-react';
 import { useTranslation, Trans } from 'react-i18next';
-// Import the configured dayjs instance instead of the raw package
 import dayjs from '../../../../config/dayjsConfig';
 
-// Shared
 import { PageHeader } from '../../components/PageHeader';
 import { DeviceStatusTag } from '../../components/DeviceStatusTag';
 import { DeploymentModeTag } from '../../components/DeploymentModeTag';
@@ -21,21 +19,21 @@ import { mockDevices } from '../../common/mockData';
 import { Device, DeviceStatus } from '../../common/types';
 import { LicenseSelectModal } from '../../components/LicenseSelectModal';
 
-export const DevicesPage: React.FC = () => {
+interface DevicesPageProps {
+  onDeviceClick?: (id: string) => void;
+}
+
+export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
   const { t } = useTranslation();
   const { isMobile } = useResponsive();
   
-  // State
   const [searchText, setSearchText] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [modeFilter, setModeFilter] = useState<string>('ALL');
   const [loading, setLoading] = useState(false);
-  
-  // Modal State
   const [bindModalOpen, setBindModalOpen] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
 
-  // Computed Data
   const pendingCount = mockDevices.filter(d => d.status === 'PENDING_LICENSE').length;
   
   const filteredData = useMemo(() => {
@@ -49,7 +47,6 @@ export const DevicesPage: React.FC = () => {
     });
   }, [searchText, statusFilter, modeFilter]);
 
-  // Actions
   const handleRefresh = () => {
     setLoading(true);
     setTimeout(() => setLoading(false), 800);
@@ -60,14 +57,16 @@ export const DevicesPage: React.FC = () => {
     setBindModalOpen(true);
   };
 
-  // Columns definition (Desktop)
   const columns = [
     {
       title: t('selfhosted.devices.cols.name'),
       dataIndex: 'name',
       key: 'name',
-      render: (text: string) => (
-        <span className="font-semibold text-text-primary hover:text-brand cursor-pointer transition-colors">
+      render: (text: string, record: Device) => (
+        <span 
+          className="font-semibold text-text-primary hover:text-brand cursor-pointer transition-colors"
+          onClick={() => onDeviceClick?.(record.id)}
+        >
           {text}
         </span>
       ),
@@ -128,15 +127,15 @@ export const DevicesPage: React.FC = () => {
       width: 60,
       render: (_: any, record: Device) => {
         const items = [
-          { key: 'view', label: t('common.viewDetails') },
+          { key: 'view', label: t('common.viewDetails'), onClick: () => onDeviceClick?.(record.id) },
           record.status === 'PENDING_LICENSE' ? { 
             key: 'bind', 
-            label: t('selfhosted.devices.actions.bind'), 
+            label: 'Bind License', 
             icon: <Link size={14} />, 
             className: 'text-brand',
             onClick: () => handleBindClick(record)
           } : null,
-          { key: 'drain', label: t('selfhosted.devices.actions.drain'), icon: <XCircle size={14} />, danger: true },
+          { key: 'drain', label: 'Drain', icon: <XCircle size={14} />, danger: true },
         ].filter(Boolean);
 
         return (
@@ -152,7 +151,7 @@ export const DevicesPage: React.FC = () => {
     <div className="flex flex-col gap-6">
       <PageHeader 
         title={t('selfhosted.devices.title')}
-        breadcrumbs={[{ title: t('selfhosted.devices.title') }]}
+        breadcrumbs={[]}
         actions={
           <div className="flex gap-3">
              <Button icon={<RefreshCw size={16} />} onClick={handleRefresh}>
@@ -165,31 +164,32 @@ export const DevicesPage: React.FC = () => {
         }
       />
 
-      {/* Alert Banner */}
       {pendingCount > 0 && (
-        <div className="flex items-center justify-between px-4 py-3 bg-warning/10 border border-warning/20 rounded-lg">
+        <div className="flex items-center justify-between px-4 py-3 bg-warning/10 border border-warning/20 rounded-lg shadow-sm">
            <div className="flex items-center gap-3">
               <AlertTriangle className="text-warning" size={20} />
-              <span className="text-sm text-text-primary">
+              <span className="text-sm text-text-primary font-medium">
                 <Trans 
                   i18nKey="selfhosted.devices.alert.pendingMessage" 
                   count={pendingCount}
-                  components={{ bold: <b /> }}
+                  components={{ bold: <b className="text-amber-900 dark:text-amber-100" /> }}
                 />
               </span>
            </div>
            <Button 
              type="link" 
              size="small" 
-             className="text-warning font-bold"
-             onClick={() => setStatusFilter('PENDING_LICENSE')}
+             className="!text-amber-700 dark:!text-amber-400 hover:opacity-80 font-bold p-0 transition-opacity"
+             onClick={() => {
+                setStatusFilter('PENDING_LICENSE');
+                setModeFilter('ALL');
+             }}
            >
              {t('selfhosted.devices.alert.filterAction')}
            </Button>
         </div>
       )}
 
-      {/* Toolbar */}
       <div className="flex flex-col md:flex-row gap-4 justify-between bg-bg-card p-4 rounded-card border border-border shadow-sm">
         <div className="flex flex-col sm:flex-row gap-3 flex-1">
           <Input 
@@ -197,9 +197,11 @@ export const DevicesPage: React.FC = () => {
             placeholder={t('selfhosted.devices.searchPlaceholder')}
             value={searchText}
             onChange={e => setSearchText(e.target.value)}
-            className="w-full sm:w-64"
+            className="w-full sm:w-64 h-10 rounded-control"
+            allowClear
           />
           <Select 
+            placeholder={t('common.status')}
             value={statusFilter} 
             onChange={setStatusFilter}
             options={[
@@ -207,30 +209,30 @@ export const DevicesPage: React.FC = () => {
               { value: 'ONLINE', label: t('selfhosted.status.online') },
               { value: 'OFFLINE', label: t('selfhosted.status.offline') },
               { value: 'PENDING_LICENSE', label: t('selfhosted.status.pending') },
+              { value: 'DRAINING', label: t('selfhosted.status.maintenance') },
             ]}
-            className="w-full sm:w-40"
+            className="w-full sm:w-40 h-10"
           />
           <Select 
+            placeholder={t('selfhosted.deviceDetail.summary.mode')}
             value={modeFilter} 
             onChange={setModeFilter}
             options={[
               { value: 'ALL', label: t('common.allModes') },
-              { value: 'EDGE', label: t('selfhosted.mode.edge') },
-              { value: 'CLOUD', label: t('selfhosted.mode.cloud') },
+              { value: 'EDGE', label: 'EDGE' },
+              { value: 'CLOUD', label: 'CLOUD' },
             ]}
-            className="w-full sm:w-32"
+            className="w-full sm:w-40 h-10"
           />
         </div>
       </div>
 
-      {/* Content */}
       {loading ? (
-        <VFCard><div className="h-64 flex items-center justify-center">{t('common.loading')}</div></VFCard>
+        <VFCard><div className="h-64 flex items-center justify-center font-bold text-text-tertiary tracking-widest">{t('common.loading')}</div></VFCard>
       ) : isMobile ? (
-        // Mobile Card List
         <div className="flex flex-col gap-4">
           {filteredData.map(device => (
-            <VFCard key={device.id} noPadding className="p-4 flex flex-col gap-3">
+            <VFCard key={device.id} noPadding className="p-4 flex flex-col gap-3" onClick={() => onDeviceClick?.(device.id)}>
               <div className="flex justify-between items-start">
                 <div>
                    <div className="font-bold text-lg text-text-primary mb-1">{device.name}</div>
@@ -241,31 +243,11 @@ export const DevicesPage: React.FC = () => {
                 </div>
                 <Button type="text" icon={<MoreVertical size={18} />} />
               </div>
-              
-              <div className="grid grid-cols-2 gap-y-2 text-sm text-text-secondary mt-2">
-                <div>{t('selfhosted.devices.cols.id')}:</div>
-                <div className="font-mono text-text-primary text-xs">{device.device_id}</div>
-                
-                <div>{t('selfhosted.devices.cols.license')}:</div>
-                <div className={device.license_name ? 'text-text-primary' : 'text-error'}>
-                   {device.license_name || t('selfhosted.devices.unbound')}
-                </div>
-                
-                <div>{t('selfhosted.devices.cols.lastSeen')}:</div>
-                <div>{dayjs(device.last_seen_at).fromNow()}</div>
-              </div>
-
-              {device.status === 'PENDING_LICENSE' && (
-                <Button block type="primary" className="mt-4" onClick={() => handleBindClick(device)}>
-                  {t('selfhosted.devices.actions.bind')}
-                </Button>
-              )}
             </VFCard>
           ))}
           {filteredData.length === 0 && <VFEmptyState description={t('selfhosted.devices.noData')} />}
         </div>
       ) : (
-        // Desktop Table
         <VFTable 
           dataSource={filteredData} 
           columns={columns} 
@@ -275,14 +257,11 @@ export const DevicesPage: React.FC = () => {
         />
       )}
 
-      {/* Modals */}
       <LicenseSelectModal 
         open={bindModalOpen} 
         onCancel={() => setBindModalOpen(false)}
         onSelect={(lic) => {
-          console.log(`Bind ${lic.id} to ${selectedDevice?.id}`);
           setBindModalOpen(false);
-          // In real app, trigger mutation and refresh
         }}
       />
     </div>

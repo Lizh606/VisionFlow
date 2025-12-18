@@ -12,6 +12,19 @@ interface VFChartProps {
   className?: string;
 }
 
+const deepMerge = (target: any, source: any) => {
+  if (!source) return target;
+  const output = { ...target };
+  Object.keys(source).forEach(key => {
+    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+      output[key] = deepMerge(target[key] || {}, source[key]);
+    } else {
+      output[key] = source[key];
+    }
+  });
+  return output;
+};
+
 export const VFChart: React.FC<VFChartProps> = ({ 
   options, 
   height = 300, 
@@ -22,7 +35,6 @@ export const VFChart: React.FC<VFChartProps> = ({
   const chartRef = useRef<ReactECharts>(null);
   const themeConfig = useChartTheme();
 
-  // Handle Resize
   useEffect(() => {
     const handleResize = () => {
       chartRef.current?.getEchartsInstance().resize();
@@ -31,14 +43,35 @@ export const VFChart: React.FC<VFChartProps> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Merge dynamic theme into options if not explicitly overridden
-  const finalOptions = themeConfig ? {
-    ...themeConfig,
-    ...options,
-    // Deep merge sensitive parts if needed, but simple spread usually works for top-level
-    grid: { ...themeConfig.grid, ...options.grid },
-    tooltip: { ...themeConfig.tooltip, ...options.tooltip },
-  } : options;
+  const getFinalOptions = () => {
+    if (!themeConfig) return options;
+
+    let final = { ...themeConfig, ...options };
+
+    const processAxis = (axis: any) => {
+      if (!axis) return axis;
+      const applyTemplate = (a: any) => {
+        const type = a.type || 'category';
+        const template = type === 'category' ? themeConfig.categoryAxis : themeConfig.valueAxis;
+        return deepMerge(template, a);
+      };
+
+      if (Array.isArray(axis)) {
+        return axis.map(applyTemplate);
+      }
+      return applyTemplate(axis);
+    };
+
+    final.xAxis = processAxis(options.xAxis || final.xAxis);
+    final.yAxis = processAxis(options.yAxis || final.yAxis);
+    
+    final.grid = deepMerge(themeConfig.grid, options.grid || {});
+    final.tooltip = deepMerge(themeConfig.tooltip, options.tooltip || {});
+    // 显式合并 Legend
+    final.legend = deepMerge(themeConfig.legend, options.legend || {});
+
+    return final;
+  };
 
   if (loading) {
     return (
@@ -62,7 +95,7 @@ export const VFChart: React.FC<VFChartProps> = ({
       {themeConfig && (
         <ReactECharts
           ref={chartRef}
-          option={finalOptions}
+          option={getFinalOptions()}
           style={{ height: '100%', width: '100%' }}
           notMerge={true}
           lazyUpdate={true}

@@ -20,7 +20,10 @@ export const LicenseUsageTrendCard: React.FC<Props> = ({ data }) => {
     legend: {
       bottom: 0,
       icon: 'circle',
-      textStyle: { color: 'var(--vf-text-secondary)' }
+      textStyle: { 
+        color: 'rgba(var(--vf-text-primary), 1)', // ✅ 修改为黑色 (Primary Text)
+        fontWeight: 600
+      }
     },
     xAxis: {
       type: 'category',
@@ -52,7 +55,7 @@ export const LicenseUsageTrendCard: React.FC<Props> = ({ data }) => {
         type: 'line',
         data: data.map(d => d.quota),
         showSymbol: false,
-        lineStyle: { type: 'dashed', width: 2, color: 'var(--vf-text-disabled)' },
+        lineStyle: { type: 'dashed', width: 2, color: 'rgba(var(--vf-text-disabled), 1)' },
       }
     ]
   };

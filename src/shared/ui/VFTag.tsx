@@ -36,12 +36,9 @@ export const VFTag: React.FC<VFTagProps> = ({
       error:   'bg-error/10 border-error/20 text-error',
       info:    'bg-info/10 border-info/20 text-info',
       brand:   'bg-brand/10 border-brand/20 text-brand',
-      // Teal (Dataviz-3) for Edge
-      teal:    'bg-[rgb(var(--vf-dataviz-3)/0.1)] border-[rgb(var(--vf-dataviz-3)/0.2)] text-[rgb(var(--vf-dataviz-3))]',
+      teal:    'bg-teal/10 border-teal/20 text-teal',
     },
     // Filled / Solid Styles (High Emphasis)
-    // Concept: Solid Color BG + White Text + Transparent Border
-    // UPDATE: Reduced opacity to /90 (approx 0.9) to make them less "heavy"/saturated while keeping solid look
     filled: {
       default: 'bg-text-secondary border-transparent text-bg-card',
       neutral: 'bg-text-disabled border-transparent text-white',
@@ -50,7 +47,7 @@ export const VFTag: React.FC<VFTagProps> = ({
       error:   'bg-error/90 border-transparent text-white',
       info:    'bg-info/90 border-transparent text-white',
       brand:   'bg-brand/90 border-transparent text-white',
-      teal:    'bg-[rgb(var(--vf-dataviz-3)/0.9)] border-transparent text-white',
+      teal:    'bg-teal/90 border-transparent text-white',
     }
   };
 

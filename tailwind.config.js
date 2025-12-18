@@ -7,63 +7,60 @@ module.exports = {
   ],
   darkMode: ['class', '[data-theme="dark"]'],
   theme: {
-    // Define breakpoints strictly per Spec Section 2.1
     screens: {
       'sm': '640px',
-      'md': '768px',  // Tablet start
-      'lg': '1024px', // Desktop start
+      'md': '768px',
+      'lg': '1024px',
       'xl': '1280px',
-      '2xl': '1440px', // Wide
+      '2xl': '1440px',
     },
     extend: {
       colors: {
-        // Brand & Status
-        brand: "rgb(var(--vf-brand) / <alpha-value>)",
-        "brand-hover": "rgb(var(--vf-brand-hover) / <alpha-value>)",
-        "brand-active": "rgb(var(--vf-brand-active) / <alpha-value>)",
+        brand: "rgba(var(--vf-brand), 1)",
+        "brand-hover": "rgba(var(--vf-brand-hover), 1)",
+        "brand-active": "rgba(var(--vf-brand-active), 1)",
         
-        info: "rgb(var(--vf-info) / <alpha-value>)",
-        success: "rgb(var(--vf-success) / <alpha-value>)",
-        warning: "rgb(var(--vf-warning) / <alpha-value>)",
-        error: "rgb(var(--vf-error) / <alpha-value>)",
+        info: "rgba(var(--vf-info), 1)",
+        success: "rgba(var(--vf-success), 1)",
+        warning: "rgba(var(--vf-warning), 1)",
+        error: "rgba(var(--vf-error), 1)",
+        teal: "rgba(var(--vf-teal), 1)",
 
-        // Surface
+        // Fixed Divider mapping
+        divider: "rgba(var(--vf-divider), var(--vf-divider-alpha))",
+
         bg: {
-          page: "rgb(var(--vf-bg-page) / <alpha-value>)",
-          card: "rgb(var(--vf-bg-card) / <alpha-value>)",
-          raised: "rgb(var(--vf-bg-raised) / <alpha-value>)",
-          overlay: "rgb(var(--vf-bg-overlay) / <alpha-value>)",
-          input: "rgb(var(--vf-bg-input) / var(--vf-bg-input-alpha))",
+          page: "rgba(var(--vf-bg-page), 1)",
+          card: "rgba(var(--vf-bg-card), 1)",
+          raised: "rgba(var(--vf-bg-raised), 1)",
+          overlay: "rgba(var(--vf-bg-overlay), 1)",
+          input: "rgba(var(--vf-bg-input), var(--vf-bg-input-alpha))",
         },
 
-        // Text
         text: {
-          primary: "rgb(var(--vf-text-primary) / <alpha-value>)",
-          secondary: "rgb(var(--vf-text-secondary) / <alpha-value>)",
-          tertiary: "rgb(var(--vf-text-tertiary) / <alpha-value>)",
-          disabled: "rgb(var(--vf-text-disabled) / <alpha-value>)",
-          inverse: "rgb(var(--vf-text-inverse) / <alpha-value>)",
+          primary: "rgba(var(--vf-text-primary), 1)",
+          secondary: "rgba(var(--vf-text-secondary), 1)",
+          tertiary: "rgba(var(--vf-text-tertiary), 1)",
+          disabled: "rgba(var(--vf-text-disabled), 1)",
+          inverse: "rgba(var(--vf-text-inverse), 1)",
         },
 
-        // Border
         border: {
-          DEFAULT: "rgb(var(--vf-border) / var(--vf-border-alpha))",
-          strong: "rgb(var(--vf-border-strong) / var(--vf-border-strong-alpha))",
-          divider: "rgb(var(--vf-divider) / var(--vf-divider-alpha))",
+          DEFAULT: "rgba(var(--vf-border), var(--vf-border-alpha))",
+          strong: "rgba(var(--vf-border-strong), var(--vf-border-strong-alpha))",
+          divider: "rgba(var(--vf-divider), var(--vf-divider-alpha))",
         },
 
-        // Action background (hover/active)
         action: {
-          hover: "rgb(var(--vf-hover) / var(--vf-hover-alpha))",
-          active: "rgb(var(--vf-active) / var(--vf-active-alpha))",
+          hover: "rgba(var(--vf-hover), var(--vf-hover-alpha))",
+          active: "rgba(var(--vf-active), var(--vf-active-alpha))",
         },
 
-        // Overlay mask
-        mask: "rgb(var(--vf-mask) / var(--vf-mask-alpha))",
+        mask: "rgba(var(--vf-mask), var(--vf-mask-alpha))",
       },
 
       ringColor: {
-        focus: "rgb(var(--vf-focus) / var(--vf-focus-alpha))",
+        focus: "rgba(var(--vf-focus), var(--vf-focus-alpha))",
       },
 
       borderRadius: {
@@ -82,7 +79,6 @@ module.exports = {
         'sidebar-expanded': '220px',
         'sidebar-collapsed': '72px',
         'content-padding': '24px',
-        // VF spacing tokens
         "vf-1": "4px",
         "vf-2": "8px",
         "vf-3": "12px",

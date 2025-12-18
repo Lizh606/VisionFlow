@@ -35,17 +35,16 @@ export const TimeRangeFilter: React.FC<TimeRangeFilterProps> = ({ onChange, clas
         onChange={onRangeChange}
         showTime
         format="YYYY-MM-DD HH:mm"
-        allowClear={false} // Enforce a selection usually, or allow clear if business logic permits
-        defaultValue={[dayjs().subtract(24, 'hour'), dayjs()]} // Default 24h
+        allowClear={false} 
+        defaultValue={[dayjs().subtract(24, 'hour'), dayjs()]} 
         className="shadow-sm hover:border-brand-hover transition-all"
         style={{
           height: '40px', // Spec: Desktop control height
           borderRadius: 'var(--vf-radius-control)',
-          border: '1px solid var(--vf-border)',
+          // Fix: Wrap the RGB values in rgba() and include the alpha token
+          border: '1px solid rgba(var(--vf-border), var(--vf-border-alpha))',
           width: '320px', // Fixed width for stability
         }}
-        // Styles for popup to match theme can be handled by ConfigProvider globally, 
-        // but here we ensure the input itself fits the page design.
       />
     </div>
   );

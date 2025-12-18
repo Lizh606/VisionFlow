@@ -12,59 +12,41 @@ interface Props {
 export const DeviceStatusChartCard: React.FC<Props> = ({ data }) => {
   const { t } = useTranslation();
 
-  // Status Colors (Hex codes to ensure stable Canvas rendering in ECharts)
-  // Matching tokens.css / tokens.ts values:
-  // Success: #0F9D58 (Online)
-  // Warning: #FBBC04 (Pending License)
-  // Error:   #EA4335 (Offline)
-  // Info:    #4285F4 (Draining)
-  // Neutral: #9AA0A6 (Decommissioned - Grey500)
   const STATUS_COLORS = {
     success: '#0F9D58',
     warning: '#FBBC04',
     error: '#EA4335',
-    info: '#4285F4',
+    info: '#528BFF',
     neutral: '#9AA0A6', 
   };
 
   const getStatusColor = (status: string) => {
     const s = status.toLowerCase();
-    
-    // Semantic Mapping (Strict per spec)
     if (s.includes('online')) return STATUS_COLORS.success;
     if (s.includes('pending')) return STATUS_COLORS.warning;
-    if (s.includes('draining')) return STATUS_COLORS.info;     // Info Blue
-    if (s.includes('offline')) return STATUS_COLORS.error;     // Error Red
+    if (s.includes('draining')) return STATUS_COLORS.info;
+    if (s.includes('offline')) return STATUS_COLORS.error;
     if (s.includes('error')) return STATUS_COLORS.error;
-    if (s.includes('decommis')) return STATUS_COLORS.neutral;  // Neutral Grey
-    
-    // Fallback for any other state
+    if (s.includes('decommis')) return STATUS_COLORS.neutral;
     return STATUS_COLORS.neutral; 
   };
 
   const options = {
     tooltip: { trigger: 'item' },
-    grid: { left: 0, right: 0, bottom: 20, top: 30, containLabel: true },
     xAxis: {
       type: 'category',
       data: data.map(d => d.status),
-      axisLine: { show: false },
-      axisTick: { show: false },
-      axisLabel: { 
-        interval: 0, 
-        fontSize: 11,
-        // Use var for text as DOM-based text rendering handles CSS vars well
-        color: 'var(--vf-text-secondary)' 
-      }
+      axisLabel: { interval: 0 }
     },
     yAxis: {
       type: 'value',
-      show: true,
-      splitLine: { 
-        show: true, 
-        lineStyle: { type: 'dashed', color: 'rgba(var(--vf-border), 0.5)' } 
+      name: t('selfhosted.overview.charts.count'),
+      nameTextStyle: {
+        align: 'left',
+        padding: [0, 0, 8, 0]
       }
     },
+    grid: { left: 0, right: 0, bottom: 0, top: 45, containLabel: true },
     series: [
       {
         data: data.map(d => ({
