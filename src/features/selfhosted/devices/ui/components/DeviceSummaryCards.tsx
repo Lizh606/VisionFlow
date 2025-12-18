@@ -158,7 +158,9 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
           <div className="mb-2 min-h-[44px] flex items-center">
              <div className="text-lg font-bold text-text-primary flex items-center gap-2">
                 {device.config_version}
-                <VFTag variant="neutral" className="h-5 text-[10px] px-1.5 opacity-60 font-mono" filled={false}>LATEST</VFTag>
+                <VFTag variant="neutral" className="h-5 text-[10px] px-1.5 opacity-60 font-bold" filled={false}>
+                  {t('selfhosted.workflowDeployment.latest')}
+                </VFTag>
              </div>
           </div>
           <div className="flex flex-col gap-0.5">

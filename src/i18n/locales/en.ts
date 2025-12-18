@@ -20,7 +20,12 @@ export const en = {
       "edit": "Edit",
       "confirm": "Confirm",
       "status": "Status",
-      "ready": "Ready"
+      "ready": "Ready",
+      "noData": "No data available",
+      "pause": "Pause",
+      "start": "Start",
+      "enabled": "Enabled",
+      "disabled": "Disabled"
     },
     "menu": {
       "workflows": "Workflows",
@@ -47,6 +52,32 @@ export const en = {
         "cloud": "Cloud",
         "cloudDesc": "Processed on VisionFlow Cloud. Usage billing applies."
       },
+      "usage": {
+        "dim": "Dimension",
+        "dimWorkflow": "Workflow",
+        "dimStream": "Stream",
+        "metric": "Metric",
+        "metricImg": "Images",
+        "metricVid": "Video",
+        "dateRange": "Date Range",
+        "modeFilter": "Mode Filter",
+        "modes": {
+          "all": "All Modes",
+          "edge": "EDGE Only",
+          "cloud": "CLOUD Only"
+        },
+        "footerNote": "Data is synchronized every 5 minutes. High availability mode might cause double counting during failover.",
+        "tableCols": {
+          "calls": "Total Calls",
+          "errors": "Errors",
+          "errorRate": "Error Rate"
+        }
+      },
+      "logs": {
+        "title": "Advanced Telemetry & Logs",
+        "description": "Detailed system logs and trace data are stored in VisionFlow Observability (SigNoz). You can view raw telemetry for Device <bold>{{id}}</bold> there.",
+        "launchBtn": "Launch Observability Shell"
+      },
       "overview": {
         "title": "Self-hosted Overview",
         "kpi": {
@@ -56,7 +87,11 @@ export const en = {
           "offline": "Offline",
           "licenseUsage": "License Usage",
           "expiringSoon": "{{count}} license(s) expiring soon",
-          "usageSummary": "Usage Summary"
+          "usageSummary": "Usage Summary",
+          "utilization": "Utilization",
+          "activeLicenses": "Active Licenses",
+          "expiring": "Expiring Soon",
+          "pending": "Pending Devices"
         },
         "charts": {
           "deviceStatus": "Device Status Distribution",
@@ -65,7 +100,10 @@ export const en = {
           "cloud": "Cloud Runner",
           "images": "Images",
           "video": "Video",
-          "count": "Count"
+          "count": "Count",
+          "usageSeries": "Actual Usage",
+          "quotaSeries": "Quota Limit",
+          "breakdown": "License Distribution"
         },
         "alerts": {
           "title": "Active Alerts",
@@ -85,19 +123,86 @@ export const en = {
           "24h": "Last 24h",
           "7d": "Last 7d",
           "30d": "Last 30d"
+        },
+        "quickActions": {
+          "title": "Quick Actions"
+        },
+        "actions": {
+          "upload": "Upload License",
+          "devices": "View Devices",
+          "manage": "Manage License",
+          "guide": "Setup Guide"
         }
+      },
+      "workflowDeployment": {
+        "title": "Streams Deployment",
+        "addStream": "Add Stream",
+        "empty": "No streams configured",
+        "startConfig": "Start Configuring Now",
+        "currentVersion": "Active Config",
+        "latest": "Latest Stable",
+        "lastUpdated": "Updated",
+        "operator": "Operator",
+        "viewHistory": "Version History",
+        "streamName": "STREAM",
+        "input": "INPUT",
+        "workflow": "WORKFLOW BINDING",
+        "status": "STATUS",
+        "telemetry": "TELEMETRY",
+        "updated": "LAST UPDATED",
+        "actions": "ACTIONS",
+        "readOnly": "Read-only access",
+        "deleteStream": "Delete Stream",
+        "editConfig": "Edit Stream",
+        "rollbackTitle": "Rollback to version {{version}}?",
+        "rollbackDesc": "This will reset all stream states. Please confirm this action.",
+        "rollbackConfirm": "Confirm Rollback",
+        "historyTitle": "Version History",
+        "snapshot": "Snapshot Summary",
+        "diff": "Change Diff",
+        "noSnapshot": "No snapshot data",
+        "loadingDiff": "Loading Diff view...",
+        "editTitle": "Edit Stream Configuration",
+        "createTitle": "Add Stream Configuration",
+        "createBtn": "Create Stream",
+        "updateBtn": "Save Changes",
+        "basicInfo": "Basic Info",
+        "inputSource": "Input Source Configuration",
+        "workflowBinding": "Workflow Binding",
+        "runPolicy": "Run Policy",
+        "nameLabel": "Stream Name",
+        "nameRequired": "Please enter name",
+        "namePlaceholder": "e.g. North Gate Monitoring",
+        "streamId": "Stream ID",
+        "autoGen": "System Assigned",
+        "sourceType": "Protocol Type",
+        "endpoint": "URL / Path",
+        "endpointRequired": "Please enter endpoint",
+        "selectWorkflow": "Select Workflow",
+        "selectWorkflowPlaceholder": "Select workflow template",
+        "versionStrategy": "Version Strategy",
+        "concurrency": "Instance Concurrency",
+        "telemetryGranularity": "Telemetry Detail Level",
+        "heartbeatOnly": "Heartbeat Only",
+        "heartbeatDesc": "Ultra-low power, online check only.",
+        "metricsOnly": "Metrics (Recommended)",
+        "metricsDesc": "Includes throughput, latency, FPS, etc.",
+        "diagnostic": "Diagnostic Telemetry",
+        "diagnosticDesc": "Full trace data, high resource overhead.",
+        "applyImmediately": "Apply changes immediately",
+        "applyImmediatelyDesc": "This might cause a brief restart of running streams."
       },
       "deviceDetail": {
         "tabs": {
           "overview": "Overview",
-          "workflow": "Workflows",
-          "usage": "Usage",
-          "logs": "Telemetry & Logs"
+          "workflow": "Deployment (Streams)",
+          "usage": "Analytics",
+          "logs": "Telemetry"
         },
         "summary": {
           "overviewTitle": "Device Overview",
-          "licenseTitle": "License Information",
-          "configTitle": "Current Configuration",
+          "licenseTitle": "License Info",
+          "configTitle": "Config Version",
           "deviceId": "Device ID",
           "runtimeId": "Runtime ID",
           "lastSeen": "Last Seen",
@@ -111,48 +216,16 @@ export const en = {
           "streamsCount": "Active Streams",
           "configuredBy": "Configured By",
           "lastModified": "Last Modified",
-          "lastModifiedTime": "Last Modified Time",
+          "lastModifiedTime": "Modified At",
           "viewHistory": "View History",
           "licenseUpdated": "License updated successfully",
           "mode": "Mode",
-          "streamsRunning": "{{count}} Streams Running"
+          "streamsRunning": "{{count}} Streams"
         },
         "overview": {
-          "diagnostics": "Health & Diagnostics",
-          "reason": "Current Health Reason",
-          "kpiHeartbeat": "Last Heartbeat",
-          "kpiStreams": "Running Streams",
-          "usagePreview": "24h Usage Preview",
-          "recentAlerts": "Active Alerts",
-          "viewAll": "View All"
-        },
-        "workflow": {
-          "verBanner": "Configuration: {{ver}}",
-          "newVerAvailable": "New version available",
-          "rollback": "Rollback",
-          "history": "History",
-          "addStream": "Add Stream",
-          "cols": {
-            "name": "Stream Name",
-            "type": "Type",
-            "workflow": "Workflow",
-            "telemetry": "Telemetry"
-          }
-        },
-        "usage": {
-          "dim": "Dimension",
-          "dimWorkflow": "Workflow",
-          "dimStream": "Stream",
-          "mode": "Mode",
-          "metric": "Metric",
-          "metricImg": "Images",
-          "metricVid": "Video",
-          "tableCols": {
-            "calls": "Total Calls",
-            "errors": "Errors",
-            "errorRate": "Error Rate"
-          },
-          "footerNote": "CLOUD usage incurs cost. EDGE usage is for metering only."
+          "recentAlerts": "Recent Alerts",
+          "units": "Image Units",
+          "unitsTooltip": "Total inferred frames or triggers in selected timeframe."
         }
       },
       "license": {
@@ -188,7 +261,8 @@ export const en = {
           "license": "License",
           "lastSeen": "Last Seen"
         },
-        "unbound": "Unbound"
+        "unbound": "Unbound",
+        "noData": "No devices matched your criteria."
       }
     }
   }

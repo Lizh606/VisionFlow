@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Space, Segmented, Select, Tooltip, Alert } from 'antd';
+import { Space, Segmented, Select, Alert } from 'antd';
 import { Info } from 'lucide-react';
 import { Device } from '../../../common/types';
 import { VFCard } from '../../../../../shared/ui/VFCard';
@@ -32,13 +32,13 @@ export const DeviceUsageTab: React.FC<{ device: Device }> = ({ device }) => {
   ];
 
   const columns = [
-    { title: 'Workflow', dataIndex: 'name', key: 'name' },
+    { title: t('selfhosted.usage.dimWorkflow'), dataIndex: 'name', key: 'name' },
     { title: t('selfhosted.usage.tableCols.calls'), dataIndex: 'calls', key: 'calls', sorter: true },
     { title: t('selfhosted.usage.metricImg'), dataIndex: 'images', key: 'images' },
     { title: t('selfhosted.usage.metricVid'), dataIndex: 'videos', key: 'videos' },
     { title: t('selfhosted.usage.tableCols.errors'), dataIndex: 'errors', key: 'errors' },
     { title: t('selfhosted.usage.tableCols.errorRate'), dataIndex: 'errorRate', key: 'errorRate' },
-    { title: t('selfhosted.usage.mode'), dataIndex: 'mode', key: 'mode' },
+    { title: t('selfhosted.deviceDetail.summary.mode'), dataIndex: 'mode', key: 'mode' },
   ];
 
   return (
@@ -69,17 +69,17 @@ export const DeviceUsageTab: React.FC<{ device: Device }> = ({ device }) => {
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <span className="text-[11px] uppercase font-bold text-text-tertiary tracking-wider">Date Range</span>
+            <span className="text-[11px] uppercase font-bold text-text-tertiary tracking-wider">{t('selfhosted.usage.dateRange')}</span>
             <TimeRangeFilter />
           </div>
         </Space>
         
         <div className="flex flex-col gap-1.5">
-          <span className="text-[11px] uppercase font-bold text-text-tertiary tracking-wider">Mode Filter</span>
-          <Select defaultValue="ALL" className="w-32">
-            <Select.Option value="ALL">ALL Modes</Select.Option>
-            <Select.Option value="EDGE">EDGE Only</Select.Option>
-            <Select.Option value="CLOUD">CLOUD Only</Select.Option>
+          <span className="text-[11px] uppercase font-bold text-text-tertiary tracking-wider">{t('selfhosted.usage.modeFilter')}</span>
+          <Select defaultValue="ALL" className="w-36">
+            <Select.Option value="ALL">{t('selfhosted.usage.modes.all')}</Select.Option>
+            <Select.Option value="EDGE">{t('selfhosted.usage.modes.edge')}</Select.Option>
+            <Select.Option value="CLOUD">{t('selfhosted.usage.modes.cloud')}</Select.Option>
           </Select>
         </div>
       </div>
