@@ -63,3 +63,11 @@
   margin-bottom: 16px !important;
   padding-bottom: 12px !important;
 }
+
+/* Switch 内部元素居中适配 */
+.ant-switch-inner-unchecked,
+.ant-switch-inner-checked {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
