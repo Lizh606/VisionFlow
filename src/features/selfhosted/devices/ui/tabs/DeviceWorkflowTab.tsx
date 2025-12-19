@@ -1,7 +1,6 @@
-
 import React, { useState, useMemo } from 'react';
 import { Button, App, Input, Select } from 'antd';
-import { Plus, Search } from 'lucide-react';
+import { Plus, Search, ShieldAlert } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { VFCard } from '../../../../../shared/ui/VFCard';
 import { useWorkflowDeployment, Stream } from '../../hooks/useWorkflowDeployment';
@@ -9,6 +8,8 @@ import { CurrentConfigCard } from '../components/CurrentConfigCard';
 import { StreamsTable } from '../components/StreamsTable';
 import { VersionHistoryDrawer } from '../components/VersionHistoryDrawer';
 import { StreamEditorDrawer } from '../components/StreamEditorDrawer';
+import { LicenseSelectModal } from '../../../components/LicenseSelectModal';
+import { VFEmptyState } from '../../../../../shared/ui/VFEmptyState';
 import { useResponsive } from '../../../../../shared/hooks/useResponsive';
 
 export const DeviceWorkflowTab: React.FC<{ device: any; isAdmin?: boolean }> = ({ device, isAdmin: propIsAdmin }) => {
@@ -27,40 +28,67 @@ export const DeviceWorkflowTab: React.FC<{ device: any; isAdmin?: boolean }> = (
 
   const [historyOpen, setHistoryOpen] = useState(false);
   const [editorOpen, setEditorOpen] = useState(false);
+  const [licenseModalOpen, setLicenseModalOpen] = useState(false);
   const [editingStream, setEditingStream] = useState<Stream | null>(null);
 
   // Filters State
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
 
+  // Logic Check: If device is pending license, show special empty state
+  const isUnbound = device.status === 'PENDING_LICENSE';
+
   const filteredStreams = useMemo(() => {
+    // If unbound, return empty array to trigger empty state logic
+    if (isUnbound) return [];
     return streams.filter(s => {
       const matchSearch = s.name.toLowerCase().includes(search.toLowerCase()) || s.id.toLowerCase().includes(search.toLowerCase());
       const matchStatus = statusFilter === 'ALL' || s.status === statusFilter;
       return matchSearch && matchStatus;
     });
-  }, [streams, search, statusFilter]);
+  }, [streams, search, statusFilter, isUnbound]);
 
   const handleAddStream = () => {
     setEditingStream(null);
     setEditorOpen(true);
   };
 
+  if (isUnbound) {
+    return (
+      <div className={`flex flex-col gap-6 animate-in fade-in duration-500 ${isMobile ? 'p-4' : 'p-6'}`}>
+        <VFCard>
+          <VFEmptyState 
+            icon={<ShieldAlert size={32} className="text-warning" />}
+            title={t('selfhosted.devices.unbound')}
+            description="该设备尚未绑定有效的授权证书。请先完成授权绑定，之后即可在该页面配置并部署数据流任务。"
+            actionLabel="立即绑定授权"
+            onAction={() => setLicenseModalOpen(true)}
+          />
+        </VFCard>
+        <LicenseSelectModal 
+          open={licenseModalOpen} 
+          onCancel={() => setLicenseModalOpen(false)}
+          onSelect={(lic) => {
+            message.success(`已成功选择授权: ${lic.name}`);
+            setLicenseModalOpen(false);
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className={`flex flex-col gap-6 ${isMobile ? 'p-4' : 'p-6'}`}>
-      {/* 1. Active Configuration Banner */}
       <CurrentConfigCard 
         version={currentVersion} 
         onViewHistory={() => setHistoryOpen(true)} 
       />
 
-      {/* 2. Streams Table Card - Adaptive height */}
       <VFCard 
         title={t('selfhosted.workflowDeployment.title')}
         noPadding
       >
         <div className="flex flex-col">
-          {/* Professional Filters Bar - Mobile Responsive Stacking */}
           <div className={`
             px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 
             border-b border-divider bg-bg-page/10
@@ -70,6 +98,7 @@ export const DeviceWorkflowTab: React.FC<{ device: any; isAdmin?: boolean }> = (
                 prefix={<Search size={14} className="text-text-tertiary" />}
                 placeholder="搜索名称或 ID..."
                 value={search}
+                // Fix: Corrected setSearchText to setSearch to match state definition
                 onChange={e => setSearch(e.target.value)}
                 className="w-full sm:w-64 h-10 sm:h-9 rounded-control"
                 allowClear
@@ -87,7 +116,6 @@ export const DeviceWorkflowTab: React.FC<{ device: any; isAdmin?: boolean }> = (
               />
             </div>
             
-            {/* Action Area */}
             <div className="flex items-center w-full sm:w-auto">
               {isAdmin && (
                 <Button 
@@ -102,7 +130,6 @@ export const DeviceWorkflowTab: React.FC<{ device: any; isAdmin?: boolean }> = (
             </div>
           </div>
 
-          {/* Table or Card List Area */}
           <StreamsTable 
             data={filteredStreams}
             isAdmin={isAdmin}
@@ -124,7 +151,6 @@ export const DeviceWorkflowTab: React.FC<{ device: any; isAdmin?: boolean }> = (
         </div>
       </VFCard>
 
-      {/* Auxiliary Components */}
       <VersionHistoryDrawer 
         open={historyOpen} 
         onClose={() => setHistoryOpen(false)}

@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Skeleton } from 'antd';
-import { Video, Inbox } from 'lucide-react';
+import { Skeleton, Button } from 'antd';
+import { Video, Inbox, ShieldAlert } from 'lucide-react';
 import { VFCard } from '../../../../../shared/ui/VFCard';
 import { VFTag } from '../../../../../shared/ui/VFTag';
 import { Device } from '../../../common/types';
@@ -14,9 +14,10 @@ interface Props {
 
 export const ConfigSummaryPanel: React.FC<Props> = ({ device, loading = false }) => {
   const { t } = useTranslation();
+  const isUnbound = device.status === 'PENDING_LICENSE';
 
-  // Mock Active Streams
-  const activeStreams = [
+  // Mock Active Streams - only show if not unbound
+  const activeStreams = isUnbound ? [] : [
     { id: 's1', name: 'Main Entrance RTSP', workflow: 'Crowd Analysis v2', status: 'RUNNING' },
     { id: 's2', name: 'Loading Dock 04', workflow: 'PPE Check v1.5', status: 'RUNNING' },
     { id: 's3', name: 'Security Corridor', workflow: 'Intrusion Detection v3', status: 'DISABLED' },
@@ -37,6 +38,19 @@ export const ConfigSummaryPanel: React.FC<Props> = ({ device, loading = false })
                 <Skeleton active title={false} paragraph={{ rows: 1, width: '80%' }} />
               </div>
             ))}
+          </div>
+        ) : isUnbound ? (
+          <div className="flex-1 flex flex-col items-center justify-center p-12 text-center">
+            <div className="w-12 h-12 rounded-full bg-warning/10 flex items-center justify-center text-warning mb-4">
+              <ShieldAlert size={24} />
+            </div>
+            <h4 className="text-sm font-bold text-text-primary mb-1">未授权设备</h4>
+            <p className="text-xs text-text-tertiary max-w-[200px] leading-relaxed mb-4">
+              在完成授权绑定之前，无法同步工作流配置或部署 Stream 任务。
+            </p>
+            <Button type="link" size="small" className="text-brand font-bold p-0">
+              去绑定授权
+            </Button>
           </div>
         ) : activeStreams.length > 0 ? (
           <div className="flex flex-col">
@@ -78,8 +92,8 @@ export const ConfigSummaryPanel: React.FC<Props> = ({ device, loading = false })
           </div>
         )}
         
-        {/* Fill the remaining space to align with Alerts */}
-        <div className="flex-1 min-h-[40px]" />
+        {/* Alignment spacer */}
+        {!isUnbound && <div className="flex-1 min-h-[40px]" />}
       </div>
     </VFCard>
   );

@@ -1,8 +1,9 @@
+
 import React, { useState } from 'react';
 import { Space, Button, Tooltip, Dropdown, App } from 'antd';
 import type { MenuProps } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { Copy, ExternalLink, History, ChevronDown, Server, Cloud } from 'lucide-react';
+import { Copy, ExternalLink, History, ChevronDown, Server, Cloud, ShieldAlert, FileX } from 'lucide-react';
 import dayjs from '../../../../../config/dayjsConfig';
 import { Device } from '../../../common/types';
 import { VFCard } from '../../../../../shared/ui/VFCard';
@@ -24,17 +25,21 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
   const { isMobile } = useResponsive();
   const [licModalOpen, setLicModalOpen] = useState(false);
 
+  const isUnbound = device.status === 'PENDING_LICENSE';
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     message.success(t('common.copy'));
   };
 
-  const InfoRow = ({ label, value, copyable }: { label: string, value: string | React.ReactNode, copyable?: string }) => (
-    <div className="flex items-center justify-between py-2 border-b border-divider last:border-b-0 min-h-[44px]">
+  const InfoRow = ({ label, value, copyable, empty }: { label: string, value: string | React.ReactNode, copyable?: string, empty?: boolean }) => (
+    <div className={`flex items-center justify-between py-2 border-b border-divider last:border-b-0 min-h-[44px] ${empty ? 'opacity-40' : ''}`}>
       <span className="text-text-tertiary text-[13px] font-medium">{label}</span>
       <div className="flex items-center gap-2 overflow-hidden">
-        <div className="font-semibold text-text-primary text-sm truncate max-w-[140px] sm:max-w-[160px]">{value}</div>
-        {copyable && (
+        <div className={`font-semibold text-text-primary text-sm truncate max-w-[140px] sm:max-w-[160px] ${empty ? 'font-normal italic' : ''}`}>
+          {empty ? '---' : value}
+        </div>
+        {copyable && !empty && (
           <Button 
             type="text" 
             size="small" 
@@ -92,67 +97,85 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
         </div>
       </VFCard>
 
-      {/* Card B: License Information */}
+      {/* Card B: License Information - Refined for Unbound state */}
       <VFCard 
         title={t('selfhosted.deviceDetail.summary.licenseTitle')} 
         extra={
           isAdmin && (
             <Button 
-              className="h-9 sm:h-8 flex items-center gap-1.5 px-3 text-[13px] font-bold text-brand border-brand hover:bg-brand/5 rounded-control"
+              type={isUnbound ? 'primary' : 'default'}
+              className={`h-9 sm:h-8 flex items-center gap-1.5 px-3 text-[13px] font-bold rounded-control ${!isUnbound ? 'text-brand border-brand hover:bg-brand/5' : 'bg-brand'}`}
               onClick={() => setLicModalOpen(true)}
             >
               <ExternalLink size={14} />
-              {isMobile ? t('common.edit') : t('selfhosted.deviceDetail.summary.changeLicense')}
+              {isUnbound ? '绑定授权' : (isMobile ? t('common.edit') : t('selfhosted.deviceDetail.summary.changeLicense'))}
             </Button>
           )
         }
       >
         <div className="flex flex-col">
           <div className="mb-2 min-h-[44px] flex items-center">
-             <div className="text-base sm:text-lg font-bold text-text-primary flex items-center gap-1.5 cursor-pointer hover:text-brand transition-colors">
-                {device.license_name || 'N/A'} 
-                <ExternalLink size={16} className="text-text-tertiary" />
-             </div>
+             {isUnbound ? (
+               <div className="flex items-center gap-2 text-warning animate-pulse">
+                 <ShieldAlert size={18} />
+                 <span className="text-sm font-bold">等待绑定授权证书</span>
+               </div>
+             ) : (
+               <div className="text-base sm:text-lg font-bold text-text-primary flex items-center gap-1.5 cursor-pointer hover:text-brand transition-colors">
+                  {device.license_name || 'N/A'} 
+                  <ExternalLink size={16} className="text-text-tertiary" />
+               </div>
+             )}
           </div>
           <div className="flex flex-col">
-            <InfoRow label={t('selfhosted.deviceDetail.summary.expiry')} value={dayjs().add(120, 'day').format('YYYY-MM-DD')} />
-            <InfoRow label={t('selfhosted.deviceDetail.summary.quota')} value="8 / 20 Slots" />
+            <InfoRow label={t('selfhosted.deviceDetail.summary.expiry')} value={dayjs().add(120, 'day').format('YYYY-MM-DD')} empty={isUnbound} />
+            <InfoRow label={t('selfhosted.deviceDetail.summary.quota')} value="8 / 20 Slots" empty={isUnbound} />
             <InfoRow label={t('selfhosted.deviceDetail.summary.offlineLease')} value={
               <span className="text-success font-bold">{t('common.enabled')}</span>
-            } />
+            } empty={isUnbound} />
           </div>
         </div>
       </VFCard>
 
-      {/* Card C: Current Configuration */}
+      {/* Card C: Current Configuration - Refined for Unbound state */}
       <VFCard 
         title={t('selfhosted.deviceDetail.summary.configTitle')} 
         extra={
-          <Button 
-            type="text" 
-            className="h-9 sm:h-8 flex items-center gap-1.5 px-2.5 text-[13px] font-semibold text-text-secondary hover:text-brand hover:bg-action-hover rounded-control"
-            icon={<History size={16} />}
-          >
-            {isMobile ? '' : t('selfhosted.deviceDetail.summary.viewHistory')}
-          </Button>
+          !isUnbound && (
+            <Button 
+              type="text" 
+              className="h-9 sm:h-8 flex items-center gap-1.5 px-2.5 text-[13px] font-semibold text-text-secondary hover:text-brand hover:bg-action-hover rounded-control"
+              icon={<History size={16} />}
+            >
+              {isMobile ? '' : t('selfhosted.deviceDetail.summary.viewHistory')}
+            </Button>
+          )
         }
       >
         <div className="flex flex-col">
           <div className="mb-2 min-h-[44px] flex items-center">
-             <div className="text-base sm:text-lg font-bold text-text-primary flex items-center gap-2">
-                {device.config_version}
-                <VFTag variant="neutral" className="h-5 text-[10px] px-1.5 font-bold" filled={false}>
-                  {t('selfhosted.workflowDeployment.latest')}
-                </VFTag>
-             </div>
+             {isUnbound ? (
+               <div className="flex items-center gap-2 text-text-tertiary opacity-60">
+                 <FileX size={18} />
+                 <span className="text-sm font-medium italic">暂无部署配置</span>
+               </div>
+             ) : (
+               <div className="text-base sm:text-lg font-bold text-text-primary flex items-center gap-2">
+                  {device.config_version}
+                  <VFTag variant="neutral" className="h-5 text-[10px] px-1.5 font-bold" filled={false}>
+                    {t('selfhosted.workflowDeployment.latest')}
+                  </VFTag>
+               </div>
+             )}
           </div>
           <div className="flex flex-col">
             <InfoRow 
               label={t('selfhosted.deviceDetail.summary.streamsCount')} 
               value={t('selfhosted.deviceDetail.summary.streamsRunning', { count: 3 })} 
+              empty={isUnbound}
             />
-            <InfoRow label={t('selfhosted.deviceDetail.summary.configuredBy')} value="Admin" />
-            <InfoRow label={t('selfhosted.deviceDetail.summary.lastModifiedTime')} value="2h ago" />
+            <InfoRow label={t('selfhosted.deviceDetail.summary.configuredBy')} value="Admin" empty={isUnbound} />
+            <InfoRow label={t('selfhosted.deviceDetail.summary.lastModifiedTime')} value="---" empty={isUnbound} />
           </div>
         </div>
       </VFCard>

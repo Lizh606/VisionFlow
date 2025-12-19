@@ -1,8 +1,9 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { AlertCircle, AlertTriangle, Info, ChevronRight } from 'lucide-react';
+import { AlertCircle, AlertTriangle, Info, ChevronRight, Ban } from 'lucide-react';
 import { VFCard } from '../../../../../shared/ui/VFCard';
+import { mockDevices } from '../../../common/mockData';
 
 interface Alert {
   id: string;
@@ -16,7 +17,6 @@ interface Props {
   loading?: boolean;
 }
 
-// Sub-component: Severity Tag (Standardized to match ActiveAlertsCard)
 const SeverityTag: React.FC<{ severity: string }> = ({ severity }) => {
   const { t } = useTranslation();
   
@@ -43,7 +43,6 @@ const SeverityTag: React.FC<{ severity: string }> = ({ severity }) => {
   );
 };
 
-// Sub-component: Alert List Item (Simplified: No Target/Subsystem Pill for cleaner Detail view)
 const AlertListItem: React.FC<{ alert: Alert; isLast: boolean }> = ({ alert, isLast }) => {
   return (
     <div className={`
@@ -51,19 +50,16 @@ const AlertListItem: React.FC<{ alert: Alert; isLast: boolean }> = ({ alert, isL
       hover:bg-action-hover transition-colors cursor-pointer
       ${!isLast ? 'border-b border-border' : ''}
     `}>
-      {/* Col 1: Severity Tag */}
       <div className="shrink-0">
         <SeverityTag severity={alert.severity} />
       </div>
 
-      {/* Col 2: Content (Title only) */}
       <div className="flex-1 min-w-0">
         <div className="text-sm font-medium text-text-primary group-hover:text-brand transition-colors truncate">
           {alert.title}
         </div>
       </div>
 
-      {/* Col 3: Time & Action */}
       <div className="flex items-center gap-3 shrink-0">
         <span className="text-xs text-text-tertiary tabular-nums group-hover:text-text-secondary transition-colors">
           {alert.time}
@@ -82,7 +78,10 @@ const AlertListItem: React.FC<{ alert: Alert; isLast: boolean }> = ({ alert, isL
 export const ActiveAlertsPanel: React.FC<Props> = ({ deviceId, loading = false }) => {
   const { t } = useTranslation();
 
-  const alerts: Alert[] = [
+  const device = mockDevices.find(d => d.id === deviceId);
+  const isUnbound = device?.status === 'PENDING_LICENSE';
+
+  const alerts: Alert[] = isUnbound ? [] : [
     { id: 'a1', severity: 'critical', title: 'CPU Usage High (>85%)', time: '10m ago' },
     { id: 'a2', severity: 'warning', title: 'Network Latency spikes detected', time: '2h ago' },
     { id: 'a3', severity: 'info', title: 'Configuration updated via CLI', time: '1d ago' },
@@ -94,14 +93,26 @@ export const ActiveAlertsPanel: React.FC<Props> = ({ deviceId, loading = false }
       noPadding
       className="h-full"
     >
-      <div className="flex flex-col">
-        {alerts.map((alert, idx) => (
-          <AlertListItem 
-            key={alert.id} 
-            alert={alert} 
-            isLast={idx === alerts.length - 1} 
-          />
-        ))}
+      <div className="flex flex-col h-full">
+        {isUnbound ? (
+          <div className="flex-1 flex flex-col items-center justify-center p-12 text-center">
+            <div className="w-10 h-10 rounded-full bg-bg-page flex items-center justify-center text-text-tertiary mb-3 opacity-40">
+              <Ban size={20} />
+            </div>
+            <span className="text-xs font-semibold text-text-tertiary uppercase tracking-wider">遥测已禁用</span>
+            <p className="text-[11px] text-text-tertiary/60 mt-2 max-w-[180px]">
+              设备未授权前，不进行遥测采集与告警分析。
+            </p>
+          </div>
+        ) : (
+          alerts.map((alert, idx) => (
+            <AlertListItem 
+              key={alert.id} 
+              alert={alert} 
+              isLast={idx === alerts.length - 1} 
+            />
+          ))
+        )}
       </div>
     </VFCard>
   );

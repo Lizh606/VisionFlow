@@ -2,12 +2,13 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Skeleton, Tooltip } from 'antd';
-import { Info, Calendar } from 'lucide-react';
+import { Info, Calendar, Ban } from 'lucide-react';
 import { VFCard } from '../../../../../shared/ui/VFCard';
 import { VFChart } from '../../../../../shared/charts/VFChart';
 import { MediaTypeToggle, MediaType } from '../../../../../shared/ui/MediaTypeToggle';
 import { TimeRangeFilter } from '../../../../../shared/ui/TimeRangeFilter';
 import { useResponsive } from '../../../../../shared/hooks/useResponsive';
+import { mockDevices } from '../../../common/mockData';
 import * as echarts from 'echarts';
 
 interface Props {
@@ -20,21 +21,29 @@ export const UsageSummaryPanel: React.FC<Props> = ({ deviceId }) => {
   const [loading] = useState(false);
   const { isMobile } = useResponsive();
 
+  // 根据 ID 获取设备状态
+  const device = mockDevices.find(d => d.id === deviceId);
+  const isUnbound = device?.status === 'PENDING_LICENSE';
+
   // Mock Trend Data
-  const trendData = useMemo(() => [
-    { time: '08:00', edge: 450, cloud: 120 },
-    { time: '10:00', edge: 520, cloud: 150 },
-    { time: '12:00', edge: 310, cloud: 280 },
-    { time: '14:00', edge: 740, cloud: 110 },
-    { time: '16:00', edge: 680, cloud: 90 },
-    { time: '18:00', edge: 890, cloud: 140 },
-    { time: '20:00', edge: 420, cloud: 200 },
-  ], []);
+  const trendData = useMemo(() => {
+    if (isUnbound) return [];
+    return [
+      { time: '08:00', edge: 450, cloud: 120 },
+      { time: '10:00', edge: 520, cloud: 150 },
+      { time: '12:00', edge: 310, cloud: 280 },
+      { time: '14:00', edge: 740, cloud: 110 },
+      { time: '16:00', edge: 680, cloud: 90 },
+      { time: '18:00', edge: 890, cloud: 140 },
+      { time: '20:00', edge: 420, cloud: 200 },
+    ];
+  }, [isUnbound]);
 
   const totalUsage = useMemo(() => {
+    if (isUnbound) return "---";
     const sum = trendData.reduce((acc, curr) => acc + curr.edge + curr.cloud, 0);
     return sum.toLocaleString();
-  }, [trendData]);
+  }, [trendData, isUnbound]);
 
   const COLORS = {
     edge: '#22C1C3',
@@ -65,9 +74,7 @@ export const UsageSummaryPanel: React.FC<Props> = ({ deviceId }) => {
       boundaryGap: false,
       axisLine: { lineStyle: { color: 'rgba(var(--vf-divider), 0.5)' } }
     },
-    yAxis: {
-      type: 'value',
-    },
+    yAxis: { type: 'value' },
     series: [
       {
         name: t('selfhosted.overview.charts.edge'),
@@ -105,14 +112,11 @@ export const UsageSummaryPanel: React.FC<Props> = ({ deviceId }) => {
       title={t('selfhosted.deviceDetail.tabs.usage')}
       extra={
         <div className="flex items-center gap-2">
-          {/* Mobile optimization: hide complex range picker or show icon-only version */}
           {!isMobile ? (
-            <div className="flex items-center" style={{ height: '32px' }}>
-              <TimeRangeFilter 
-                className="scale-[0.85] origin-right" 
-                onChange={() => {}} 
-              />
-            </div>
+            <TimeRangeFilter 
+              className="scale-[0.85] origin-right" 
+              onChange={() => {}} 
+            />
           ) : (
              <div className="w-8 h-8 rounded-control border border-border flex items-center justify-center text-text-tertiary">
                <Calendar size={14} />
@@ -127,7 +131,6 @@ export const UsageSummaryPanel: React.FC<Props> = ({ deviceId }) => {
       }
     >
       <div className="flex flex-col gap-4">
-        {/* KPI Row - Usage focused */}
         <div className="flex items-baseline gap-2 mb-2 group">
           <span className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-bold text-text-primary tracking-tight`}>
             {totalUsage}
@@ -142,12 +145,23 @@ export const UsageSummaryPanel: React.FC<Props> = ({ deviceId }) => {
           </div>
         </div>
 
-        {/* Chart Area */}
-        <div className={`${isMobile ? 'h-[240px]' : 'h-[320px]'} w-full`}>
+        <div className={`${isMobile ? 'h-[240px]' : 'h-[320px]'} w-full relative`}>
           {loading ? (
             <Skeleton.Button active block className="h-full rounded-card" />
+          ) : isUnbound ? (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-bg-page/10 rounded-lg border border-dashed border-border text-center px-6">
+              <Ban size={32} className="text-text-tertiary mb-3 opacity-20" />
+              <span className="text-sm font-bold text-text-secondary mb-1">用量统计不可用</span>
+              <p className="text-xs text-text-tertiary max-w-[240px]">
+                在设备未完成授权绑定前，系统无法通过遥测采集其产生的图像或视频处理数据。
+              </p>
+            </div>
           ) : (
-            <VFChart options={chartOptions} height="100%" />
+            <VFChart 
+              options={chartOptions} 
+              height="100%" 
+              empty={trendData.length === 0} 
+            />
           )}
         </div>
       </div>
