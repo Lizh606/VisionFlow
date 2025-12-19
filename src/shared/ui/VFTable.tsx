@@ -48,7 +48,7 @@ export function VFTable<T extends object>({ className, ...props }: VFTableProps<
         /* 2. Cell Styles: High-density and clean */
         .vf-table-wrapper .ant-table-tbody > tr > td {
           padding: 12px 16px !important;
-          border-bottom: 1px solid rgba(var(--vf-divider), 0.5) !important;
+          border-bottom: 1px solid rgba(var(--vf-divider), var(--vf-divider-alpha)) !important;
           color: rgba(var(--vf-text-primary), 1) !important;
           font-size: 14px !important;
         }
