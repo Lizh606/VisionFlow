@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Button, Input, Select, Tooltip, Dropdown } from 'antd';
 import { 
@@ -172,14 +171,14 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
                 <Trans 
                   i18nKey="selfhosted.devices.alert.pendingMessage" 
                   count={pendingCount}
-                  components={{ bold: <b className="text-amber-900 dark:text-amber-100" /> }}
+                  components={{ bold: <b className="text-text-primary" /> }}
                 />
               </span>
            </div>
            <Button 
              type="link" 
              size="small" 
-             className="!text-amber-700 dark:!text-amber-400 hover:opacity-80 font-bold p-0 transition-opacity"
+             className="!text-warning hover:opacity-75 active:opacity-90 font-bold p-0 transition-all underline underline-offset-4"
              onClick={() => {
                 setStatusFilter('PENDING_LICENSE');
                 setModeFilter('ALL');

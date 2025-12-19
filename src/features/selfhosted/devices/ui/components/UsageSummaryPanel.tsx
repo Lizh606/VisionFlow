@@ -2,11 +2,12 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Skeleton, Tooltip } from 'antd';
-import { Info } from 'lucide-react';
+import { Info, Calendar } from 'lucide-react';
 import { VFCard } from '../../../../../shared/ui/VFCard';
 import { VFChart } from '../../../../../shared/charts/VFChart';
 import { MediaTypeToggle, MediaType } from '../../../../../shared/ui/MediaTypeToggle';
 import { TimeRangeFilter } from '../../../../../shared/ui/TimeRangeFilter';
+import { useResponsive } from '../../../../../shared/hooks/useResponsive';
 import * as echarts from 'echarts';
 
 interface Props {
@@ -17,6 +18,7 @@ export const UsageSummaryPanel: React.FC<Props> = ({ deviceId }) => {
   const { t } = useTranslation();
   const [mediaType, setMediaType] = useState<MediaType>('img');
   const [loading] = useState(false);
+  const { isMobile } = useResponsive();
 
   // Mock Trend Data
   const trendData = useMemo(() => [
@@ -50,7 +52,13 @@ export const UsageSummaryPanel: React.FC<Props> = ({ deviceId }) => {
       top: 0,
       textStyle: { fontWeight: 500 , fontSize: 10 }
     },
-    grid: { left: 0, right: 10, bottom: 0, top: 40, containLabel: true },
+    grid: { 
+      left: 0, 
+      right: isMobile ? 5 : 10, 
+      bottom: 0, 
+      top: 40, 
+      containLabel: true 
+    },
     xAxis: {
       type: 'category',
       data: trendData.map(d => d.time),
@@ -97,13 +105,19 @@ export const UsageSummaryPanel: React.FC<Props> = ({ deviceId }) => {
       title={t('selfhosted.deviceDetail.tabs.usage')}
       extra={
         <div className="flex items-center gap-2">
-          {/* Custom style to force 32px height for shared components */}
-          <div className="flex items-center" style={{ height: '32px' }}>
-            <TimeRangeFilter 
-              className="scale-[0.85] origin-right" 
-              onChange={() => {}} 
-            />
-          </div>
+          {/* Mobile optimization: hide complex range picker or show icon-only version */}
+          {!isMobile ? (
+            <div className="flex items-center" style={{ height: '32px' }}>
+              <TimeRangeFilter 
+                className="scale-[0.85] origin-right" 
+                onChange={() => {}} 
+              />
+            </div>
+          ) : (
+             <div className="w-8 h-8 rounded-control border border-border flex items-center justify-center text-text-tertiary">
+               <Calendar size={14} />
+             </div>
+          )}
           <MediaTypeToggle 
             value={mediaType} 
             onChange={setMediaType} 
@@ -115,9 +129,11 @@ export const UsageSummaryPanel: React.FC<Props> = ({ deviceId }) => {
       <div className="flex flex-col gap-4">
         {/* KPI Row - Usage focused */}
         <div className="flex items-baseline gap-2 mb-2 group">
-          <span className="text-3xl font-bold text-text-primary tracking-tight">{totalUsage}</span>
+          <span className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-bold text-text-primary tracking-tight`}>
+            {totalUsage}
+          </span>
           <div className="flex items-center gap-1.5 cursor-help">
-            <span className="text-sm text-text-tertiary font-medium">
+            <span className="text-xs sm:text-sm text-text-tertiary font-medium">
               {t('selfhosted.deviceDetail.overview.units')}
             </span>
             <Tooltip title={t('selfhosted.deviceDetail.overview.unitsTooltip')}>
@@ -127,7 +143,7 @@ export const UsageSummaryPanel: React.FC<Props> = ({ deviceId }) => {
         </div>
 
         {/* Chart Area */}
-        <div className="h-[320px] w-full">
+        <div className={`${isMobile ? 'h-[240px]' : 'h-[320px]'} w-full`}>
           {loading ? (
             <Skeleton.Button active block className="h-full rounded-card" />
           ) : (

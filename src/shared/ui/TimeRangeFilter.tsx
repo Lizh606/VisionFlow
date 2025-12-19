@@ -41,9 +41,9 @@ export const TimeRangeFilter: React.FC<TimeRangeFilterProps> = ({ onChange, clas
         style={{
           height: '40px', // Spec: Desktop control height
           borderRadius: 'var(--vf-radius-control)',
-          // Fix: Wrap the RGB values in rgba() and include the alpha token
           border: '1px solid rgba(var(--vf-border), var(--vf-border-alpha))',
-          width: '320px', // Fixed width for stability
+          maxWidth: '320px',
+          width: '100%',
         }}
       />
     </div>

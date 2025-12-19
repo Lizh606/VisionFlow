@@ -1,12 +1,13 @@
 
 import React from 'react';
-import { Button, Dropdown, Tooltip } from 'antd';
+import { Button, Dropdown, Tooltip, Empty, List } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { Play, Pause, Edit, Trash2, MoreVertical, Video, Clock } from 'lucide-react';
+import { Play, Pause, Edit, Trash2, MoreVertical, Video, Clock, Activity, Zap } from 'lucide-react';
 import dayjs from '../../../../../config/dayjsConfig';
 import { VFTable } from '../../../../../shared/ui/VFTable';
 import { VFTag } from '../../../../../shared/ui/VFTag';
 import { Stream } from '../../hooks/useWorkflowDeployment';
+import { useResponsive } from '../../../../../shared/hooks/useResponsive';
 
 interface Props {
   data: Stream[];
@@ -16,8 +17,150 @@ interface Props {
   onDelete: (stream: Stream) => void;
 }
 
+/**
+ * Mobile Stream Card component
+ */
+const StreamCard: React.FC<{
+  stream: Stream;
+  isAdmin: boolean;
+  onEdit: (s: Stream) => void;
+  onToggleStatus: (s: Stream) => void;
+  onDelete: (s: Stream) => void;
+}> = ({ stream, isAdmin, onEdit, onToggleStatus, onDelete }) => {
+  const { t } = useTranslation();
+  const isRunning = stream.status === 'RUNNING';
+
+  const menuItems = [
+    { 
+      key: 'toggle', 
+      label: isRunning ? t('common.pause') : t('common.start'), 
+      icon: isRunning ? <Pause size={14} /> : <Play size={14} />,
+      onClick: () => onToggleStatus(stream)
+    },
+    { key: 'edit', label: t('common.edit'), icon: <Edit size={14} />, onClick: () => onEdit(stream) },
+    { type: 'divider' as const },
+    { key: 'delete', label: t('common.delete'), danger: true, icon: <Trash2 size={14} />, onClick: () => onDelete(stream) },
+  ];
+
+  return (
+    <div className="flex flex-col p-4 bg-bg-card border-b border-divider last:border-b-0 group">
+      {/* Row 1: Icon + Name + Actions */}
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex items-center gap-3 overflow-hidden">
+          <div className="w-9 h-9 rounded-control bg-bg-page border border-border/40 flex items-center justify-center text-text-tertiary shrink-0">
+            <Video size={16} />
+          </div>
+          <div className="flex flex-col min-w-0">
+            <span className="font-bold text-text-primary text-[15px] leading-tight truncate">
+              {stream.name}
+            </span>
+            <span className="text-[11px] font-mono text-text-tertiary mt-1 opacity-60">
+              {stream.id}
+            </span>
+          </div>
+        </div>
+        
+        {isAdmin && (
+          <Dropdown menu={{ items: menuItems }} trigger={['click']} placement="bottomRight">
+            <Button 
+              type="text" 
+              className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-action-hover" 
+              icon={<MoreVertical size={20} className="text-text-tertiary" />} 
+            />
+          </Dropdown>
+        )}
+      </div>
+
+      {/* Row 2: Workflow & Status */}
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-1.5 min-w-0">
+          <Zap size={13} className="text-brand opacity-70 shrink-0" />
+          <span className="text-[13px] font-semibold text-text-secondary truncate">{stream.workflow}</span>
+          <VFTag variant="brand" className="h-4 text-[9px] px-1 opacity-70" filled={false}>
+            {stream.version}
+          </VFTag>
+        </div>
+        <VFTag 
+          variant={isRunning ? 'success' : 'neutral'} 
+          filled={true} 
+          className="h-5 text-[9px] font-bold uppercase min-w-[64px]"
+        >
+          {stream.status}
+        </VFTag>
+      </div>
+
+      {/* Row 3: Details (Telemetry, Type, Time) */}
+      <div className="flex items-center justify-between mt-1 pt-2 border-t border-divider/40">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1.5 text-[11px] text-text-tertiary">
+            <Activity size={12} className="opacity-50" />
+            <span className="font-medium uppercase">{stream.telemetry}</span>
+          </div>
+          <VFTag variant="neutral" className="h-4.5 text-[9px] px-1.5 font-mono" filled={false}>
+            {stream.type}
+          </VFTag>
+        </div>
+        <div className="flex items-center gap-1.5 text-[11px] text-text-tertiary">
+          <Clock size={12} className="opacity-40" />
+          <span>{dayjs(stream.updatedAt).fromNow()}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const StreamsTable: React.FC<Props> = ({ data, isAdmin, onEdit, onToggleStatus, onDelete }) => {
   const { t } = useTranslation();
+  const { isMobile } = useResponsive();
+
+  if (isMobile) {
+    return (
+      <div className="vf-mobile-list-container">
+        <List
+          dataSource={data}
+          className="vf-mobile-list"
+          locale={{ 
+            emptyText: (
+              <div className="py-12 flex flex-col items-center justify-center">
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={t('selfhosted.workflowDeployment.empty')} />
+              </div>
+            )
+          }}
+          pagination={data.length > 0 ? {
+            pageSize: 10,
+            size: 'small',
+            showSizeChanger: false,
+            hideOnSinglePage: true,
+            position: 'bottom',
+            align: 'center',
+            className: 'vf-list-pagination'
+          } : false}
+          renderItem={stream => (
+            <StreamCard 
+              key={stream.id}
+              stream={stream}
+              isAdmin={isAdmin}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onToggleStatus={onToggleStatus}
+            />
+          )}
+        />
+        <style>{`
+          .vf-list-pagination {
+            padding: 16px 24px !important;
+            margin: 0 !important;
+            border-top: 1px solid rgba(var(--vf-divider), var(--vf-divider-alpha));
+            background-color: rgba(var(--vf-bg-card), 1);
+            justify-content: center !important;
+          }
+          .vf-mobile-list-container .ant-list-pagination {
+            margin-top: 0 !important;
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   const columns = [
     {

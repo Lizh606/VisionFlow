@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Space, Button, Tooltip, Dropdown, App } from 'antd';
 import type { MenuProps } from 'antd';
@@ -11,6 +10,7 @@ import { DeviceStatusTag } from '../../../components/DeviceStatusTag';
 import { DeploymentModeTag } from '../../../components/DeploymentModeTag';
 import { LicenseSelectModal } from '../../../components/LicenseSelectModal';
 import { VFTag } from '../../../../../shared/ui/VFTag';
+import { useResponsive } from '../../../../../shared/hooks/useResponsive';
 
 interface Props {
   device: Device;
@@ -21,6 +21,7 @@ interface Props {
 export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeChange }) => {
   const { t } = useTranslation();
   const { message } = App.useApp();
+  const { isMobile } = useResponsive();
   const [licModalOpen, setLicModalOpen] = useState(false);
 
   const copyToClipboard = (text: string) => {
@@ -29,16 +30,16 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
   };
 
   const InfoRow = ({ label, value, copyable }: { label: string, value: string | React.ReactNode, copyable?: string }) => (
-    <div className="flex items-center justify-between py-1.5 border-b border-divider last:border-b-0 min-h-[40px]">
-      <span className="text-text-tertiary text-sm font-medium">{label}</span>
-      <div className="flex items-center gap-1 overflow-hidden">
-        <div className="font-semibold text-text-primary truncate max-w-[160px]">{value}</div>
+    <div className="flex items-center justify-between py-2 border-b border-divider last:border-b-0 min-h-[44px]">
+      <span className="text-text-tertiary text-[13px] font-medium">{label}</span>
+      <div className="flex items-center gap-2 overflow-hidden">
+        <div className="font-semibold text-text-primary text-sm truncate max-w-[140px] sm:max-w-[160px]">{value}</div>
         {copyable && (
           <Button 
             type="text" 
             size="small" 
-            className="flex items-center justify-center p-0 h-7 w-7 text-text-tertiary hover:text-brand transition-colors rounded-control"
-            icon={<Copy size={13} />}
+            className="flex items-center justify-center p-0 h-8 w-8 text-text-tertiary hover:text-brand transition-colors rounded-control"
+            icon={<Copy size={14} />}
             onClick={() => copyToClipboard(copyable)}
           />
         )}
@@ -47,34 +48,22 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
   );
 
   const modeMenuItems: MenuProps['items'] = [
-    { 
-      key: 'EDGE', 
-      label: 'EDGE (Local)', 
-      icon: <Server size={14} />,
-      onClick: () => onModeChange('EDGE')
-    },
-    { 
-      key: 'CLOUD', 
-      label: 'CLOUD (Runner)', 
-      icon: <Cloud size={14} />,
-      onClick: () => onModeChange('CLOUD')
-    },
+    { key: 'EDGE', label: 'EDGE (Local)', icon: <Server size={14} />, onClick: () => onModeChange('EDGE') },
+    { key: 'CLOUD', label: 'CLOUD (Runner)', icon: <Cloud size={14} />, onClick: () => onModeChange('CLOUD') },
   ];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      {/* Card A: Device Overview - Lighter Neutral Selector */}
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+      {/* Card A: Device Overview */}
       <VFCard 
         title={t('selfhosted.deviceDetail.summary.overviewTitle')} 
-        className="h-full"
         extra={
           isAdmin ? (
             <Dropdown menu={{ items: modeMenuItems }} trigger={['click']} placement="bottomRight">
               <Button 
-                size="small" 
-                className="h-8 flex items-center gap-1.5 px-3 text-[13px] font-medium border-border text-text-secondary hover:text-text-primary hover:border-border-strong rounded-control transition-all bg-bg-page/40"
+                className="h-9 sm:h-8 flex items-center gap-1.5 px-3 text-[13px] font-medium border-border text-text-secondary rounded-control bg-bg-page/40"
               >
-                {device.deployment_mode === 'EDGE' ? <Server size={14} className="opacity-60" /> : <Cloud size={14} className="opacity-60" />}
+                {device.deployment_mode === 'EDGE' ? <Server size={14} /> : <Cloud size={14} />}
                 {device.deployment_mode}
                 <ChevronDown size={14} className="opacity-40" />
               </Button>
@@ -88,16 +77,14 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
           <div className="mb-2 min-h-[44px] flex items-center">
             <DeviceStatusTag status={device.status} />
           </div>
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col">
             <InfoRow label={t('selfhosted.deviceDetail.summary.deviceId')} value={device.device_id} copyable={device.device_id} />
             <InfoRow label={t('selfhosted.deviceDetail.summary.runtimeId')} value={device.runtime_id} copyable={device.runtime_id} />
             <InfoRow 
               label={t('selfhosted.deviceDetail.summary.lastSeen')} 
               value={
                 <Tooltip title={dayjs(device.last_seen_at).format('YYYY-MM-DD HH:mm:ss')}>
-                  <span className="cursor-help text-text-secondary">
-                    {dayjs(device.last_seen_at).fromNow()}
-                  </span>
+                  <span className="text-text-secondary">{dayjs(device.last_seen_at).fromNow()}</span>
                 </Tooltip>
               } 
             />
@@ -105,89 +92,72 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
         </div>
       </VFCard>
 
-      {/* Card B: License Information - Primary Action (Brand Outline) */}
+      {/* Card B: License Information */}
       <VFCard 
         title={t('selfhosted.deviceDetail.summary.licenseTitle')} 
-        className="h-full"
         extra={
           isAdmin && (
             <Button 
-              size="small" 
-              className="h-8 flex items-center gap-1.5 px-3 text-[13px] font-bold text-brand border-brand hover:text-brand-hover hover:border-brand-hover hover:bg-brand/5 transition-all rounded-control bg-transparent"
+              className="h-9 sm:h-8 flex items-center gap-1.5 px-3 text-[13px] font-bold text-brand border-brand hover:bg-brand/5 rounded-control"
               onClick={() => setLicModalOpen(true)}
             >
-              <ExternalLink size={16} />
-              {t('selfhosted.deviceDetail.summary.changeLicense')}
+              <ExternalLink size={14} />
+              {isMobile ? t('common.edit') : t('selfhosted.deviceDetail.summary.changeLicense')}
             </Button>
           )
         }
       >
         <div className="flex flex-col">
           <div className="mb-2 min-h-[44px] flex items-center">
-             <div className="text-lg font-bold text-text-primary flex items-center gap-1.5 cursor-pointer hover:text-brand transition-colors group">
+             <div className="text-base sm:text-lg font-bold text-text-primary flex items-center gap-1.5 cursor-pointer hover:text-brand transition-colors">
                 {device.license_name || 'N/A'} 
-                <ExternalLink size={16} className="text-text-tertiary group-hover:text-brand transition-colors" />
+                <ExternalLink size={16} className="text-text-tertiary" />
              </div>
           </div>
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col">
             <InfoRow label={t('selfhosted.deviceDetail.summary.expiry')} value={dayjs().add(120, 'day').format('YYYY-MM-DD')} />
             <InfoRow label={t('selfhosted.deviceDetail.summary.quota')} value="8 / 20 Slots" />
             <InfoRow label={t('selfhosted.deviceDetail.summary.offlineLease')} value={
-              <span className="text-success font-bold">{t('common.status.enabled', { defaultValue: '已启用' })}</span>
+              <span className="text-success font-bold">{t('common.enabled')}</span>
             } />
           </div>
         </div>
       </VFCard>
 
-      {/* Card C: Current Configuration - Secondary Action (Link style) */}
+      {/* Card C: Current Configuration */}
       <VFCard 
         title={t('selfhosted.deviceDetail.summary.configTitle')} 
-        className="h-full"
         extra={
           <Button 
             type="text" 
-            size="small" 
-            className="h-8 flex items-center gap-1.5 px-2.5 text-[13px] font-semibold text-text-secondary hover:text-brand hover:bg-action-hover transition-all rounded-control"
+            className="h-9 sm:h-8 flex items-center gap-1.5 px-2.5 text-[13px] font-semibold text-text-secondary hover:text-brand hover:bg-action-hover rounded-control"
             icon={<History size={16} />}
           >
-            {t('selfhosted.deviceDetail.summary.viewHistory')}
+            {isMobile ? '' : t('selfhosted.deviceDetail.summary.viewHistory')}
           </Button>
         }
       >
         <div className="flex flex-col">
           <div className="mb-2 min-h-[44px] flex items-center">
-             <div className="text-lg font-bold text-text-primary flex items-center gap-2">
+             <div className="text-base sm:text-lg font-bold text-text-primary flex items-center gap-2">
                 {device.config_version}
-                <VFTag variant="neutral" className="h-5 text-[10px] px-1.5 opacity-60 font-bold" filled={false}>
+                <VFTag variant="neutral" className="h-5 text-[10px] px-1.5 font-bold" filled={false}>
                   {t('selfhosted.workflowDeployment.latest')}
                 </VFTag>
              </div>
           </div>
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col">
             <InfoRow 
               label={t('selfhosted.deviceDetail.summary.streamsCount')} 
               value={t('selfhosted.deviceDetail.summary.streamsRunning', { count: 3 })} 
             />
-            <InfoRow 
-              label={t('selfhosted.deviceDetail.summary.configuredBy')} 
-              value={<span className="text-text-secondary">Admin</span>} 
-            />
-            <InfoRow 
-              label={t('selfhosted.deviceDetail.summary.lastModifiedTime')} 
-              value={<span className="text-text-secondary">2h ago</span>} 
-            />
+            <InfoRow label={t('selfhosted.deviceDetail.summary.configuredBy')} value="Admin" />
+            <InfoRow label={t('selfhosted.deviceDetail.summary.lastModifiedTime')} value="2h ago" />
           </div>
         </div>
       </VFCard>
 
-      <LicenseSelectModal 
-        open={licModalOpen} 
-        onCancel={() => setLicModalOpen(false)}
-        onSelect={(lic) => {
-          setLicModalOpen(false);
-          message.success(t('selfhosted.deviceDetail.summary.licenseUpdated', { defaultValue: '授权信息已更新' }));
-        }}
-      />
+      <LicenseSelectModal open={licModalOpen} onCancel={() => setLicModalOpen(false)} onSelect={() => setLicModalOpen(false)} />
     </div>
   );
 };

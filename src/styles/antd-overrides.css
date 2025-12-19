@@ -1,0 +1,65 @@
+
+/* Ant Design 全局组件圆角适配 */
+.ant-btn { border-radius: var(--vf-radius-control) !important; }
+.ant-tag { border-radius: var(--vf-radius-tag) !important; }
+.ant-select-selector { border-radius: var(--vf-radius-control) !important; }
+.ant-input { border-radius: var(--vf-radius-control) !important; }
+.ant-modal-content { border-radius: var(--vf-radius-card) !important; }
+
+/* 按钮样式覆盖 */
+.ant-btn-primary:not(.ant-btn-dangerous) {
+  background-color: rgba(var(--vf-brand), 1) !important;
+  border-color: rgba(var(--vf-brand), 1) !important;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.05);
+  text-shadow: none !important;
+  color: #fff !important;
+}
+
+.ant-btn-primary:not(.ant-btn-dangerous):not(:disabled):hover {
+  background-color: rgba(var(--vf-brand-hover), 1) !important;
+  border-color: rgba(var(--vf-brand-hover), 1) !important;
+}
+
+.ant-btn-primary:not(.ant-btn-dangerous):not(:disabled):active {
+  background-color: rgba(var(--vf-brand-active), 1) !important;
+  border-color: rgba(var(--vf-brand-active), 1) !important;
+}
+
+.ant-btn-primary:disabled {
+  background-color: rgba(var(--vf-text-disabled), 0.15) !important;
+  border-color: transparent !important;
+  color: rgba(var(--vf-text-disabled), 1) !important;
+  opacity: 0.6;
+}
+
+.ant-btn-default:not(:disabled):hover {
+  color: rgba(var(--vf-brand), 1) !important;
+  border-color: rgba(var(--vf-brand), 1) !important;
+}
+
+/* 链接按钮逻辑 - 移除 !important 以支持 Contextual Overrides */
+.ant-btn-link:not(.ant-btn-dangerous) {
+  color: rgba(var(--vf-brand), 1);
+}
+
+/* 危险状态样式 - 保持高优先级 */
+.ant-btn-dangerous.ant-btn-dangerous {
+  color: rgba(var(--vf-error), 1) !important;
+}
+
+.ant-btn-primary.ant-btn-dangerous {
+  background-color: rgba(var(--vf-error), 1) !important;
+  border-color: rgba(var(--vf-error), 1) !important;
+  color: #fff !important;
+}
+
+/* 抽屉/模态框通用微调 */
+.ant-drawer-header {
+  border-bottom: 1px solid rgba(var(--vf-divider), var(--vf-divider-alpha)) !important;
+}
+
+.ant-modal-header {
+  border-bottom: 1px solid rgba(var(--vf-divider), var(--vf-divider-alpha)) !important;
+  margin-bottom: 16px !important;
+  padding-bottom: 12px !important;
+}

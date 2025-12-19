@@ -39,11 +39,14 @@ export const ConfigSummaryPanel: React.FC<Props> = ({ device, loading = false })
             ))}
           </div>
         ) : activeStreams.length > 0 ? (
-          <div className="divide-y divide-divider/60">
-            {activeStreams.map((stream) => (
+          <div className="flex flex-col">
+            {activeStreams.map((stream, idx) => (
               <div 
                 key={stream.id} 
-                className="px-6 py-3.5 flex items-center justify-between hover:bg-action-hover transition-colors cursor-pointer group"
+                className={`
+                  px-6 py-4 flex items-center justify-between hover:bg-action-hover transition-colors cursor-pointer group
+                  ${idx !== activeStreams.length - 1 ? 'border-b border-border' : ''}
+                `}
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-8 h-8 rounded-control bg-bg-page border border-border/40 flex items-center justify-center text-text-tertiary shrink-0 group-hover:bg-brand/5 group-hover:text-brand transition-colors">

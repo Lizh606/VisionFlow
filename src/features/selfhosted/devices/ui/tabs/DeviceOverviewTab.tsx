@@ -4,20 +4,23 @@ import { Device } from '../../../common/types';
 import { UsageSummaryPanel } from '../components/UsageSummaryPanel';
 import { ConfigSummaryPanel } from '../components/ConfigSummaryPanel';
 import { ActiveAlertsPanel } from '../components/ActiveAlertsPanel';
+import { useResponsive } from '../../../../../shared/hooks/useResponsive';
 
 interface Props {
   device: Device;
 }
 
 export const DeviceOverviewTab: React.FC<Props> = ({ device }) => {
+  const { isMobile } = useResponsive();
+  
   return (
-    <div className="p-6 flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+    <div className={`flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-2 duration-500 ${isMobile ? 'p-4' : 'p-6'}`}>
       {/* Panel 1: Usage Summary - Full Width with Large Chart */}
       <section className="w-full">
         <UsageSummaryPanel deviceId={device.id} />
       </section>
 
-      {/* Row 2: Config & Alerts - 1:1 Split */}
+      {/* Row 2: Config & Alerts - 1:1 Split (Desktop) or Stacking (Mobile) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
         <section className="h-full">
           <ConfigSummaryPanel device={device} />

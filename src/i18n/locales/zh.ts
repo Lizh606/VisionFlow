@@ -78,6 +78,62 @@ export const zh = {
         "description": "详细的系统日志和链路追踪数据存储在 VisionFlow 观测平台 (SigNoz) 中。您可以直接在该平台查看设备 <bold>{{id}}</bold> 的原始遥测数据。",
         "launchBtn": "打开观测平台控制台"
       },
+      "overview": {
+        "title": "自托管概览",
+        "kpi": {
+          "totalDevices": "设备总数",
+          "online": "在线",
+          "pendingLicense": "待授权",
+          "offline": "离线",
+          "licenseUsage": "许可使用情况",
+          "expiringSoon": "{{count}} 个许可即将到期",
+          "usageSummary": "用量摘要",
+          "utilization": "利用率",
+          "activeLicenses": "活跃许可",
+          "expiring": "即将到期",
+          "pending": "待处理设备"
+        },
+        "charts": {
+          "deviceStatus": "设备状态分布",
+          "usageTrend": "用量趋势",
+          "edge": "边缘端计算",
+          "cloud": "云端运行器",
+          "images": "图像",
+          "video": "视频",
+          "count": "数量",
+          "usageSeries": "实际用量",
+          "quotaSeries": "配额限制",
+          "breakdown": "许可分布"
+        },
+        "alerts": {
+          "title": "活动告警",
+          "viewAll": "查看全部",
+          "critical": "严重",
+          "warning": "警告",
+          "info": "信息",
+          "target": "目标"
+        },
+        "shortcuts": {
+          "title": "快捷入口",
+          "viewDeviceList": "查看设备列表",
+          "manageLicenses": "管理许可证书",
+          "recentDeployments": "最近部署任务"
+        },
+        "timeRange": {
+          "24h": "最近 24 小时",
+          "7d": "最近 7 天",
+          "30d": "最近 30 天"
+        },
+        "quickActions": {
+          "title": "快捷操作"
+        },
+        "actions": {
+          "upload": "上传许可",
+          "devices": "查看设备",
+          "manage": "管理许可",
+          "guide": "配置指南"
+        }
+      },
       "workflowDeployment": {
         "title": "Streams 部署管理",
         "addStream": "新增 Stream",
