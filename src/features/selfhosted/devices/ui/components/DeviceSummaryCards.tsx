@@ -97,7 +97,7 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
         </div>
       </VFCard>
 
-      {/* Card B: License Information - Refined for Unbound state */}
+      {/* Card B: License Information - 优化待绑定状态 */}
       <VFCard 
         title={t('selfhosted.deviceDetail.summary.licenseTitle')} 
         extra={
@@ -118,7 +118,7 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
              {isUnbound ? (
                <div className="flex items-center gap-2 text-warning animate-pulse">
                  <ShieldAlert size={18} />
-                 <span className="text-sm font-bold">等待绑定授权证书</span>
+                 <span className="text-sm font-bold tracking-tight">等待绑定授权证书</span>
                </div>
              ) : (
                <div className="text-base sm:text-lg font-bold text-text-primary flex items-center gap-1.5 cursor-pointer hover:text-brand transition-colors">
@@ -128,16 +128,14 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
              )}
           </div>
           <div className="flex flex-col">
-            <InfoRow label={t('selfhosted.deviceDetail.summary.expiry')} value={dayjs().add(120, 'day').format('YYYY-MM-DD')} empty={isUnbound} />
-            <InfoRow label={t('selfhosted.deviceDetail.summary.quota')} value="8 / 20 Slots" empty={isUnbound} />
-            <InfoRow label={t('selfhosted.deviceDetail.summary.offlineLease')} value={
-              <span className="text-success font-bold">{t('common.enabled')}</span>
-            } empty={isUnbound} />
+            <InfoRow label={t('selfhosted.deviceDetail.summary.expiry')} value="---" empty={isUnbound} />
+            <InfoRow label={t('selfhosted.deviceDetail.summary.quota')} value="---" empty={isUnbound} />
+            <InfoRow label={t('selfhosted.deviceDetail.summary.offlineLease')} value="---" empty={isUnbound} />
           </div>
         </div>
       </VFCard>
 
-      {/* Card C: Current Configuration - Refined for Unbound state */}
+      {/* Card C: Current Configuration - 优化待绑定状态 */}
       <VFCard 
         title={t('selfhosted.deviceDetail.summary.configTitle')} 
         extra={
@@ -171,10 +169,10 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
           <div className="flex flex-col">
             <InfoRow 
               label={t('selfhosted.deviceDetail.summary.streamsCount')} 
-              value={t('selfhosted.deviceDetail.summary.streamsRunning', { count: 3 })} 
+              value="---" 
               empty={isUnbound}
             />
-            <InfoRow label={t('selfhosted.deviceDetail.summary.configuredBy')} value="Admin" empty={isUnbound} />
+            <InfoRow label={t('selfhosted.deviceDetail.summary.configuredBy')} value="---" empty={isUnbound} />
             <InfoRow label={t('selfhosted.deviceDetail.summary.lastModifiedTime')} value="---" empty={isUnbound} />
           </div>
         </div>

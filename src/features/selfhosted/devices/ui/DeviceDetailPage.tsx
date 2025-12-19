@@ -82,9 +82,8 @@ export const DeviceDetailPage: React.FC<Props> = ({ deviceId, onBack }) => {
       <VFPageHeader 
         title={device.name}
         onBack={onBack}
+        // 修正：PageHeader 已经包含了前缀，这里只需要定义相对路径
         breadcrumbs={[
-          { title: 'Vision Team' },
-          { title: t('menu.selfHosted') },
           { title: t('menu.devices') },
           { title: device.name }
         ]}
@@ -183,7 +182,6 @@ export const DeviceDetailPage: React.FC<Props> = ({ deviceId, onBack }) => {
           transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
 
-        /* 限制范围：仅针对移动端主标签页使用高对比度品牌背景 */
         .vf-mobile-tabs-segmented .ant-segmented-item-selected {
           background-color: rgba(var(--vf-brand), 1) !important;
           box-shadow: 0 2px 4px rgba(var(--vf-brand), 0.2) !important;

@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { Button, Input, Select, Tooltip, Dropdown } from 'antd';
 import { 
@@ -150,7 +151,8 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
     <div className="flex flex-col gap-6">
       <PageHeader 
         title={t('selfhosted.devices.title')}
-        breadcrumbs={[]}
+        // 修正：面包屑添加“设备列表”节点
+        breadcrumbs={[{ title: t('menu.devices') }]}
         actions={
           <div className="flex gap-3">
              <Button icon={<RefreshCw size={16} />} onClick={handleRefresh}>

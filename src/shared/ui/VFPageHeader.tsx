@@ -28,7 +28,7 @@ export const VFPageHeader: React.FC<VFPageHeaderProps> = ({
         <Breadcrumb 
           separator={<ChevronRight size={12} className="text-text-tertiary" />}
           items={breadcrumbs}
-          className="text-xs text-text-secondary"
+          className="!text-xs !text-text-secondary"
         />
       )}
 
