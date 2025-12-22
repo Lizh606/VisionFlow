@@ -9,7 +9,6 @@ interface Props {
   alerts: Alert[];
 }
 
-// Sub-component: Severity Tag (Standardized per Spec A.2)
 const SeverityTag: React.FC<{ severity: string }> = ({ severity }) => {
   const { t } = useTranslation();
   
@@ -30,13 +29,12 @@ const SeverityTag: React.FC<{ severity: string }> = ({ severity }) => {
     `}>
       <Icon size={12} strokeWidth={2.5} />
       <span className="text-[11px] font-bold uppercase tracking-wide leading-none pt-[1px]">
-        {t(`selfhosted.overview.alerts.${severity}`)}
+        {t('selfhosted.overview.alerts.' + severity)}
       </span>
     </div>
   );
 };
 
-// Sub-component: List Item (Standardized per Spec A.1 & A.3)
 const AlertListItem: React.FC<{ alert: Alert; isLast: boolean }> = ({ alert, isLast }) => {
   const { t } = useTranslation();
 
@@ -44,22 +42,20 @@ const AlertListItem: React.FC<{ alert: Alert; isLast: boolean }> = ({ alert, isL
     <div className={`
       group relative flex items-start gap-4 p-4
       hover:bg-action-hover transition-colors cursor-pointer
-      ${!isLast ? 'border-b border-border' : ''}
+      ${!isLast ? 'border-b border-divider' : ''}
     `}>
-      {/* Col 1: Severity Tag (Fixed Left) */}
       <div className="pt-0.5">
         <SeverityTag severity={alert.severity} />
       </div>
 
-      {/* Col 2: Content (Middle - Grows) */}
       <div className="flex-1 min-w-0 flex flex-col gap-1.5">
-        <div className="text-sm font-medium text-text-primary group-hover:text-brand transition-colors truncate">
+        {/* T5 Body (14/22, 500) */}
+        <div className="text-[14px] font-medium text-text-primary group-hover:text-brand transition-colors truncate leading-[22px]">
           {alert.title}
         </div>
         
-        {/* Target Pill (Spec A.3) */}
         <div className="flex items-center gap-2">
-           <span className="text-xs text-text-tertiary">{t('selfhosted.overview.alerts.target')}:</span>
+           <span className="text-[12px] text-text-tertiary leading-[18px]">{t('selfhosted.overview.alerts.target')}:</span>
            <code className="
              px-1.5 py-0.5 rounded text-[11px] font-mono 
              bg-bg-page border border-border text-text-secondary
@@ -70,12 +66,11 @@ const AlertListItem: React.FC<{ alert: Alert; isLast: boolean }> = ({ alert, isL
         </div>
       </div>
 
-      {/* Col 3: Time & Action (Right - Fixed) */}
       <div className="flex flex-col items-end gap-1 shrink-0 pt-0.5">
-        <span className="text-xs text-text-tertiary tabular-nums group-hover:text-text-secondary transition-colors">
+        {/* T6 Caption */}
+        <span className="text-[12px] text-text-tertiary tabular-nums group-hover:text-text-secondary transition-colors leading-[18px]">
           {alert.time}
         </span>
-        {/* Subtle Arrow on Hover */}
         <div className="h-5 flex items-center justify-end">
            <ChevronRight 
              size={16} 

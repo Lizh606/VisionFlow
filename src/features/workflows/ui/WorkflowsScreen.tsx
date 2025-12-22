@@ -1,7 +1,9 @@
 
 import React, { useState } from 'react';
-import { App } from 'antd';
+import { App, Divider } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { LayoutGrid, Compass, FolderPlus, Plus } from 'lucide-react';
+
 import { WorkflowsPageHeader } from '../components/WorkflowsPageHeader';
 import { WorkflowsToolbar } from '../components/WorkflowsToolbar';
 import { WorkflowsTable } from '../components/WorkflowsTable';
@@ -11,9 +13,12 @@ import { CreateFolderModal } from '../components/CreateFolderModal';
 import { WorkflowTemplateModal } from '../components/WorkflowTemplateModal';
 import { VFEmptyState } from '../../../shared/ui/VFEmptyState';
 import { useWorkflows } from '../hooks/useWorkflows';
-import { LayoutGrid } from 'lucide-react';
 import { useResponsive } from '../../../shared/hooks/useResponsive';
 
+/**
+ * WorkflowsScreen - V1.4 Refined Layout
+ * 采用与“设备列表”一致的模块化结构，弃用大容器包裹，提升画布感。
+ */
 export const WorkflowsScreen: React.FC = () => {
   const { t } = useTranslation();
   const { message } = App.useApp();
@@ -60,74 +65,80 @@ export const WorkflowsScreen: React.FC = () => {
   };
 
   return (
-    <div className={`flex flex-col gap-4 md:gap-6 pb-20 w-full animate-in fade-in duration-500`}>
+    <div className="flex flex-col gap-4 md:gap-6 pb-20 w-full animate-in fade-in duration-500">
       
-      {/* 1. Page Header */}
+      {/* 1. Page Header: 标题与页面级动作 */}
       <WorkflowsPageHeader 
         title={t('workflows.title')} 
         folderName={activeFolder?.name}
         onBack={activeFolderId ? () => setActiveFolderId(null) : undefined}
       />
       
-      {/* 2. MainPanel */}
-      <div className={`bg-bg-card rounded-card border border-border shadow-card overflow-hidden`}>
-        
-        {/* Toolbar Area */}
-        <div className="p-4 md:p-5 border-b border-divider bg-bg-page/5">
-          <WorkflowsToolbar 
-            search={search}
-            onSearchChange={setSearch}
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
-            onNewFolder={() => setIsFolderModalOpen(true)}
-            onExploreTemplates={() => openTemplateModal('explore')}
-            onCreateWorkflow={() => openTemplateModal('create')}
+      {/* 2. Toolbar Card: 搜索与筛选 (对齐设备列表的 Filter Card) */}
+      <div className="bg-bg-card p-4 rounded-card border border-border shadow-sm">
+        <WorkflowsToolbar 
+          search={search}
+          onSearchChange={setSearch}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          onNewFolder={() => setIsFolderModalOpen(true)}
+          onExploreTemplates={() => openTemplateModal('explore')}
+          onCreateWorkflow={() => openTemplateModal('create')}
+        />
+      </div>
+
+      {/* 3. Folders Section: 仅在非搜索且处于根目录时显示 */}
+      {!activeFolderId && !search && folders.length > 0 && (
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-2 px-1">
+            <span className="text-[11px] font-bold text-text-tertiary uppercase tracking-wider">
+              {t('menu.folders', { defaultValue: 'Folders' })}
+            </span>
+            <div className="h-px flex-1 bg-divider opacity-60" />
+          </div>
+          <FolderGrid 
+            folders={folders} 
+            onFolderClick={setActiveFolderId} 
           />
         </div>
+      )}
 
-        {/* Content Area */}
-        <div className="p-4 md:p-5 min-h-[400px]">
-          
-          {/* A) Folders Area */}
-          {!activeFolderId && !search && (
-            <FolderGrid 
-              folders={folders} 
-              onFolderClick={setActiveFolderId} 
+      {/* 4. Main Content: 列表或网格 */}
+      <div className="min-h-[400px]">
+        {items.length > 0 ? (
+          viewMode === 'list' ? (
+            /* VFTable 自身已包含白色背景、圆角和边框，无需额外包装 */
+            <WorkflowsTable 
+              data={items} 
+              loading={loading} 
+              total={total}
+              page={page}
+              pageSize={pageSize}
+              onPageChange={handlePageChange}
             />
-          )}
-
-          {/* B) Workflows Area */}
-          {items.length > 0 ? (
-            viewMode === 'list' ? (
-              <WorkflowsTable 
-                data={items} 
-                loading={loading} 
-                total={total}
-                page={page}
-                pageSize={pageSize}
-                onPageChange={handlePageChange}
-              />
-            ) : (
+          ) : (
+            <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
               <WorkflowsGrid 
                 data={items} 
                 onToggleFavorite={toggleFavorite}
                 onToggleSelect={toggleSelect}
               />
-            )
-          ) : (
-            <div className="py-12">
-              <VFEmptyState 
-                title={activeFolderId ? t('workflows.empty.folder') : t('workflows.empty.global')}
-                description={activeFolderId ? t('workflows.empty.folderDesc') : t('workflows.empty.globalDesc')}
-                actionLabel={t('workflows.actions.create')}
-                onAction={() => openTemplateModal('create')}
-                icon={<LayoutGrid size={24} />}
-              />
             </div>
-          )}
-        </div>
+          )
+        ) : (
+          <div className="bg-bg-card rounded-card border border-border p-12 shadow-sm">
+            <VFEmptyState 
+              title={activeFolderId ? t('workflows.empty.folder') : t('workflows.empty.global')}
+              description={activeFolderId ? t('workflows.empty.folderDesc') : t('workflows.empty.globalDesc')}
+              actionLabel={t('workflows.actions.create')}
+              onAction={() => openTemplateModal('create')}
+              icon={<LayoutGrid size={24} />}
+            />
+          </div>
+        )}
       </div>
 
+      {/* Modals */}
       <CreateFolderModal 
         open={isFolderModalOpen} 
         onCancel={() => setIsFolderModalOpen(false)}

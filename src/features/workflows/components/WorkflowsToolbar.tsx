@@ -101,30 +101,32 @@ export const WorkflowsToolbar: React.FC<Props> = ({
           />
         </div>
         
-        <Tooltip title={t('workflows.actions.newFolder')}>
+        <div className="flex items-center gap-2">
+          <Tooltip title={t('workflows.actions.newFolder')}>
+            <Button 
+              onClick={onNewFolder}
+              icon={<FolderPlus size={18} />} 
+              className="h-10 w-10 flex items-center justify-center rounded-control border-border text-text-tertiary hover:!text-brand hover:!border-brand transition-colors"
+            />
+          </Tooltip>
+
           <Button 
-            onClick={onNewFolder}
-            icon={<FolderPlus size={18} />} 
-            className="h-10 w-10 flex items-center justify-center rounded-control border-border text-text-tertiary hover:!text-brand hover:!border-brand transition-colors"
-          />
-        </Tooltip>
+            icon={<Compass size={18} />} 
+            onClick={onExploreTemplates}
+            className="h-10 px-4 font-semibold border-border text-text-secondary flex items-center gap-2 hover:!text-brand hover:!border-brand transition-colors"
+          >
+            {t('workflows.actions.explore')}
+          </Button>
 
-        <Button 
-          icon={<Compass size={18} />} 
-          onClick={onExploreTemplates}
-          className="h-10 px-4 font-medium border-border text-text-secondary flex items-center gap-2 hover:!text-brand hover:!border-brand transition-colors"
-        >
-          {t('workflows.actions.explore')}
-        </Button>
-
-        <Button 
-          type="primary" 
-          icon={<Plus size={18} />} 
-          onClick={onCreateWorkflow}
-          className="h-10 px-6 font-bold bg-brand flex items-center gap-2 rounded-control"
-        >
-          {t('workflows.actions.create')}
-        </Button>
+          <Button 
+            type="primary" 
+            icon={<Plus size={18} />} 
+            onClick={onCreateWorkflow}
+            className="h-10 px-6 font-bold bg-brand flex items-center gap-2 rounded-control"
+          >
+            {t('workflows.actions.create')}
+          </Button>
+        </div>
       </div>
 
       <div className="flex items-center p-1 bg-bg-page border border-border rounded-control h-10 shrink-0">
@@ -133,7 +135,7 @@ export const WorkflowsToolbar: React.FC<Props> = ({
             onClick={() => onViewModeChange('list')}
             className={`px-3 h-8 flex items-center justify-center rounded-control transition-all ${
               viewMode === 'list' 
-                ? 'bg-bg-card border border-brand/20 text-brand shadow-sm' 
+                ? 'bg-bg-card border border-divider shadow-sm text-brand font-bold' 
                 : 'text-text-tertiary hover:text-text-secondary'
             }`}
           >
@@ -145,7 +147,7 @@ export const WorkflowsToolbar: React.FC<Props> = ({
             onClick={() => onViewModeChange('grid')}
             className={`px-3 h-8 flex items-center justify-center rounded-control transition-all ${
               viewMode === 'grid' 
-                ? 'bg-bg-card border border-brand/20 text-brand shadow-sm' 
+                ? 'bg-bg-card border border-divider shadow-sm text-brand font-bold' 
                 : 'text-text-tertiary hover:text-text-secondary'
             }`}
           >

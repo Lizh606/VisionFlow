@@ -27,7 +27,6 @@ export const VFCard: React.FC<VFCardProps> = ({
       bg-bg-card rounded-card 
       flex flex-col overflow-hidden
       transition-all duration-200
-      /* V1.4: Use 1px border as primary separator */
       ${bordered ? 'border border-border shadow-card hover:shadow-sm' : ''}
       ${onClick ? 'cursor-pointer hover:border-brand/30 active:scale-[0.99] active:bg-action-hover' : ''}
       ${className}
@@ -42,7 +41,8 @@ export const VFCard: React.FC<VFCardProps> = ({
           gap-4 flex-nowrap
         ">
           {title && (
-            <div className="text-[11px] sm:text-sm font-bold text-text-primary uppercase tracking-wider truncate min-w-0 flex items-center h-full">
+            /* V1.4: Card Title = T4 Subhead (16/24, 600) */
+            <div className="text-base font-semibold text-text-primary truncate min-w-0 flex items-center h-full">
               {title}
             </div>
           )}

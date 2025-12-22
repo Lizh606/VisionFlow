@@ -88,6 +88,204 @@ export const en = {
       }
     },
     "selfhosted": {
+      "overview": {
+        "title": "Self-hosted Overview",
+        "timeRange": {
+          "24h": "Last 24h",
+          "7d": "Last 7d",
+          "30d": "Last 30d"
+        },
+        "kpi": {
+          "totalDevices": "Total Devices",
+          "online": "Online",
+          "pendingLicense": "Pending License",
+          "offline": "Offline",
+          "licenseUsage": "License Usage",
+          "expiringSoon": "{{count}} expiring soon",
+          "usageSummary": "Usage Summary",
+          "utilization": "Quota Utilization",
+          "activeLicenses": "Active Licenses",
+          "expiring": "Expiring Soon",
+          "pending": "Pending Devices"
+        },
+        "charts": {
+          "deviceStatus": "Device Status Distribution",
+          "usageTrend": "Processing Trend",
+          "edge": "Edge Processing",
+          "cloud": "Cloud Processing",
+          "images": "Images",
+          "video": "Video",
+          "count": "Count",
+          "breakdown": "License Breakdown",
+          "usageSeries": "Actual Usage",
+          "quotaSeries": "Total Quota"
+        },
+        "alerts": {
+          "title": "Active Alerts",
+          "viewAll": "View All",
+          "critical": "Critical",
+          "warning": "Warning",
+          "info": "Info",
+          "target": "Target"
+        },
+        "shortcuts": {
+          "title": "Quick Access",
+          "viewDeviceList": "Device Fleet",
+          "manageLicenses": "License Management",
+          "recentDeployments": "Deployment Logs"
+        },
+        "quickActions": {
+          "title": "Quick Actions"
+        },
+        "actions": {
+          "upload": "Upload License",
+          "devices": "Manage Devices",
+          "manage": "Licenses",
+          "guide": "Setup Guide"
+        }
+      },
+      "devices": {
+        "title": "Device Fleet",
+        "searchPlaceholder": "Search by name or device ID...",
+        "unbound": "Unlicensed",
+        "noData": "No devices matched your filters",
+        "cols": {
+          "name": "Device Name",
+          "id": "Device ID",
+          "status": "Status",
+          "mode": "Mode",
+          "license": "License",
+          "lastSeen": "Last Seen"
+        },
+        "alert": {
+          "pendingMessage": "There are <bold>{{count}}</bold> devices awaiting license assignment.",
+          "filterAction": "View Pending"
+        }
+      },
+      "deviceDetail": {
+        "summary": {
+          "overviewTitle": "Device Overview",
+          "deviceId": "Device ID",
+          "runtimeId": "Runtime ID",
+          "lastSeen": "Last Seen",
+          "changeMode": "Change Mode",
+          "licenseTitle": "License & Entitlement",
+          "changeLicense": "Change",
+          "expiry": "Expiration",
+          "quota": "Usage Quota",
+          "offlineLease": "Offline Lease",
+          "configTitle": "Deployment Config",
+          "viewHistory": "History",
+          "streamsCount": "Active Streams",
+          "configuredBy": "Configured By",
+          "lastModifiedTime": "Last Modified",
+          "mode": "Deployment Mode"
+        },
+        "overview": {
+          "units": "Inference Calls",
+          "unitsTooltip": "Total processed inferences in the selected time window.",
+          "recentAlerts": "Recent Alerts"
+        },
+        "tabs": {
+          "overview": "Overview",
+          "workflow": "Deployment",
+          "usage": "Telemetry",
+          "logs": "System Logs"
+        },
+        "workflow": {
+          "rollback": "Rollback to this version"
+        }
+      },
+      "workflowDeployment": {
+        "title": "Stream Deployments",
+        "addStream": "Deploy Stream",
+        "streamName": "Stream Name",
+        "input": "Input",
+        "workflow": "Workflow",
+        "status": "Status",
+        "telemetry": "Telemetry",
+        "updated": "Updated",
+        "latest": "LATEST",
+        "historyTitle": "Deployment History",
+        "lastUpdated": "Last Deployment",
+        "operator": "Operator",
+        "viewHistory": "History",
+        "editTitle": "Edit Stream Deployment",
+        "createTitle": "Deploy New Stream",
+        "basicInfo": "General Identity",
+        "nameLabel": "Stream Name",
+        "nameRequired": "Stream name is required",
+        "namePlaceholder": "e.g. South Parking Cam",
+        "inputSource": "Input Configuration",
+        "sourceType": "Source Type",
+        "endpoint": "Endpoint URL",
+        "endpointRequired": "Connection URL is required",
+        "workflowBinding": "Workflow & Logic",
+        "selectWorkflow": "Vision Workflow",
+        "selectWorkflowPlaceholder": "Choose a workflow...",
+        "versionStrategy": "Version Logic",
+        "runPolicy": "Inference Policy",
+        "concurrency": "Workers",
+        "telemetryGranularity": "Telemetry Level",
+        "applyImmediately": "Atomic Restart",
+        "applyImmediatelyDesc": "Automatically restart processing nodes to apply these changes immediately.",
+        "updateBtn": "Deploy Changes",
+        "createBtn": "Start Stream",
+        "snapshot": "Snapshot",
+        "diff": "Diff",
+        "noSnapshot": "No configuration snapshot available",
+        "loadingDiff": "Calculating configuration differences...",
+        "rollbackTitle": "Rollback to {{version}}?",
+        "rollbackDesc": "This will stop current processing and restart nodes with the selected historical configuration.",
+        "rollbackConfirm": "Confirm Rollback"
+      },
+      "usage": {
+        "dim": "Dimension",
+        "dimWorkflow": "By Workflow",
+        "dimStream": "By Stream",
+        "metric": "Metric",
+        "metricImg": "Images",
+        "metricVid": "Video",
+        "dateRange": "Time Window",
+        "modeFilter": "Compute Mode",
+        "modes": {
+          "all": "All Modes",
+          "edge": "Edge Only",
+          "cloud": "Cloud Only"
+        },
+        "tableCols": {
+          "calls": "Inference Calls",
+          "errors": "Failures",
+          "errorRate": "Error Rate"
+        },
+        "footerNote": "Telemetry data is aggregated across all active nodes with a 5-minute latency."
+      },
+      "logs": {
+        "title": "Centralized Observability",
+        "description": "System logs for device <bold>{{id}}</bold> are streamed to your centralized logging backend.",
+        "launchBtn": "Open Log Console"
+      },
+      "license": {
+        "title": "License Management",
+        "upload": "Add License",
+        "noData": "No licenses found in this workspace",
+        "selectTitle": "Select Entitlement License",
+        "quotaAvailable": "{{count}} / {{total}} Available",
+        "selectedLabel": "Selected License",
+        "daysLeft": "{{count}} days left",
+        "cols": {
+          "name": "License Name",
+          "key": "License Key",
+          "type": "Type",
+          "billing": "Billing",
+          "usage": "Capacity",
+          "expiry": "Expiry"
+        },
+        "actions": {
+          "viewUsage": "Usage Report",
+          "extend": "Renew License"
+        }
+      },
       "status": {
         "online": "Online",
         "offline": "Offline",

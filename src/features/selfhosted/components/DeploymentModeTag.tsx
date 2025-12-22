@@ -15,16 +15,14 @@ export const DeploymentModeTag: React.FC<Props> = ({ mode }) => {
 
   const config = {
     EDGE: {
-      icon: <Server size={12} />,
-      label: t('selfhosted.mode.edge'),
+      icon: <Server />,
       desc: t('selfhosted.mode.edgeDesc'),
-      variant: 'teal' as const, // ✅ 统一使用 Teal
+      variant: 'teal' as const,
     },
     CLOUD: {
-      icon: <Cloud size={12} />,
-      label: t('selfhosted.mode.cloud'),
+      icon: <Cloud />,
       desc: t('selfhosted.mode.cloudDesc'),
-      variant: 'info' as const, // ✅ 切换为 Blue (info)
+      variant: 'info' as const,
     },
   };
 
@@ -35,9 +33,8 @@ export const DeploymentModeTag: React.FC<Props> = ({ mode }) => {
       <span className="inline-block">
         <VFTag 
           variant={current.variant} 
-          filled={false} 
           icon={current.icon}
-          className="font-mono tracking-tight"
+          minWidth={72} // 模式列统一占位 72px
         >
           {mode}
         </VFTag>

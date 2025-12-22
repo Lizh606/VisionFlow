@@ -34,9 +34,11 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
 
   const InfoRow = ({ label, value, copyable, empty }: { label: string, value: string | React.ReactNode, copyable?: string, empty?: boolean }) => (
     <div className={`flex items-center justify-between py-2 border-b border-divider last:border-b-0 min-h-[44px] ${empty ? 'opacity-40' : ''}`}>
-      <span className="text-text-tertiary text-[13px] font-medium">{label}</span>
+      {/* T6 Caption (12/18, 400) */}
+      <span className="text-[12px] leading-[18px] font-normal text-text-tertiary">{label}</span>
       <div className="flex items-center gap-2 overflow-hidden">
-        <div className={`font-semibold text-text-primary text-sm truncate max-w-[140px] sm:max-w-[160px] ${empty ? 'font-normal italic' : ''}`}>
+        {/* T5 Body Strong (14/22, 500) */}
+        <div className={`text-[14px] font-medium text-text-primary leading-[22px] truncate max-w-[140px] sm:max-w-[160px] ${empty ? 'font-normal italic' : ''}`}>
           {empty ? '---' : value}
         </div>
         {copyable && !empty && (
@@ -59,7 +61,6 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-      {/* Card A: Device Overview */}
       <VFCard 
         title={t('selfhosted.deviceDetail.summary.overviewTitle')} 
         extra={
@@ -97,7 +98,6 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
         </div>
       </VFCard>
 
-      {/* Card B: License Information */}
       <VFCard 
         title={t('selfhosted.deviceDetail.summary.licenseTitle')} 
         extra={
@@ -118,10 +118,10 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
              {isUnbound ? (
                <div className="flex items-center gap-2 text-warning animate-pulse">
                  <ShieldAlert size={18} />
-                 <span className="text-sm font-bold tracking-tight">Awaiting License</span>
+                 <span className="text-[14px] font-bold tracking-tight">Awaiting License</span>
                </div>
              ) : (
-               <div className="text-base sm:text-lg font-bold text-text-primary flex items-center gap-1.5 cursor-pointer hover:text-brand transition-colors">
+               <div className="text-[16px] font-bold text-text-primary flex items-center gap-1.5 cursor-pointer hover:text-brand transition-colors">
                   {device.license_name || 'N/A'} 
                   <ExternalLink size={16} className="text-text-tertiary" />
                </div>
@@ -135,7 +135,6 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
         </div>
       </VFCard>
 
-      {/* Card C: Current Configuration */}
       <VFCard 
         title={t('selfhosted.deviceDetail.summary.configTitle')} 
         extra={
@@ -155,10 +154,10 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
              {isUnbound ? (
                <div className="flex items-center gap-2 text-text-tertiary opacity-60">
                  <FileX size={18} />
-                 <span className="text-sm font-medium italic">No configuration found</span>
+                 <span className="text-[14px] font-medium italic">No configuration found</span>
                </div>
              ) : (
-               <div className="text-base sm:text-lg font-bold text-text-primary flex items-center gap-2">
+               <div className="text-[16px] font-bold text-text-primary flex items-center gap-2">
                   {device.config_version}
                   <VFTag variant="neutral" className="h-5 text-[10px] px-1.5 font-bold" filled={false}>
                     {t('selfhosted.workflowDeployment.latest')}
