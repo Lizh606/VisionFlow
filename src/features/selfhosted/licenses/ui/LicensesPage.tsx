@@ -110,7 +110,7 @@ export const LicensesPage: React.FC = () => {
       <div className="flex flex-col gap-6">
         <PageHeader 
           title={t('selfhosted.license.title')}
-          breadcrumbs={[]}
+          // V1.3: Breadcrumbs are removed as per spec
           actions={<Button type="primary" icon={<Plus size={16} />} onClick={() => {}} />}
         />
         <div className="flex flex-col gap-4">
@@ -162,7 +162,7 @@ export const LicensesPage: React.FC = () => {
     <div className="flex flex-col gap-6">
       <PageHeader 
         title={t('selfhosted.license.title')}
-        breadcrumbs={[{ title: t('selfhosted.license.title') }]}
+        // V1.3: Breadcrumbs are removed as per spec
         actions={
           <div className="flex gap-3">
              <Button icon={<RefreshCw size={16} />} className="rounded-control">{t('common.refresh')}</Button>

@@ -1,5 +1,6 @@
+
 import React, { useEffect, useMemo, useState } from 'react';
-import { Drawer, Form, Input, Select, Switch, Button, Radio, Alert, Space, Tooltip } from 'antd';
+import { Drawer, Form, Input, Select, Switch, Button, Radio, Space } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { 
   Zap, 
@@ -29,10 +30,6 @@ interface Props {
   initialValues?: Stream | null;
 }
 
-/**
- * 规范适配层：Section
- * 固化区块间距与对齐
- */
 interface SectionProps {
   title: string;
   subtitle?: string;
@@ -57,9 +54,6 @@ const Section: React.FC<SectionProps> = ({ title, subtitle, icon: Icon, children
   </div>
 );
 
-/**
- * 精致化重构组件：TelemetryLevelOption
- */
 const TelemetryLevelCard = ({ icon: Icon, title, desc, recommended, active }: any) => (
   <div className={`
     relative flex items-center gap-3.5 p-4 rounded-card border transition-all cursor-pointer select-none h-full w-full
@@ -81,7 +75,7 @@ const TelemetryLevelCard = ({ icon: Icon, title, desc, recommended, active }: an
         </span>
         {recommended && (
           <VFTag variant="brand" className="h-4 px-1.5 text-[9px] font-bold opacity-80" filled={false}>
-            推荐
+            REC
           </VFTag>
         )}
       </div>
@@ -174,7 +168,7 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
             <div className="px-6 py-2.5 bg-warning/5 border-b border-warning/10 flex items-center gap-3">
               <AlertCircle size={14} className="text-warning shrink-0" />
               <span className="text-[12px] font-medium text-warning-700">
-                某些更改可能会在保存后导致流重启
+                Changes may cause stream restart
               </span>
             </div>
           )}
@@ -210,7 +204,7 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
         requiredMark={false}
         className="vf-form-refined"
       >
-        <Section title={t('selfhosted.workflowDeployment.basicInfo')} icon={Info} subtitle="设置设备标识与发现信息">
+        <Section title={t('selfhosted.workflowDeployment.basicInfo')} icon={Info} subtitle="Set identification and discovery info">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-0 sm:gap-y-2">
             <Form.Item 
               label={<span className="text-[13px] font-bold">{t('selfhosted.workflowDeployment.nameLabel')}</span>} 
@@ -229,7 +223,7 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
           </div>
         </Section>
 
-        <Section title={t('selfhosted.workflowDeployment.inputSource')} icon={Network} subtitle="配置连接协议与源地址详情">
+        <Section title={t('selfhosted.workflowDeployment.inputSource')} icon={Network} subtitle="Connection protocol and endpoint">
           <div className="bg-bg-page/40 p-4 sm:p-5 rounded-card border border-border flex flex-col gap-6">
             <Form.Item label={<span className="text-[13px] font-bold">{t('selfhosted.workflowDeployment.sourceType')}</span>} name="type" className="mb-0">
               <Radio.Group className="vf-radio-group-refined w-full grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -264,7 +258,7 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
           </div>
         </Section>
 
-        <Section title={t('selfhosted.workflowDeployment.workflowBinding')} icon={Database} subtitle="为此数据流分配视觉处理逻辑">
+        <Section title={t('selfhosted.workflowDeployment.workflowBinding')} icon={Database} subtitle="Assign vision logic to this stream">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-0 sm:gap-y-2">
             <Form.Item label={<span className="text-[13px] font-bold">{t('selfhosted.workflowDeployment.selectWorkflow')}</span>} name="workflowId" rules={[{ required: true }]} className="mb-5 sm:mb-6">
               <Select 
@@ -272,8 +266,8 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
                 className="h-11 w-full"
                 placeholder={t('selfhosted.workflowDeployment.selectWorkflowPlaceholder')} 
                 options={[
-                  { value: 'wf_crowd_01', label: '人流量分析 (Crowd Analysis)' },
-                  { value: 'wf_ppe_05', label: '安防合规 (PPE Compliance)' }
+                  { value: 'wf_crowd_01', label: 'Crowd Analysis' },
+                  { value: 'wf_ppe_05', label: 'PPE Compliance' }
                 ]} 
               />
             </Form.Item>
@@ -281,15 +275,15 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
             <div className="flex flex-col gap-0 sm:gap-6 mb-5 sm:mb-6">
               <Form.Item label={<span className="text-[13px] font-bold">{t('selfhosted.workflowDeployment.versionStrategy')}</span>} name="strategy" className="mb-2 sm:mb-0">
                 <Radio.Group className="vf-radio-group-refined w-full grid grid-cols-2 gap-2">
-                  <Radio.Button value="LATEST">最新稳定</Radio.Button>
-                  <Radio.Button value="SPECIFIC">指定版本</Radio.Button>
+                  <Radio.Button value="LATEST">LATEST</Radio.Button>
+                  <Radio.Button value="SPECIFIC">SPECIFIC</Radio.Button>
                 </Radio.Group>
               </Form.Item>
               
               {strategy === 'SPECIFIC' && (
                 <Form.Item name="version" rules={[{ required: true }]} className="animate-in slide-in-from-top-2 duration-200 mb-0">
                   <Select 
-                    placeholder="选择版本..."
+                    placeholder="Select version..."
                     className="h-11 w-full"
                     options={[
                       { value: 'v2.4', label: 'v2.4.0 (Stable)' },
@@ -302,10 +296,10 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
           </div>
         </Section>
 
-        <Section title={t('selfhosted.workflowDeployment.runPolicy')} icon={Zap} subtitle="运行时性能与遙测指标设置">
+        <Section title={t('selfhosted.workflowDeployment.runPolicy')} icon={Zap} subtitle="Runtime and telemetry settings">
           <div className="flex flex-col gap-6">
             <Form.Item label={<span className="text-[13px] font-bold">{t('selfhosted.workflowDeployment.concurrency')}</span>} name="concurrency" className="mb-0 max-w-full sm:max-w-[200px]">
-              <Input type="number" min={1} max={10} className="h-11 font-bold text-center" suffix="实例" />
+              <Input type="number" min={1} max={10} className="h-11 font-bold text-center" suffix="INST" />
             </Form.Item>
 
             <div className="flex flex-col gap-3">
@@ -313,9 +307,9 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
               <Form.Item name="telemetry" className="mb-0">
                 <Radio.Group className="w-full grid grid-cols-1 sm:grid-cols-3 gap-3 items-stretch">
                   {[
-                    { value: 'HEARTBEAT', title: '仅心跳', desc: '仅上报在线/离线状态，资源占用最低', icon: ShieldCheck },
-                    { value: 'METRICS', title: '性能指标', desc: '包含吞吐量、延迟、FPS 等关键指标', icon: Activity, recommended: true },
-                    { value: 'DIAGNOSTIC', title: '诊断遥测', desc: '包含完整链路追踪，资源消耗较高', icon: Video },
+                    { value: 'HEARTBEAT', title: 'Heartbeat', desc: 'Online check only, lowest overhead', icon: ShieldCheck },
+                    { value: 'METRICS', title: 'Metrics', desc: 'Throughput, latency, FPS data', icon: Activity, recommended: true },
+                    { value: 'DIAGNOSTIC', title: 'Diagnostic', desc: 'Full traces, high overhead', icon: Video },
                   ].map(opt => (
                     <Radio key={opt.value} value={opt.value} className="vf-card-radio !m-0 !p-0">
                       <TelemetryLevelCard 
@@ -343,7 +337,7 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
                 {isEdit && (
                    <p className="text-[10px] text-brand font-bold mt-2 flex items-center gap-1">
                      <ChevronRight size={10} />
-                     {!form.getFieldValue('applyImmediately') && "更改将在下次手动发布时生效"}
+                     {!form.getFieldValue('applyImmediately') && "Changes applied on next release"}
                    </p>
                 )}
               </div>
@@ -351,129 +345,6 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
           </div>
         </Section>
       </Form>
-
-      <style>{`
-        .vf-form-refined .ant-form-item-label {
-          padding-bottom: 6px !important;
-        }
-
-        .vf-form-refined .ant-form-item-label label {
-          color: rgba(var(--vf-text-secondary), 1) !important;
-          height: auto !important;
-        }
-        
-        .vf-card-radio .ant-radio {
-          position: absolute;
-          opacity: 0;
-          width: 0;
-          height: 0;
-        }
-
-        .vf-card-radio.ant-radio-wrapper {
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-          width: 100% !important; /* 强制全宽以解决移动端不对齐问题 */
-          margin-inline-end: 0 !important;
-        }
-
-        .ant-input, .ant-select-selector {
-          border-color: rgba(var(--vf-border), 1) !important;
-          transition: all 0.2s ease !important;
-        }
-
-        /* 修复单选按钮布局混乱 */
-        .vf-radio-group-refined.ant-radio-group {
-          display: grid !important;
-        }
-
-        .vf-radio-group-refined .ant-radio-button-wrapper::before {
-          display: none !important; 
-        }
-        
-        .vf-radio-group-refined .ant-radio-button-wrapper {
-          height: 44px !important;
-          padding: 0 12px !important;
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          border-inline-start-width: 1px !important; 
-          border-radius: var(--vf-radius-control) !important;
-          border: 1px solid rgba(var(--vf-border), 1) !important;
-          transition: all 0.2s ease;
-          background: var(--vf-bg-card);
-        }
-
-        /* 强制内部 span 居中并保持间距 */
-        .vf-radio-group-refined .ant-radio-button-wrapper > span:not(.ant-radio-button) {
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          gap: 8px !important;
-          font-weight: 700 !important;
-          font-size: 13px !important;
-          width: 100%;
-        }
-
-        .vf-radio-group-refined .ant-radio-button-wrapper-checked {
-          border-color: rgba(var(--vf-brand), 1) !important;
-          color: rgba(var(--vf-brand), 1) !important;
-          background: rgba(var(--vf-brand), 0.04) !important;
-          box-shadow: none !important;
-          z-index: 1; 
-        }
-        
-        @media (max-width: 768px) {
-          /* 修复 Input 垂直错位：移除 flex 改用 padding/line-height 对齐 */
-          .ant-input {
-            height: 44px !important;
-            padding: 4px 12px !important;
-            line-height: 1.5 !important;
-          }
-          
-          /* 带有 Icon 的输入框（如密码框） */
-          .ant-input-affix-wrapper {
-            height: 44px !important;
-            padding: 4px 12px !important;
-            display: flex !important;
-            align-items: center !important;
-          }
-          
-          .ant-input-affix-wrapper .ant-input {
-            height: auto !important;
-            line-height: inherit !important;
-            padding: 0 !important;
-          }
-
-          /* 修复 Select 垂直错位 */
-          .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
-            height: 44px !important;
-            padding: 0 11px !important;
-            display: flex !important;
-            align-items: center !important;
-          }
-          
-          .ant-select-single .ant-select-selector .ant-select-selection-item,
-          .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
-             line-height: 42px !important; /* height - borders */
-          }
-          
-          .ant-btn {
-            min-height: 44px !important;
-          }
-
-          .vf-radio-group-refined.ant-radio-group {
-             grid-template-columns: 1fr !important;
-             gap: 8px !important;
-          }
-          
-          /* 遥测级别在移动端强制垂直排列且等宽 */
-          .ant-radio-group.grid-cols-1 {
-            grid-template-columns: 1fr !important;
-            width: 100% !important;
-          }
-        }
-      `}</style>
     </Drawer>
   );
 };

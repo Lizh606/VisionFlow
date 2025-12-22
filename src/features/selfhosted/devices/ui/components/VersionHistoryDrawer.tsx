@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Drawer, Timeline, Segmented, Button, Popconfirm, Tooltip, Empty } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -265,7 +266,7 @@ export const VersionHistoryDrawer: React.FC<Props> = ({ open, onClose, history, 
           padding: 12px 20px !important;
         }
         
-        /* 抽屉内 Segmented 专用修正：取消高亮背景覆盖，改用 Token 定义的柔和高亮 */
+        /* 抽屉内 Segmented 专用修正：取消高亮背景覆盖 改用 Token 定义的柔和高亮 */
         .vf-history-segmented.ant-segmented .ant-segmented-item-selected {
           background-color: var(--vf-bg-card) !important;
           color: rgba(var(--vf-brand), 1) !important;

@@ -1,41 +1,38 @@
 
 import React from 'react';
-import { Breadcrumb, Button } from 'antd';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { ItemType } from 'antd/es/breadcrumb/Breadcrumb';
+import { Button } from 'antd';
+import { ChevronLeft } from 'lucide-react';
+import { useResponsive } from '../../shared/hooks/useResponsive';
 
 interface VFPageHeaderProps {
-  title: string;
+  title: React.ReactNode;
   description?: string;
-  breadcrumbs?: ItemType[];
   actions?: React.ReactNode;
   onBack?: () => void;
+  showDivider?: boolean;
   className?: string;
 }
 
 export const VFPageHeader: React.FC<VFPageHeaderProps> = ({ 
   title, 
   description, 
-  breadcrumbs, 
   actions,
   onBack,
+  showDivider = false,
   className = ''
 }) => {
-  return (
-    <div className={`flex flex-col gap-6 mb-4 ${className}`}>
-      {/* Row 1: Breadcrumbs (Separate line, subtle) */}
-      {breadcrumbs && (
-        <Breadcrumb 
-          separator={<ChevronRight size={12} className="text-text-tertiary" />}
-          items={breadcrumbs}
-          className="!text-xs !text-text-secondary"
-        />
-      )}
+  const { isMobile } = useResponsive();
 
-      {/* Row 2: Title & Actions */}
+  return (
+    <div className={`
+      flex flex-col gap-4 
+      ${showDivider ? 'pb-4 border-b border-divider' : ''} 
+      ${className}
+    `}>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div className="flex items-center gap-4">
-          {onBack && (
+        <div className="flex items-start gap-4">
+          {/* Back Button (Desktop style) */}
+          {onBack && !isMobile && (
             <Button 
               type="text" 
               icon={<ChevronLeft size={20} />} 
@@ -43,12 +40,22 @@ export const VFPageHeader: React.FC<VFPageHeaderProps> = ({
               className="flex items-center justify-center w-9 h-9 rounded-control hover:bg-action-hover text-text-secondary"
             />
           )}
+
           <div className="flex flex-col gap-1">
-            <h1 className="text-2xl font-bold text-text-primary m-0 tracking-tight leading-tight">
+            {/* T2 Page Title (24px, 600 weight) */}
+            <h1 className="text-2xl font-semibold text-text-primary m-0 tracking-tight leading-tight flex items-center gap-3">
+              {onBack && isMobile && (
+                 <ChevronLeft 
+                   size={20} 
+                   className="text-text-secondary cursor-pointer" 
+                   onClick={onBack} 
+                 />
+              )}
               {title}
             </h1>
+            {/* T5 Body Secondary (14px, 400 weight) */}
             {description && (
-              <p className="text-text-secondary m-0 text-sm max-w-3xl leading-relaxed">
+              <p className="text-text-secondary m-0 text-sm max-w-2xl leading-relaxed">
                 {description}
               </p>
             )}
@@ -56,7 +63,7 @@ export const VFPageHeader: React.FC<VFPageHeaderProps> = ({
         </div>
         
         {actions && (
-          <div className="flex items-center gap-3 shrink-0 mt-1">
+          <div className="flex items-center gap-3 shrink-0">
             {actions}
           </div>
         )}

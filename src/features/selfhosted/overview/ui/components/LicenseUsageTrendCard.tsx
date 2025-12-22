@@ -21,7 +21,7 @@ export const LicenseUsageTrendCard: React.FC<Props> = ({ data }) => {
       bottom: 0,
       icon: 'circle',
       textStyle: { 
-        color: 'rgba(var(--vf-text-primary), 1)', // ✅ 修改为黑色 (Primary Text)
+        color: 'rgba(var(--vf-text-primary), 1)', 
         fontWeight: 600
       }
     },
@@ -45,7 +45,7 @@ export const LicenseUsageTrendCard: React.FC<Props> = ({ data }) => {
         areaStyle: {
           opacity: 0.2,
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: 'rgba(109, 41, 217, 0.8)' }, // vf-brand
+            { offset: 0, color: 'rgba(109, 41, 217, 0.8)' }, 
             { offset: 1, color: 'rgba(109, 41, 217, 0.0)' }
           ])
         },

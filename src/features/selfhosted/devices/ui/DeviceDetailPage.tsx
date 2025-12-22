@@ -78,15 +78,10 @@ export const DeviceDetailPage: React.FC<Props> = ({ deviceId, onBack }) => {
   }, [activeTab, device, isAdmin]);
 
   return (
-    <div className="flex flex-col gap-6 animate-in fade-in duration-500 pb-12">
+    <div className="flex flex-col gap-4 md:gap-6 animate-in fade-in duration-500 pb-12">
       <VFPageHeader 
         title={device.name}
         onBack={onBack}
-        // 修正：PageHeader 已经包含了前缀，这里只需要定义相对路径
-        breadcrumbs={[
-          { title: t('menu.devices') },
-          { title: device.name }
-        ]}
         actions={
           <Space>
             <Button 

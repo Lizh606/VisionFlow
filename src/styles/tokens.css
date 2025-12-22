@@ -10,10 +10,12 @@
   --vf-success: 15, 157, 88;
   --vf-warning: 245, 158, 11;
   --vf-error: 234, 67, 53;
-  --vf-teal: 34, 193, 195; /* #22C1C3 */
+  --vf-teal: 34, 193, 195;
 
-  /* --- Surface --- */
-  --vf-bg-page: 246, 248, 251;
+  /* --- Surface (V1.4 Spec) --- */
+  /* Content 画布背景: #F8FAFC */
+  --vf-bg-page: 248, 250, 252; 
+  /* Sidebar/Card 背景: #FFFFFF */
   --vf-bg-card: 255, 255, 255;
   --vf-bg-raised: 255, 255, 255;
   --vf-bg-overlay: 255, 255, 255;
@@ -21,24 +23,25 @@
   --vf-bg-input-alpha: 1;
 
   /* --- Text --- */
-  --vf-text-primary: 17, 21, 34;
-  --vf-text-secondary: 75, 85, 101;
-  --vf-text-tertiary: 107, 119, 140;
-  --vf-text-disabled: 154, 160, 166;
+  --vf-text-primary: 15, 23, 42; /* Slate-900 */
+  --vf-text-secondary: 71, 85, 105; /* Slate-600 */
+  --vf-text-tertiary: 100, 116, 139; /* Slate-500 */
+  --vf-text-disabled: 148, 163, 184; /* Slate-400 */
   --vf-text-inverse: 255, 255, 255;
 
-  /* --- Border + alpha --- */
-  --vf-border: 229, 234, 242;
-  --vf-border-strong: 211, 218, 230;
-  --vf-divider: 229, 234, 242;
+  /* --- Border + Divider (Crucial for V1.4 Hierarchy) --- */
+  /* 使用 Slate-200 确保在 #F8FAFC 上清晰可见 */
+  --vf-border: 226, 232, 240; 
+  --vf-border-strong: 203, 213, 225;
+  --vf-divider: 226, 232, 240;
   --vf-border-alpha: 1;
   --vf-border-strong-alpha: 1;
   --vf-divider-alpha: 1;
 
   /* --- Action bg --- */
-  --vf-hover: 17, 21, 34;
+  --vf-hover: 15, 23, 42;
   --vf-hover-alpha: 0.04;
-  --vf-active: 17, 21, 34;
+  --vf-active: 15, 23, 42;
   --vf-active-alpha: 0.08;
 
   /* --- Focus ring --- */
@@ -50,45 +53,38 @@
   --vf-radius-control: 8px;
   --vf-radius-card: 12px;
 
-  /* --- Shadow --- */
-  --vf-shadow-card: 0 1px 2px rgba(0,0,0,0.05);
-  --vf-shadow-overlay: 0 8px 24px rgba(0,0,0,0.12);
+  /* --- Shadow (Restrained) --- */
+  --vf-shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  --vf-shadow-overlay: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 [data-theme="dark"] {
-   --vf-brand: 155, 99, 255;
+  --vf-brand: 155, 99, 255;
   --vf-brand-hover: 185, 140, 255;
   --vf-brand-active: 127, 61, 255;
 
   --vf-info: 165, 180, 252;
-  --vf-teal: 34, 193, 195;
   --vf-bg-page: 11, 15, 26;
   --vf-bg-card: 17, 21, 34;
   --vf-bg-raised: 30, 35, 48;
   --vf-bg-overlay: 30, 35, 48;
-  --vf-bg-input: 255, 255, 255;
-  --vf-bg-input-alpha: 0.06;
 
   --vf-text-primary: 255, 255, 255;
-  --vf-text-secondary: 255, 255, 255;
-  --vf-text-tertiary: 255, 255, 255;
-  --vf-text-disabled: 255, 255, 255;
-  --vf-text-inverse: 11, 15, 26;
+  --vf-text-secondary: rgba(255, 255, 255, 0.85);
+  --vf-text-tertiary: rgba(255, 255, 255, 0.65);
+  --vf-text-disabled: rgba(255, 255, 255, 0.35);
 
   --vf-border: 255, 255, 255;
   --vf-border-strong: 255, 255, 255;
   --vf-divider: 255, 255, 255;
-  --vf-border-alpha: 0.08;
-  --vf-border-strong-alpha: 0.15;
-  --vf-divider-alpha: 0.10;
+  --vf-border-alpha: 0.12;
+  --vf-border-strong-alpha: 0.2;
+  --vf-divider-alpha: 0.12;
 
   --vf-hover: 255, 255, 255;
   --vf-hover-alpha: 0.06;
   --vf-active: 255, 255, 255;
   --vf-active-alpha: 0.10;
-
-  --vf-focus: 155, 99, 255;
-  --vf-focus-alpha: 0.32;
 
   --vf-shadow-card: 0 1px 2px rgba(0,0,0,0.2);
   --vf-shadow-overlay: 0 10px 28px rgba(0,0,0,0.4);
@@ -98,14 +94,7 @@
   border-color: rgba(var(--vf-divider), var(--vf-divider-alpha)) !important;
 }
 
-.bg-divider {
-  background-color: rgba(var(--vf-divider), var(--vf-divider-alpha)) !important;
-}
-
 body {
   background-color: rgba(var(--vf-bg-page), 1);
   color: rgba(var(--vf-text-primary), 1);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  margin: 0;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }

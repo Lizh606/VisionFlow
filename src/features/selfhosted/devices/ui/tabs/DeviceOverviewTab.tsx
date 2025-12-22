@@ -21,7 +21,7 @@ export const DeviceOverviewTab: React.FC<Props> = ({ device }) => {
 
   return (
     <div className={`flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-2 duration-500 ${isMobile ? 'p-4' : 'p-6'}`}>
-      {/* 1. 强力警告横幅：仅在待绑定状态下显示 */}
+      {/* 1. Alert Banner for pending license */}
       {isUnbound && (
         <Alert
           type="warning"
@@ -34,7 +34,7 @@ export const DeviceOverviewTab: React.FC<Props> = ({ device }) => {
                   {t('selfhosted.devices.unbound')}
                 </span>
                 <span className="text-xs text-text-secondary">
-                  当前设备未关联有效的许可证书，遥测监控与任务部署功能暂不可用。
+                  This device is not linked to a valid license. Monitoring and deployment are disabled.
                 </span>
               </div>
               <Button 
@@ -43,7 +43,7 @@ export const DeviceOverviewTab: React.FC<Props> = ({ device }) => {
                 className="h-8 px-4 font-bold bg-warning border-warning hover:bg-warning/80 flex items-center gap-1.5 shrink-0"
                 onClick={() => console.log('Open license modal')}
               >
-                立即绑定授权 <ArrowRight size={14} />
+                Bind License <ArrowRight size={14} />
               </Button>
             </div>
           }
@@ -51,12 +51,12 @@ export const DeviceOverviewTab: React.FC<Props> = ({ device }) => {
         />
       )}
 
-      {/* 2. 用量摘要：传递 device 对象以处理内部空状态 */}
+      {/* 2. Usage Summary */}
       <section className="w-full">
         <UsageSummaryPanel deviceId={device.id} />
       </section>
 
-      {/* 3. 配置与告警双栏：同步适配待绑定状态 */}
+      {/* 3. Config and Alerts panels */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
         <section className="h-full">
           <ConfigSummaryPanel device={device} />

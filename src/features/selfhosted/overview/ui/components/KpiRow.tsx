@@ -44,7 +44,7 @@ export const KpiRow: React.FC<KpiRowProps> = ({ data }) => {
               percent={utilization} 
               showInfo={false} 
               strokeColor={statusColor} 
-              trailColor="rgba(var(--vf-brand) / 0.1)"
+              trailColor="rgba(var(--vf-brand), 0.1)"
               size="small"
             />
           </div>

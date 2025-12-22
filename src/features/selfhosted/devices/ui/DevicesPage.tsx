@@ -148,11 +148,9 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
   ];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 md:gap-6">
       <PageHeader 
         title={t('selfhosted.devices.title')}
-        // 修正：面包屑添加“设备列表”节点
-        breadcrumbs={[{ title: t('menu.devices') }]}
         actions={
           <div className="flex gap-3">
              <Button icon={<RefreshCw size={16} />} onClick={handleRefresh}>
@@ -228,35 +226,37 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
         </div>
       </div>
 
-      {loading ? (
-        <VFCard><div className="h-64 flex items-center justify-center font-bold text-text-tertiary tracking-widest">{t('common.loading')}</div></VFCard>
-      ) : isMobile ? (
-        <div className="flex flex-col gap-4">
-          {filteredData.map(device => (
-            <VFCard key={device.id} noPadding className="p-4 flex flex-col gap-3" onClick={() => onDeviceClick?.(device.id)}>
-              <div className="flex justify-between items-start">
-                <div>
-                   <div className="font-bold text-lg text-text-primary mb-1">{device.name}</div>
-                   <div className="flex gap-2">
-                     <DeviceStatusTag status={device.status} /> 
-                     <DeploymentModeTag mode={device.deployment_mode} />
-                   </div>
+      <div className="min-h-0">
+        {loading ? (
+          <VFCard><div className="h-64 flex items-center justify-center font-bold text-text-tertiary tracking-widest">{t('common.loading')}</div></VFCard>
+        ) : isMobile ? (
+          <div className="flex flex-col gap-4">
+            {filteredData.map(device => (
+              <VFCard key={device.id} noPadding className="p-4 flex flex-col gap-3" onClick={() => onDeviceClick?.(device.id)}>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="font-bold text-lg text-text-primary mb-1">{device.name}</div>
+                    <div className="flex gap-2">
+                      <DeviceStatusTag status={device.status} /> 
+                      <DeploymentModeTag mode={device.deployment_mode} />
+                    </div>
+                  </div>
+                  <Button type="text" icon={<MoreVertical size={18} />} />
                 </div>
-                <Button type="text" icon={<MoreVertical size={18} />} />
-              </div>
-            </VFCard>
-          ))}
-          {filteredData.length === 0 && <VFEmptyState description={t('selfhosted.devices.noData')} />}
-        </div>
-      ) : (
-        <VFTable 
-          dataSource={filteredData} 
-          columns={columns} 
-          rowKey="id"
-          pagination={{ pageSize: 10 }}
-          locale={{ emptyText: <VFEmptyState description={t('selfhosted.devices.noData')} /> }}
-        />
-      )}
+              </VFCard>
+            ))}
+            {filteredData.length === 0 && <VFEmptyState description={t('selfhosted.devices.noData')} />}
+          </div>
+        ) : (
+          <VFTable 
+            dataSource={filteredData} 
+            columns={columns} 
+            rowKey="id"
+            pagination={{ pageSize: 10 }}
+            locale={{ emptyText: <VFEmptyState description={t('selfhosted.devices.noData')} /> }}
+          />
+        )}
+      </div>
 
       <LicenseSelectModal 
         open={bindModalOpen} 

@@ -1,12 +1,18 @@
 
-/* Ant Design 全局组件圆角适配 */
+/* Ant Design Global Rounded Adaptation */
 .ant-btn { border-radius: var(--vf-radius-control) !important; }
 .ant-tag { border-radius: var(--vf-radius-tag) !important; }
 .ant-select-selector { border-radius: var(--vf-radius-control) !important; }
 .ant-input { border-radius: var(--vf-radius-control) !important; }
 .ant-modal-content { border-radius: var(--vf-radius-card) !important; }
 
-/* 按钮样式覆盖 */
+/* 屏蔽 Menu 默认的右侧边框，防止双栏布局出现重复的竖线 */
+.ant-menu-inline, 
+.ant-menu-vertical {
+  border-inline-end: none !important;
+}
+
+/* Button Style Overrides */
 .ant-btn-primary:not(.ant-btn-dangerous) {
   background-color: rgba(var(--vf-brand), 1) !important;
   border-color: rgba(var(--vf-brand), 1) !important;
@@ -37,12 +43,10 @@
   border-color: rgba(var(--vf-brand), 1) !important;
 }
 
-/* 链接按钮逻辑 - 移除 !important 以支持 Contextual Overrides */
 .ant-btn-link:not(.ant-btn-dangerous) {
   color: rgba(var(--vf-brand), 1);
 }
 
-/* 危险状态样式 - 保持高优先级 */
 .ant-btn-dangerous.ant-btn-dangerous {
   color: rgba(var(--vf-error), 1) !important;
 }
@@ -53,7 +57,6 @@
   color: #fff !important;
 }
 
-/* 抽屉/模态框通用微调 */
 .ant-drawer-header {
   border-bottom: 1px solid rgba(var(--vf-divider), var(--vf-divider-alpha)) !important;
 }
@@ -64,10 +67,43 @@
   padding-bottom: 12px !important;
 }
 
-/* Switch 内部元素居中适配 */
 .ant-switch-inner-unchecked,
 .ant-switch-inner-checked {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+}
+
+/* Sidebar System Dropdown specific overrides */
+.vf-system-dropdown .ant-dropdown-menu-item,
+.vf-system-dropdown .ant-dropdown-menu-submenu-title {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  padding: 8px 12px !important;
+}
+
+.vf-system-dropdown .ant-dropdown-menu-item-icon {
+  display: none !important;
+}
+
+.vf-system-dropdown .ant-dropdown-menu-title-content {
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.vf-system-dropdown .ant-dropdown-menu-submenu-expand-icon {
+  position: relative !important;
+  right: 0 !important;
+  margin-left: 8px !important;
+}
+
+/* 针对移动端弹出菜单向右溢出的样式兜底方案 */
+@media (max-width: 767px) {
+  /* 当主菜单使用 bottomRight 时，子菜单默认向右弹出，通过此样式强制其在无空间时向左偏移 */
+  .ant-dropdown-menu-submenu-popup {
+    margin-inline-start: -100% !important; /* 使子菜单相对于父菜单项向左偏移 */
+    transform: translateX(-12px) !important;
+  }
 }

@@ -37,7 +37,7 @@ const SeverityTag: React.FC<{ severity: string }> = ({ severity }) => {
     `}>
       <Icon size={12} strokeWidth={2.5} />
       <span className="text-[11px] font-bold uppercase tracking-wide leading-none pt-[1px]">
-        {t(`selfhosted.overview.alerts.${severity}`)}
+        {t('selfhosted.overview.alerts.' + severity)}
       </span>
     </div>
   );
@@ -99,9 +99,11 @@ export const ActiveAlertsPanel: React.FC<Props> = ({ deviceId, loading = false }
             <div className="w-10 h-10 rounded-full bg-bg-page flex items-center justify-center text-text-tertiary mb-3 opacity-40">
               <Ban size={20} />
             </div>
-            <span className="text-xs font-semibold text-text-tertiary uppercase tracking-wider">遥测已禁用</span>
+            <span className="text-xs font-semibold text-text-tertiary uppercase tracking-wider">
+              Telemetry Disabled
+            </span>
             <p className="text-[11px] text-text-tertiary/60 mt-2 max-w-[180px]">
-              设备未授权前，不进行遥测采集与告警分析。
+              Monitoring is disabled until device is licensed.
             </p>
           </div>
         ) : (

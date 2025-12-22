@@ -27,8 +27,9 @@ export const VFCard: React.FC<VFCardProps> = ({
       bg-bg-card rounded-card 
       flex flex-col overflow-hidden
       transition-all duration-200
-      ${bordered ? 'border border-border shadow-card' : ''}
-      ${onClick ? 'cursor-pointer hover:shadow-overlay active:scale-[0.99] active:bg-action-hover' : ''}
+      /* V1.4: Use 1px border as primary separator */
+      ${bordered ? 'border border-border shadow-card hover:shadow-sm' : ''}
+      ${onClick ? 'cursor-pointer hover:border-brand/30 active:scale-[0.99] active:bg-action-hover' : ''}
       ${className}
     `}>
       {(title || extra) && (

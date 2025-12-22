@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Drawer } from 'antd';
 import { Sidebar } from './components/Sidebar';
-import { Header } from './components/Header';
+import { MobileAppBar } from './components/MobileAppBar';
 import { vfLayout } from '../design-system/tokens';
 import { useResponsive } from '../shared/hooks/useResponsive';
 
-const { Content } = Layout;
+const { Content, Sider } = Layout;
 
 interface MainLayoutProps {
   children?: React.ReactNode;
@@ -16,89 +16,78 @@ interface MainLayoutProps {
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ children, activePath = 'workflows', onNavigate }) => {
   const { isMobile, shouldCollapseSidebar } = useResponsive();
-  
-  // State for sidebar collapsed (desktop) or drawer open (mobile)
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // Sync initial state with screen size
   useEffect(() => {
     setCollapsed(shouldCollapseSidebar);
   }, [shouldCollapseSidebar]);
 
-  const toggleSidebar = () => {
-    if (isMobile) {
-      setMobileOpen(!mobileOpen);
-    } else {
-      setCollapsed(!collapsed);
-    }
-  };
-
-  const handleMobileNavigate = (key: string) => {
+  const handleNavigate = (key: string) => {
     if (onNavigate) onNavigate(key);
-    setMobileOpen(false);
+    if (isMobile) setMobileOpen(false);
   };
 
-  // Spec Rule:
-  // - Workflows/Overview (Canvas/Dashboard) -> Gray Background (bg-bg-page)
-  // - Devices/Licenses (Table/List) -> White Background (bg-bg-card)
-  const whiteBgRoutes = ['sh-devices', 'sh-license', 'upload-license'];
-  const isWhitePage = whiteBgRoutes.includes(activePath);
-  
-  const contentBgClass = isWhitePage ? 'bg-bg-card' : 'bg-bg-page';
+  const handleBrandClick = () => {
+    handleNavigate('workflows');
+  };
 
   return (
-    <Layout className="h-screen w-screen overflow-hidden bg-bg-page">
-      {/* 
-        Responsive Navigation Strategy:
-        - Desktop: Sidebar
-        - Mobile: Drawer
-      */}
+    <Layout className="h-screen w-screen overflow-hidden bg-bg-page flex flex-col md:flex-row">
+      {/* 1. Mobile AppBar */}
+      <MobileAppBar 
+        onOpenMenu={() => setMobileOpen(true)} 
+        onBrandClick={handleBrandClick}
+      />
+
+      {/* 2. Desktop/Tablet Sidebar (>= 768px) */}
       {!isMobile && (
-        <Sidebar 
-          collapsed={collapsed} 
-          activeKey={activePath} 
-          onNavigate={onNavigate} 
-        />
+        <Sider
+          trigger={null}
+          collapsible
+          collapsed={collapsed}
+          width={vfLayout.siderWidthExpanded}
+          collapsedWidth={vfLayout.siderWidthCollapsed}
+          className="!bg-bg-card border-r border-border h-full flex flex-col shrink-0"
+        >
+          <Sidebar 
+            collapsed={collapsed} 
+            activeKey={activePath} 
+            onNavigate={handleNavigate} 
+          />
+        </Sider>
       )}
 
-      {isMobile && (
-        <Drawer
-          placement="left"
-          onClose={() => setMobileOpen(false)}
-          open={mobileOpen}
-          styles={{ body: { padding: 0 } }}
-          width={vfLayout.siderWidthExpanded}
-          closable={false}
-        >
-           <div className="h-full bg-bg-card">
-              <Sidebar 
-                collapsed={false} 
-                isMobile={true} 
-                activeKey={activePath} 
-                onNavigate={handleMobileNavigate}
-              />
-           </div>
-        </Drawer>
-      )}
+      {/* 3. Mobile Navigation Drawer */}
+      <Drawer
+        placement="right"
+        onClose={() => setMobileOpen(false)}
+        open={mobileOpen && isMobile}
+        styles={{ 
+          body: { padding: 0 },
+          header: { display: 'none' } 
+        }}
+        width="min(320px, 85vw)"
+        closable={false}
+        destroyOnClose={false}
+      >
+        <div className="h-full bg-bg-card flex flex-col">
+          <Sidebar 
+            collapsed={false} 
+            activeKey={activePath} 
+            onNavigate={handleNavigate}
+          />
+        </div>
+      </Drawer>
       
-      {/* Right Content Area */}
-      {/* Apply dynamic background class here to cover full height */}
-      <Layout className={`h-full flex flex-col transition-colors duration-200 ${contentBgClass}`}>
-        <Header 
-          collapsed={collapsed} 
-          onCollapse={toggleSidebar} 
-          isMobile={isMobile}
-        />
-        
-        {/* Scrollable Content */}
+      {/* 4. Content Area: bg-bg-page ensures #F8FAFC canvas */}
+      <Layout className="flex-1 flex flex-col bg-bg-page relative overflow-hidden">
         <Content 
-          className="flex-1 overflow-y-auto overflow-x-hidden relative custom-scrollbar"
+          className="flex-1 overflow-y-auto overflow-x-hidden relative custom-scrollbar bg-bg-page"
           style={{ 
-            padding: vfLayout.pagePadding,
+            padding: isMobile ? '16px' : '24px',
           }}
         >
-          {/* Content Wrapper - Max Width for Wide screens */}
           <div className="w-full mx-auto max-w-[1600px] min-h-full">
             {children}
           </div>

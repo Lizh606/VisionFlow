@@ -22,8 +22,8 @@ interface Props {
 export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeChange }) => {
   const { t } = useTranslation();
   const { message } = App.useApp();
-  const { isMobile } = useResponsive();
   const [licModalOpen, setLicModalOpen] = useState(false);
+  const { isMobile } = useResponsive();
 
   const isUnbound = device.status === 'PENDING_LICENSE';
 
@@ -97,7 +97,7 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
         </div>
       </VFCard>
 
-      {/* Card B: License Information - 优化待绑定状态 */}
+      {/* Card B: License Information */}
       <VFCard 
         title={t('selfhosted.deviceDetail.summary.licenseTitle')} 
         extra={
@@ -108,7 +108,7 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
               onClick={() => setLicModalOpen(true)}
             >
               <ExternalLink size={14} />
-              {isUnbound ? '绑定授权' : (isMobile ? t('common.edit') : t('selfhosted.deviceDetail.summary.changeLicense'))}
+              {isUnbound ? 'Bind License' : (isMobile ? t('common.edit') : t('selfhosted.deviceDetail.summary.changeLicense'))}
             </Button>
           )
         }
@@ -118,7 +118,7 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
              {isUnbound ? (
                <div className="flex items-center gap-2 text-warning animate-pulse">
                  <ShieldAlert size={18} />
-                 <span className="text-sm font-bold tracking-tight">等待绑定授权证书</span>
+                 <span className="text-sm font-bold tracking-tight">Awaiting License</span>
                </div>
              ) : (
                <div className="text-base sm:text-lg font-bold text-text-primary flex items-center gap-1.5 cursor-pointer hover:text-brand transition-colors">
@@ -135,7 +135,7 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
         </div>
       </VFCard>
 
-      {/* Card C: Current Configuration - 优化待绑定状态 */}
+      {/* Card C: Current Configuration */}
       <VFCard 
         title={t('selfhosted.deviceDetail.summary.configTitle')} 
         extra={
@@ -155,7 +155,7 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
              {isUnbound ? (
                <div className="flex items-center gap-2 text-text-tertiary opacity-60">
                  <FileX size={18} />
-                 <span className="text-sm font-medium italic">暂无部署配置</span>
+                 <span className="text-sm font-medium italic">No configuration found</span>
                </div>
              ) : (
                <div className="text-base sm:text-lg font-bold text-text-primary flex items-center gap-2">

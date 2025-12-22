@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { Button, App, Input, Select } from 'antd';
 import { Plus, Search, ShieldAlert } from 'lucide-react';
@@ -31,15 +32,12 @@ export const DeviceWorkflowTab: React.FC<{ device: any; isAdmin?: boolean }> = (
   const [licenseModalOpen, setLicenseModalOpen] = useState(false);
   const [editingStream, setEditingStream] = useState<Stream | null>(null);
 
-  // Filters State
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
 
-  // Logic Check: If device is pending license, show special empty state
   const isUnbound = device.status === 'PENDING_LICENSE';
 
   const filteredStreams = useMemo(() => {
-    // If unbound, return empty array to trigger empty state logic
     if (isUnbound) return [];
     return streams.filter(s => {
       const matchSearch = s.name.toLowerCase().includes(search.toLowerCase()) || s.id.toLowerCase().includes(search.toLowerCase());
@@ -60,8 +58,8 @@ export const DeviceWorkflowTab: React.FC<{ device: any; isAdmin?: boolean }> = (
           <VFEmptyState 
             icon={<ShieldAlert size={32} className="text-warning" />}
             title={t('selfhosted.devices.unbound')}
-            description="该设备尚未绑定有效的授权证书。请先完成授权绑定，之后即可在该页面配置并部署数据流任务。"
-            actionLabel="立即绑定授权"
+            description="This device has no active license. Please bind a license to start configuring streams."
+            actionLabel="Bind License"
             onAction={() => setLicenseModalOpen(true)}
           />
         </VFCard>
@@ -69,7 +67,7 @@ export const DeviceWorkflowTab: React.FC<{ device: any; isAdmin?: boolean }> = (
           open={licenseModalOpen} 
           onCancel={() => setLicenseModalOpen(false)}
           onSelect={(lic) => {
-            message.success(`已成功选择授权: ${lic.name}`);
+            message.success(`License bound: ${lic.name}`);
             setLicenseModalOpen(false);
           }}
         />
@@ -96,22 +94,21 @@ export const DeviceWorkflowTab: React.FC<{ device: any; isAdmin?: boolean }> = (
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full sm:w-auto">
               <Input 
                 prefix={<Search size={14} className="text-text-tertiary" />}
-                placeholder="搜索名称或 ID..."
+                placeholder="Search name or ID..."
                 value={search}
-                // Fix: Corrected setSearchText to setSearch to match state definition
                 onChange={e => setSearch(e.target.value)}
                 className="w-full sm:w-64 h-10 sm:h-9 rounded-control"
                 allowClear
               />
               <Select 
-                placeholder="状态"
+                placeholder="Status"
                 value={statusFilter}
                 onChange={setStatusFilter}
                 className="w-full sm:w-32 h-10 sm:h-9"
                 options={[
                   { label: t('common.allStatus'), value: 'ALL' },
-                  { label: '运行中', value: 'RUNNING' },
-                  { label: '已暂停', value: 'PAUSED' },
+                  { label: 'Running', value: 'RUNNING' },
+                  { label: 'Paused', value: 'PAUSED' },
                 ]}
               />
             </div>
@@ -136,16 +133,16 @@ export const DeviceWorkflowTab: React.FC<{ device: any; isAdmin?: boolean }> = (
             onEdit={(s) => { setEditingStream(s); setEditorOpen(true); }}
             onDelete={(s) => {
               modal.confirm({
-                title: '删除 Stream',
-                content: `确认从设备部署中移除 "${s.name}"?`,
-                okText: '确认删除',
+                title: 'Delete Stream',
+                content: `Confirm removing "${s.name}" from deployment?`,
+                okText: 'Delete',
                 okType: 'danger',
                 onOk: () => setStreams(prev => prev.filter(x => x.id !== s.id))
               });
             }}
             onToggleStatus={(s) => {
               setStreams(prev => prev.map(x => x.id === s.id ? { ...x, status: x.status === 'RUNNING' ? 'PAUSED' : 'RUNNING' } : x));
-              message.success('状态已更新');
+              message.success('Status updated');
             }}
           />
         </div>
@@ -165,10 +162,10 @@ export const DeviceWorkflowTab: React.FC<{ device: any; isAdmin?: boolean }> = (
         onSave={(vals) => {
           if (editingStream) {
             setStreams(prev => prev.map(s => s.id === editingStream.id ? { ...s, ...vals } : s));
-            message.success('更新成功');
+            message.success('Updated successfully');
           } else {
             setStreams(prev => [...prev, vals]);
-            message.success('创建成功');
+            message.success('Created successfully');
           }
           setEditorOpen(false);
         }}

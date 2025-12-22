@@ -18,6 +18,7 @@ export const zh = {
       "cancel": "取消",
       "delete": "删除",
       "edit": "编辑",
+      "choose": "选择",
       "confirm": "确认",
       "status": "状态",
       "ready": "就绪",
@@ -25,17 +26,66 @@ export const zh = {
       "pause": "暂停",
       "start": "启动",
       "enabled": "已启用",
-      "disabled": "已禁用"
+      "disabled": "已禁用",
+      "language": "语言"
     },
     "menu": {
       "workflows": "工作流",
       "selfHosted": "自托管",
       "overview": "概览",
       "devices": "设备",
-      "license": "许可",
+      "license": "许可证书",
       "support": "帮助与支持",
       "settings": "设置",
       "security": "安全"
+    },
+    "workflows": {
+      "title": "工作流",
+      "inviteTeam": "邀请成员",
+      "helpTooltip": "管理您的计算机视觉处理逻辑与工作流。",
+      "searchPlaceholder": "搜索工作流...",
+      "view": {
+        "list": "列表视图",
+        "grid": "网格视图"
+      },
+      "actions": {
+        "newFolder": "新建文件夹",
+        "explore": "探索模板",
+        "create": "创建工作流"
+      },
+      "folders": {
+        "count": "{{count}} 个工作流",
+        "count_plural": "{{count}} 个工作流",
+        "create": "创建文件夹",
+        "nameLabel": "文件夹名称",
+        "namePlaceholder": "例如：生产环境工作流",
+        "nameRequired": "请输入文件夹名称"
+      },
+      "table": {
+        "name": "工作流名称",
+        "updated": "最后更新时间"
+      },
+      "empty": {
+        "folder": "此文件夹为空",
+        "folderDesc": "在此文件夹中创建您的第一个工作流。",
+        "global": "未找到工作流",
+        "globalDesc": "立即创建您的第一个工作流开始使用。"
+      },
+      "templates": {
+        "modalTitle": "选择模板并配置",
+        "gallery": "图库",
+        "popular": "热门模板",
+        "emptyTitle": "选择一个模板进行预览和配置",
+        "emptyDesc": "浏览左侧图库，查看工作流架构和自定义选项。",
+        "architecture": "工作流架构",
+        "customize": "自定义配置",
+        "customizeDesc": "选择模型或配置参数。",
+        "pickModel": "选择模型：",
+        "noConfig": "无需配置",
+        "noConfigDesc": "此模板使用内置处理逻辑，无需外部视觉模型即可启动。",
+        "footerHint": "请从左侧图库中选择一个模板",
+        "advancedHint": "创建后，可以在工作流编辑器中进一步自定义高级逻辑和推理节点。"
+      }
     },
     "selfhosted": {
       "status": {
@@ -45,220 +95,6 @@ export const zh = {
         "error": "异常",
         "pending": "待许可",
         "decommissioned": "已退役"
-      },
-      "mode": {
-        "edge": "边缘端",
-        "edgeDesc": "本地处理。仅上报许可统计。",
-        "cloud": "云端",
-        "cloudDesc": "在 VisionFlow 云端处理。按量计费。"
-      },
-      "usage": {
-        "dim": "分析维度",
-        "dimWorkflow": "工作流",
-        "dimStream": "Stream",
-        "metric": "指标",
-        "metricImg": "图像数",
-        "metricVid": "视频时长",
-        "dateRange": "时间范围",
-        "modeFilter": "运行模式",
-        "modes": {
-          "all": "全部模式",
-          "edge": "仅边缘端",
-          "cloud": "仅云端"
-        },
-        "footerNote": "统计数据每 5 分钟同步一次。高可用模式下，节点切换可能导致极小概率的重复统计。",
-        "tableCols": {
-          "calls": "总调用量",
-          "errors": "错误数",
-          "errorRate": "错误率"
-        }
-      },
-      "logs": {
-        "title": "高级遥测与日志",
-        "description": "详细的系统日志和链路追踪数据存储在 VisionFlow 观测平台 (SigNoz) 中。您可以直接在该平台查看设备 <bold>{{id}}</bold> 的原始遥测数据。",
-        "launchBtn": "打开观测平台控制台"
-      },
-      "overview": {
-        "title": "自托管概览",
-        "kpi": {
-          "totalDevices": "设备总数",
-          "online": "在线",
-          "pendingLicense": "待授权",
-          "offline": "离线",
-          "licenseUsage": "许可使用情况",
-          "expiringSoon": "{{count}} 个许可即将到期",
-          "usageSummary": "用量摘要",
-          "utilization": "利用率",
-          "activeLicenses": "活跃许可",
-          "expiring": "即将到期",
-          "pending": "待处理设备"
-        },
-        "charts": {
-          "deviceStatus": "设备状态分布",
-          "usageTrend": "用量趋势",
-          "edge": "边缘端计算",
-          "cloud": "云端运行器",
-          "images": "图像",
-          "video": "视频",
-          "count": "数量",
-          "usageSeries": "实际用量",
-          "quotaSeries": "配额限制",
-          "breakdown": "许可分布"
-        },
-        "alerts": {
-          "title": "活动告警",
-          "viewAll": "查看全部",
-          "critical": "严重",
-          "warning": "警告",
-          "info": "信息",
-          "target": "目标"
-        },
-        "shortcuts": {
-          "title": "快捷入口",
-          "viewDeviceList": "查看设备列表",
-          "manageLicenses": "管理许可证书",
-          "recentDeployments": "最近部署任务"
-        },
-        "timeRange": {
-          "24h": "最近 24 小时",
-          "7d": "最近 7 天",
-          "30d": "最近 30 天"
-        },
-        "quickActions": {
-          "title": "快捷操作"
-        },
-        "actions": {
-          "upload": "上传许可",
-          "devices": "查看设备",
-          "manage": "管理许可",
-          "guide": "配置指南"
-        }
-      },
-      "workflowDeployment": {
-        "title": "Streams 部署管理",
-        "addStream": "新增 Stream",
-        "empty": "未配置任何 Stream",
-        "startConfig": "开始配置",
-        "currentVersion": "当前",
-        "latest": "最新稳定版",
-        "lastUpdated": "最后更新时间",
-        "operator": "操作员",
-        "viewHistory": "版本历史",
-        "streamName": "Stream",
-        "input": "输入源",
-        "workflow": "Workflow 绑定",
-        "status": "运行状态",
-        "telemetry": "遥测级别",
-        "updated": "最后更新",
-        "actions": "操作",
-        "readOnly": "只读权限",
-        "deleteStream": "删除 Stream",
-        "editConfig": "编辑配置",
-        "historyTitle": "版本历史",
-        "snapshot": "快照",
-        "diff": "对比",
-        "editTitle": "编辑 Stream 配置",
-        "createTitle": "新增 Stream 配置",
-        "createBtn": "创建并部署",
-        "updateBtn": "保存更改",
-        "basicInfo": "基础信息",
-        "inputSource": "输入源配置",
-        "workflowBinding": "工作流绑定",
-        "runPolicy": "运行策略",
-        "nameLabel": "Stream 名称",
-        "nameRequired": "请输入名称",
-        "namePlaceholder": "例如: 仓库北门监控",
-        "streamId": "Stream ID",
-        "autoGen": "系统自动分配",
-        "sourceType": "协议类型",
-        "endpoint": "URL / 路径",
-        "endpointRequired": "请输入源地址",
-        "selectWorkflow": "关联工作流",
-        "selectWorkflowPlaceholder": "选择工作流模板",
-        "versionStrategy": "版本策略",
-        "latestStable": "最新稳定版",
-        "concurrency": "实例并发",
-        "telemetryGranularity": "遥测级别",
-        "heartbeatOnly": "仅心跳",
-        "heartbeatDesc": "极低功耗，仅上报在线状态。",
-        "metricsOnly": "性能指标 (推荐)",
-        "metricsDesc": "包含吞吐量、延迟、FPS 等核心数据。",
-        "diagnostic": "诊断级遥测",
-        "diagnosticDesc": "包含完整链路追踪，资源消耗较高。",
-        "applyImmediately": "立即生效",
-        "applyImmediatelyDesc": "保存后将重启对应的流任务以应用配置。"
-      },
-      "deviceDetail": {
-        "tabs": {
-          "overview": "概览",
-          "workflow": "Stream 部署",
-          "usage": "用量分析",
-          "logs": "遥测日志"
-        },
-        "summary": {
-          "overviewTitle": "设备概览",
-          "licenseTitle": "授权信息",
-          "configTitle": "配置版本",
-          "deviceId": "设备 ID",
-          "runtimeId": "运行时 ID",
-          "lastSeen": "最后在线",
-          "changeMode": "切换模式",
-          "changeLicense": "变更授权",
-          "licenseType": "类型",
-          "expiry": "到期时间",
-          "quota": "配额 (已用/总计)",
-          "offlineLease": "离线租约",
-          "configVer": "版本",
-          "streamsCount": "运行 Stream",
-          "configuredBy": "操作员",
-          "lastModified": "最后修改",
-          "lastModifiedTime": "修改时间",
-          "viewHistory": "查看历史",
-          "licenseUpdated": "授权信息已成功更新",
-          "mode": "运行模式",
-          "streamsRunning": "{{count}} 个 Stream"
-        },
-        "overview": {
-          "recentAlerts": "最近告警",
-          "units": "图像单元",
-          "unitsTooltip": "选定时间段内处理的帧数或触发次数总计。"
-        }
-      },
-      "license": {
-        "title": "许可管理",
-        "selectTitle": "选择授权证书",
-        "upload": "上传证书",
-        "daysLeft": "(剩余 {{count}} 天)",
-        "noData": "未找到授权证书。",
-        "cols": {
-          "name": "名称",
-          "key": "Key ID",
-          "type": "类型",
-          "billing": "计费模式",
-          "usage": "使用情况",
-          "expiry": "到期日期"
-        },
-        "actions": { "viewUsage": "使用详情", "extend": "续期" },
-        "quotaAvailable": "{{count}} / {{total}} 可用",
-        "selectedLabel": "已选择授权"
-      },
-      "devices": {
-        "title": "设备列表",
-        "searchPlaceholder": "搜索名称、ID...",
-        "alert": {
-          "pendingMessage": "您有 <bold>{{count}}</bold> 台新设备等待绑定授权证书。",
-          "filterAction": "筛选待处理"
-        },
-        "cols": {
-          "name": "设备名称",
-          "id": "设备 ID",
-          "status": "状态",
-          "mode": "模式",
-          "license": "授权",
-          "lastSeen": "最后在线"
-        },
-        "unbound": "未绑定",
-        "noData": "没有符合条件的设备。"
       }
     }
   }
