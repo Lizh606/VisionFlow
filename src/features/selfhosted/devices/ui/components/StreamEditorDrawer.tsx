@@ -1,6 +1,6 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Drawer, Form, Input, Select, Switch, Button, Radio, Space } from 'antd';
+import { Drawer, Form, Input, Select, Switch, Button, Radio } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { 
   Zap, 
@@ -38,16 +38,16 @@ interface SectionProps {
 }
 
 const Section: React.FC<SectionProps> = ({ title, subtitle, icon: Icon, children }) => (
-  <div className="flex flex-col gap-4 mb-8 sm:mb-10 last:mb-0">
+  <div className="flex flex-col gap-4 mb-10 last:mb-0">
     <div className="flex items-center gap-3 border-b border-divider pb-3">
       <div className="flex items-center justify-center w-8 h-8 rounded-control bg-bg-page border border-border text-text-secondary shrink-0">
         <Icon size={16} strokeWidth={2} />
       </div>
       <div className="flex flex-col min-w-0">
-        <span className="text-[14px] font-bold text-text-primary uppercase tracking-wider leading-none mb-1">
+        <span className="text-sm font-bold text-text-primary uppercase tracking-wider leading-none mb-1">
           {title}
         </span>
-        {subtitle && <span className="text-[11px] text-text-tertiary font-medium truncate">{subtitle}</span>}
+        {subtitle && <span className="text-xs text-text-tertiary font-medium truncate">{subtitle}</span>}
       </div>
     </div>
     <div className="px-0 sm:px-1">{children}</div>
@@ -56,7 +56,7 @@ const Section: React.FC<SectionProps> = ({ title, subtitle, icon: Icon, children
 
 const TelemetryLevelCard = ({ icon: Icon, title, desc, recommended, active }: any) => (
   <div className={`
-    relative flex items-center gap-3.5 p-4 rounded-card border transition-all cursor-pointer select-none h-full w-full
+    relative flex items-center gap-4 p-4 rounded-card border transition-all cursor-pointer select-none h-full w-full
     ${active 
       ? 'bg-brand/[0.04] border-brand/40 ring-1 ring-brand/10 shadow-sm' 
       : 'bg-bg-card border-border hover:border-brand/20 hover:bg-bg-page/40'}
@@ -70,16 +70,16 @@ const TelemetryLevelCard = ({ icon: Icon, title, desc, recommended, active }: an
 
     <div className="flex flex-col min-w-0 flex-1">
       <div className="flex items-center justify-between gap-2 mb-1">
-        <span className={`text-[14px] font-bold leading-none ${active ? 'text-brand' : 'text-text-primary'}`}>
+        <span className={`text-sm font-bold leading-none ${active ? 'text-brand' : 'text-text-primary'}`}>
           {title}
         </span>
         {recommended && (
-          <VFTag variant="brand" className="h-4 px-1.5 text-[9px] font-bold opacity-80" filled={false}>
+          <VFTag variant="brand" className="h-4.5 px-1.5 text-[10px] font-bold opacity-80" filled={false}>
             REC
           </VFTag>
         )}
       </div>
-      <p className="text-[12px] text-text-tertiary leading-snug line-clamp-2 m-0 font-medium opacity-80">
+      <p className="text-xs text-text-tertiary leading-snug line-clamp-2 m-0 font-medium opacity-80">
         {desc}
       </p>
     </div>
@@ -144,13 +144,13 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
           <div className="w-10 h-10 rounded-control bg-brand/5 border border-brand/10 text-brand flex items-center justify-center shrink-0 shadow-sm">
             {isEdit ? <Settings2 size={22} /> : <Plus size={22} />}
           </div>
-          <div className="flex flex-col gap-0.5">
-            <span className="font-bold text-[17px] text-text-primary leading-tight">
+          <div className="flex flex-col gap-1">
+            <span className="font-bold text-base text-text-primary leading-tight">
               {isEdit ? t('selfhosted.workflowDeployment.editTitle') : t('selfhosted.workflowDeployment.createTitle')}
             </span>
             <div className="flex items-center gap-2">
-              <span className="text-[11px] text-text-tertiary font-bold tracking-wider uppercase opacity-60">Stream ID:</span>
-              <span className="text-[11px] font-mono font-bold text-text-secondary">
+              <span className="text-xs text-text-tertiary font-bold tracking-wider uppercase opacity-60">Stream ID:</span>
+              <span className="text-xs font-mono font-bold text-text-secondary">
                 {isEdit ? initialValues?.id : 'AUTO_ASSIGNED'}
               </span>
             </div>
@@ -165,15 +165,15 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
       footer={
         <div className="flex flex-col bg-bg-card">
           {isEdit && isDirty && (
-            <div className="px-6 py-2.5 bg-warning/5 border-b border-warning/10 flex items-center gap-3">
+            <div className="px-6 py-3 bg-warning/5 border-b border-warning/10 flex items-center gap-3">
               <AlertCircle size={14} className="text-warning shrink-0" />
-              <span className="text-[12px] font-medium text-warning-700">
+              <span className="text-xs font-medium text-warning-700">
                 Changes may cause stream restart
               </span>
             </div>
           )}
           
-          <div className="flex items-center justify-between px-6 py-4">
+          <div className="flex items-center justify-between px-6 py-5">
             <Button 
               onClick={onClose} 
               className="h-11 px-8 font-semibold border-none text-text-secondary hover:text-text-primary hover:bg-bg-page transition-all"
@@ -205,18 +205,18 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
         className="vf-form-refined"
       >
         <Section title={t('selfhosted.workflowDeployment.basicInfo')} icon={Info} subtitle="Set identification and discovery info">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-0 sm:gap-y-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
             <Form.Item 
-              label={<span className="text-[13px] font-bold">{t('selfhosted.workflowDeployment.nameLabel')}</span>} 
+              label={<span className="text-sm font-bold text-text-secondary">{t('selfhosted.workflowDeployment.nameLabel')}</span>} 
               name="name" 
               rules={[{ required: true, message: t('selfhosted.workflowDeployment.nameRequired') }]}
-              className="mb-5 sm:mb-4"
+              className="mb-0"
             >
               <Input placeholder={t('selfhosted.workflowDeployment.namePlaceholder')} className="h-11" allowClear />
             </Form.Item>
             <Form.Item 
-              label={<span className="text-[13px] font-bold">Stream ID</span>} 
-              className="mb-5 sm:mb-4 opacity-70"
+              label={<span className="text-sm font-bold text-text-secondary">Stream ID</span>} 
+              className="mb-0 opacity-70"
             >
               <Input value={isEdit ? initialValues?.id : "AUTO"} disabled className="h-11 font-mono" />
             </Form.Item>
@@ -224,8 +224,8 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
         </Section>
 
         <Section title={t('selfhosted.workflowDeployment.inputSource')} icon={Network} subtitle="Connection protocol and endpoint">
-          <div className="bg-bg-page/40 p-4 sm:p-5 rounded-card border border-border flex flex-col gap-6">
-            <Form.Item label={<span className="text-[13px] font-bold">{t('selfhosted.workflowDeployment.sourceType')}</span>} name="type" className="mb-0">
+          <div className="bg-bg-page/40 p-5 rounded-card border border-border flex flex-col gap-6">
+            <Form.Item label={<span className="text-sm font-bold text-text-secondary">{t('selfhosted.workflowDeployment.sourceType')}</span>} name="type" className="mb-0">
               <Radio.Group className="vf-radio-group-refined w-full grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <Radio.Button value="RTSP">
                   <Video size={16} /><span>RTSP</span>
@@ -240,7 +240,7 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
             </Form.Item>
             
             <Form.Item 
-              label={<span className="text-[13px] font-bold">{t('selfhosted.workflowDeployment.endpoint')}</span>} 
+              label={<span className="text-sm font-bold text-text-secondary">{t('selfhosted.workflowDeployment.endpoint')}</span>} 
               name="endpoint" 
               rules={[{ required: true, message: t('selfhosted.workflowDeployment.endpointRequired') }]}
               className="mb-0"
@@ -248,19 +248,19 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
               {sourceType === 'RTSP' ? (
                 <Input.Password 
                   placeholder="rtsp://admin:****@192.168.1.1:554/ch1" 
-                  className="h-11 font-mono text-[13px]" 
+                  className="h-11 font-mono text-sm" 
                   iconRender={visible => (visible ? <Eye size={18} /> : <EyeOff size={18} />)}
                 />
               ) : (
-                <Input placeholder={sourceType === 'FILE' ? "/data/recordings/clip_01.mp4" : "https://api.visionflow.io/ingest/..."} className="h-11 font-mono" />
+                <Input placeholder={sourceType === 'FILE' ? "/data/recordings/clip_01.mp4" : "https://api.visionflow.io/ingest/..."} className="h-11 font-mono text-sm" />
               )}
             </Form.Item>
           </div>
         </Section>
 
         <Section title={t('selfhosted.workflowDeployment.workflowBinding')} icon={Database} subtitle="Assign vision logic to this stream">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-0 sm:gap-y-2">
-            <Form.Item label={<span className="text-[13px] font-bold">{t('selfhosted.workflowDeployment.selectWorkflow')}</span>} name="workflowId" rules={[{ required: true }]} className="mb-5 sm:mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6">
+            <Form.Item label={<span className="text-sm font-bold text-text-secondary">{t('selfhosted.workflowDeployment.selectWorkflow')}</span>} name="workflowId" rules={[{ required: true }]} className="mb-0">
               <Select 
                 showSearch
                 className="h-11 w-full"
@@ -272,8 +272,8 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
               />
             </Form.Item>
             
-            <div className="flex flex-col gap-0 sm:gap-6 mb-5 sm:mb-6">
-              <Form.Item label={<span className="text-[13px] font-bold">{t('selfhosted.workflowDeployment.versionStrategy')}</span>} name="strategy" className="mb-2 sm:mb-0">
+            <div className="flex flex-col gap-4">
+              <Form.Item label={<span className="text-sm font-bold text-text-secondary">{t('selfhosted.workflowDeployment.versionStrategy')}</span>} name="strategy" className="mb-0">
                 <Radio.Group className="vf-radio-group-refined w-full grid grid-cols-2 gap-2">
                   <Radio.Button value="LATEST">LATEST</Radio.Button>
                   <Radio.Button value="SPECIFIC">SPECIFIC</Radio.Button>
@@ -297,19 +297,19 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
         </Section>
 
         <Section title={t('selfhosted.workflowDeployment.runPolicy')} icon={Zap} subtitle="Runtime and telemetry settings">
-          <div className="flex flex-col gap-6">
-            <Form.Item label={<span className="text-[13px] font-bold">{t('selfhosted.workflowDeployment.concurrency')}</span>} name="concurrency" className="mb-0 max-w-full sm:max-w-[200px]">
+          <div className="flex flex-col gap-8">
+            <Form.Item label={<span className="text-sm font-bold text-text-secondary">{t('selfhosted.workflowDeployment.concurrency')}</span>} name="concurrency" className="mb-0 max-w-full sm:max-w-[200px]">
               <Input type="number" min={1} max={10} className="h-11 font-bold text-center" suffix="INST" />
             </Form.Item>
 
-            <div className="flex flex-col gap-3">
-              <span className="text-[13px] font-bold text-text-secondary">{t('selfhosted.workflowDeployment.telemetryGranularity')}</span>
+            <div className="flex flex-col gap-4">
+              <span className="text-sm font-bold text-text-secondary">{t('selfhosted.workflowDeployment.telemetryGranularity')}</span>
               <Form.Item name="telemetry" className="mb-0">
-                <Radio.Group className="w-full grid grid-cols-1 sm:grid-cols-3 gap-3 items-stretch">
+                <Radio.Group className="w-full grid grid-cols-1 sm:grid-cols-3 gap-4 items-stretch">
                   {[
-                    { value: 'HEARTBEAT', title: 'Heartbeat', desc: 'Online check only, lowest overhead', icon: ShieldCheck },
-                    { value: 'METRICS', title: 'Metrics', desc: 'Throughput, latency, FPS data', icon: Activity, recommended: true },
-                    { value: 'DIAGNOSTIC', title: 'Diagnostic', desc: 'Full traces, high overhead', icon: Video },
+                    { value: 'HEARTBEAT', title: 'Heartbeat', desc: 'Online check only', icon: ShieldCheck },
+                    { value: 'METRICS', title: 'Metrics', desc: 'Throughput & FPS', icon: Activity, recommended: true },
+                    { value: 'DIAGNOSTIC', title: 'Diagnostic', desc: 'Full traces', icon: Video },
                   ].map(opt => (
                     <Radio key={opt.value} value={opt.value} className="vf-card-radio !m-0 !p-0">
                       <TelemetryLevelCard 
@@ -322,23 +322,23 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
               </Form.Item>
             </div>
 
-            <div className="p-4 rounded-card border border-brand/10 bg-brand/5 flex items-start gap-3 mb-4">
-              <div className="pt-0.5 text-brand"><AlertCircle size={16} /></div>
+            <div className="p-4 rounded-card border border-brand/20 bg-brand/5 flex items-start gap-4 mb-4">
+              <div className="pt-1 text-brand"><AlertCircle size={18} /></div>
               <div className="flex-1">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[13px] font-bold text-text-primary">{t('selfhosted.workflowDeployment.applyImmediately')}</span>
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-sm font-bold text-text-primary">{t('selfhosted.workflowDeployment.applyImmediately')}</span>
                   <Form.Item name="applyImmediately" valuePropName="checked" className="mb-0">
                     <Switch size="small" />
                   </Form.Item>
                 </div>
-                <p className="text-[11px] text-text-tertiary font-medium m-0 leading-normal">
+                <p className="text-xs text-text-tertiary font-medium m-0 leading-relaxed">
                   {t('selfhosted.workflowDeployment.applyImmediatelyDesc')}
                 </p>
                 {isEdit && (
-                   <p className="text-[10px] text-brand font-bold mt-2 flex items-center gap-1">
-                     <ChevronRight size={10} />
+                   <div className="text-xs text-brand font-bold mt-2.5 flex items-center gap-1.5">
+                     <ChevronRight size={12} strokeWidth={3} />
                      {!form.getFieldValue('applyImmediately') && "Changes applied on next release"}
-                   </p>
+                   </div>
                 )}
               </div>
             </div>

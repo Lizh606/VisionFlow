@@ -17,9 +17,6 @@ interface Props {
   onDelete: (stream: Stream) => void;
 }
 
-/**
- * Mobile Stream Card component
- */
 const StreamCard: React.FC<{
   stream: Stream;
   isAdmin: boolean;
@@ -44,17 +41,16 @@ const StreamCard: React.FC<{
 
   return (
     <div className="flex flex-col p-4 bg-bg-card border-b border-divider last:border-b-0 group">
-      {/* Row 1: Icon + Name + Actions */}
-      <div className="flex items-start justify-between mb-3">
+      <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3 overflow-hidden">
-          <div className="w-9 h-9 rounded-control bg-bg-page border border-border/40 flex items-center justify-center text-text-tertiary shrink-0">
-            <Video size={16} />
+          <div className="w-10 h-10 rounded-control bg-bg-page border border-border flex items-center justify-center text-text-tertiary shrink-0">
+            <Video size={18} strokeWidth={1.5} />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="font-bold text-text-primary text-[15px] leading-tight truncate">
+            <span className="font-bold text-text-primary text-base leading-tight truncate">
               {stream.name}
             </span>
-            <span className="text-[11px] font-mono text-text-tertiary mt-1 opacity-60">
+            <span className="text-xs font-mono text-text-tertiary mt-1 font-medium opacity-60">
               {stream.id}
             </span>
           </div>
@@ -71,36 +67,34 @@ const StreamCard: React.FC<{
         )}
       </div>
 
-      {/* Row 2: Workflow & Status */}
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-1.5 min-w-0">
-          <Zap size={13} className="text-brand opacity-70 shrink-0" />
-          <span className="text-[13px] font-semibold text-text-secondary truncate">{stream.workflow}</span>
-          <VFTag variant="brand" className="h-4 text-[9px] px-1 opacity-70" filled={false}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2 min-w-0">
+          <Zap size={14} className="text-brand opacity-70 shrink-0" />
+          <span className="text-sm font-semibold text-text-secondary truncate">{stream.workflow}</span>
+          <VFTag variant="brand" className="h-5 text-[10px] px-1.5 opacity-70" filled={false}>
             {stream.version}
           </VFTag>
         </div>
         <VFTag 
           variant={isRunning ? 'success' : 'neutral'} 
           filled={true} 
-          className="h-5 text-[9px] font-bold uppercase min-w-[64px]"
+          className="h-6 text-[10px] font-bold uppercase min-w-[72px]"
         >
           {stream.status}
         </VFTag>
       </div>
 
-      {/* Row 3: Details (Telemetry, Type, Time) */}
-      <div className="flex items-center justify-between mt-1 pt-2 border-t border-divider/40">
+      <div className="flex items-center justify-between mt-1 pt-3 border-t border-divider/40">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1.5 text-[11px] text-text-tertiary">
+          <div className="flex items-center gap-1.5 text-xs text-text-tertiary">
             <Activity size={12} className="opacity-50" />
-            <span className="font-medium uppercase">{stream.telemetry}</span>
+            <span className="font-bold uppercase tracking-tight">{stream.telemetry}</span>
           </div>
-          <VFTag variant="neutral" className="h-4.5 text-[9px] px-1.5 font-mono" filled={false}>
+          <VFTag variant="neutral" className="h-5 text-[10px] px-2 font-mono" filled={false}>
             {stream.type}
           </VFTag>
         </div>
-        <div className="flex items-center gap-1.5 text-[11px] text-text-tertiary">
+        <div className="flex items-center gap-1.5 text-xs text-text-tertiary font-medium">
           <Clock size={12} className="opacity-40" />
           <span>{dayjs(stream.updatedAt).fromNow()}</span>
         </div>
@@ -121,17 +115,14 @@ export const StreamsTable: React.FC<Props> = ({ data, isAdmin, onEdit, onToggleS
           className="vf-mobile-list"
           locale={{ 
             emptyText: (
-              <div className="py-12 flex flex-col items-center justify-center">
-                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={t('selfhosted.workflowDeployment.empty')} />
+              <div className="py-16 flex flex-col items-center justify-center">
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span className="text-sm text-text-tertiary">{t('selfhosted.workflowDeployment.empty')}</span>} />
               </div>
             )
           }}
           pagination={data.length > 0 ? {
             pageSize: 10,
             size: 'small',
-            showSizeChanger: false,
-            hideOnSinglePage: true,
-            position: 'bottom',
             align: 'center',
             className: 'vf-list-pagination'
           } : false}
@@ -148,14 +139,10 @@ export const StreamsTable: React.FC<Props> = ({ data, isAdmin, onEdit, onToggleS
         />
         <style>{`
           .vf-list-pagination {
-            padding: 16px 24px !important;
+            padding: 20px 24px !important;
             margin: 0 !important;
             border-top: 1px solid rgba(var(--vf-divider), var(--vf-divider-alpha));
             background-color: rgba(var(--vf-bg-card), 1);
-            justify-content: center !important;
-          }
-          .vf-mobile-list-container .ant-list-pagination {
-            margin-top: 0 !important;
           }
         `}</style>
       </div>
@@ -169,15 +156,15 @@ export const StreamsTable: React.FC<Props> = ({ data, isAdmin, onEdit, onToggleS
       key: 'name',
       width: '24%',
       render: (text: string, record: Stream) => (
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-control bg-bg-page border border-border/40 flex items-center justify-center text-text-tertiary shrink-0">
-            <Video size={14} strokeWidth={1.5} />
+        <div className="flex items-center gap-3 py-1">
+          <div className="w-9 h-9 rounded-control bg-bg-page border border-border flex items-center justify-center text-text-tertiary shrink-0">
+            <Video size={16} strokeWidth={1.5} />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="font-bold text-text-primary text-[14px] leading-tight truncate">
+            <span className="font-bold text-text-primary text-sm leading-tight truncate">
               {text}
             </span>
-            <span className="text-[11px] font-mono text-text-tertiary mt-0.5 tracking-tight">
+            <span className="text-xs font-mono text-text-tertiary mt-0.5 font-medium tracking-tight opacity-50">
               {record.id}
             </span>
           </div>
@@ -190,7 +177,7 @@ export const StreamsTable: React.FC<Props> = ({ data, isAdmin, onEdit, onToggleS
       key: 'type',
       width: '10%',
       render: (type: string) => (
-        <VFTag variant="neutral" className="font-mono text-[10px] h-5 px-1.5" filled={false}>
+        <VFTag variant="neutral" className="font-mono text-[10px] h-5 px-2" filled={false}>
           {type}
         </VFTag>
       ),
@@ -201,9 +188,9 @@ export const StreamsTable: React.FC<Props> = ({ data, isAdmin, onEdit, onToggleS
       key: 'workflow',
       width: '24%',
       render: (text: string, record: Stream) => (
-        <div className="flex items-center gap-1.5">
-          <span className="text-[13px] font-bold text-brand hover:underline cursor-pointer truncate max-w-[140px]">{text}</span>
-          <VFTag variant="brand" className="h-4 text-[9px] px-1 opacity-70" filled={false}>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-bold text-brand hover:underline cursor-pointer truncate max-w-[160px]">{text}</span>
+          <VFTag variant="brand" className="h-4.5 text-[9px] px-1.5 font-bold opacity-60" filled={false}>
             {record.version}
           </VFTag>
         </div>
@@ -220,7 +207,7 @@ export const StreamsTable: React.FC<Props> = ({ data, isAdmin, onEdit, onToggleS
           <VFTag 
             variant={isRunning ? 'success' : 'neutral'} 
             filled={true} 
-            className="h-5.5 min-w-[72px] font-bold text-[10px] uppercase"
+            className="h-6 min-w-[80px] font-bold text-[10px] uppercase"
           >
             {s}
           </VFTag>
@@ -233,7 +220,7 @@ export const StreamsTable: React.FC<Props> = ({ data, isAdmin, onEdit, onToggleS
       key: 'telemetry',
       width: '12%',
       render: (t_val: string) => (
-        <VFTag variant="neutral" className="h-5 text-[10px] px-1.5" filled={false}>
+        <VFTag variant="neutral" className="h-5 text-[10px] px-2 font-bold uppercase tracking-tight" filled={false}>
           {t_val}
         </VFTag>
       ),
@@ -245,8 +232,8 @@ export const StreamsTable: React.FC<Props> = ({ data, isAdmin, onEdit, onToggleS
       width: '14%',
       render: (date: string) => (
         <Tooltip title={dayjs(date).format('YYYY-MM-DD HH:mm:ss')}>
-          <div className="flex items-center gap-1.5 text-[12px] text-text-tertiary">
-            <Clock size={12} className="opacity-40" />
+          <div className="flex items-center gap-2 text-xs text-text-tertiary font-medium">
+            <Clock size={14} className="opacity-40" />
             <span>{dayjs(date).fromNow()}</span>
           </div>
         </Tooltip>
@@ -272,7 +259,7 @@ export const StreamsTable: React.FC<Props> = ({ data, isAdmin, onEdit, onToggleS
         ];
         return (
           <Dropdown menu={{ items }} trigger={['click']} placement="bottomRight">
-            <Button type="text" size="small" icon={<MoreVertical size={16} />} className="text-text-tertiary" />
+            <Button type="text" size="small" icon={<MoreVertical size={18} />} className="text-text-tertiary" />
           </Dropdown>
         );
       }
@@ -288,8 +275,7 @@ export const StreamsTable: React.FC<Props> = ({ data, isAdmin, onEdit, onToggleS
         pagination={{ 
           pageSize: 10, 
           showSizeChanger: true, 
-          size: 'small',
-          hideOnSinglePage: false
+          size: 'small'
         }}
         className="!border-none !rounded-none"
       />

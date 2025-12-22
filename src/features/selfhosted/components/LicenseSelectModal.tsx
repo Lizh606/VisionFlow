@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Modal, Radio, Space, Input } from 'antd';
 import { Search } from 'lucide-react';
@@ -43,7 +42,7 @@ export const LicenseSelectModal: React.FC<Props> = ({ open, onCancel, onSelect, 
       title: t('selfhosted.license.cols.name'),
       dataIndex: 'name',
       key: 'name',
-      render: (text: string) => <span className="font-bold text-text-primary">{text}</span>
+      render: (text: string) => <span className="font-bold text-text-primary text-sm">{text}</span>
     },
     {
       title: t('selfhosted.license.cols.type'),
@@ -71,7 +70,7 @@ export const LicenseSelectModal: React.FC<Props> = ({ open, onCancel, onSelect, 
       title: t('selfhosted.license.cols.expiry'),
       dataIndex: 'expiry_date',
       key: 'expiry',
-      render: (d: string) => dayjs(d).format('YYYY-MM-DD')
+      render: (d: string) => <span className="text-sm text-text-secondary">{dayjs(d).format('YYYY-MM-DD')}</span>
     }
   ];
 
@@ -99,7 +98,7 @@ export const LicenseSelectModal: React.FC<Props> = ({ open, onCancel, onSelect, 
            placeholder={t('selfhosted.devices.searchPlaceholder')}
            value={searchText}
            onChange={e => setSearchText(e.target.value)}
-           className="h-10 rounded-control"
+           className="h-10 rounded-control text-sm"
            allowClear
          />
 
@@ -117,14 +116,13 @@ export const LicenseSelectModal: React.FC<Props> = ({ open, onCancel, onSelect, 
          />
       </div>
       
-      {/* Selected Summary */}
       {selectedId && (
         <div className="bg-bg-page p-4 rounded-card border border-brand/20 flex justify-between items-center animate-in slide-in-from-bottom-2 duration-300">
           <Space direction="vertical" size={0}>
-             <span className="text-[10px] text-text-tertiary uppercase font-bold tracking-wider">
+             <span className="text-xs text-text-tertiary uppercase font-bold tracking-wider">
                {t('selfhosted.license.selectedLabel', { defaultValue: '已选择授权' })}
              </span>
-             <span className="font-bold text-brand">
+             <span className="font-bold text-brand text-sm">
                {mockLicenses.find(l => l.id === selectedId)?.name}
              </span>
           </Space>
@@ -146,7 +144,6 @@ export const LicenseSelectModal: React.FC<Props> = ({ open, onCancel, onSelect, 
           font-size: 18px !important;
           font-weight: 700 !important;
         }
-        /* 确保表格行最小高度符合规范 */
         .ant-modal-body .ant-table-tbody > tr > td {
           padding: 12px 16px !important;
         }

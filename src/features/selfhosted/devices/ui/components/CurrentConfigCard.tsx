@@ -12,10 +12,6 @@ interface Props {
   onViewHistory: () => void;
 }
 
-/**
- * CurrentConfigCard - Redesigned as a Configuration Summary Header
- * Mobile Responsive adaptation included.
- */
 export const CurrentConfigCard: React.FC<Props> = ({ version, onViewHistory }) => {
   const { t } = useTranslation();
   const { isMobile } = useResponsive();
@@ -23,38 +19,33 @@ export const CurrentConfigCard: React.FC<Props> = ({ version, onViewHistory }) =
 
   return (
     <div className={`
-      bg-bg-card rounded-card border border-border px-4 sm:px-5 flex items-center shadow-sm transition-all duration-300
-      ${isMobile ? 'py-3' : 'h-[84px]'}
+      bg-bg-card rounded-card border border-border px-5 flex items-center shadow-sm transition-all duration-300
+      ${isMobile ? 'py-4' : 'h-[92px]'}
     `}>
       <Flex justify="space-between" align="center" className="w-full">
-        {/* Left Section: Icon and Information Stack */}
-        <Flex align="center" gap={isMobile ? 12 : 16} className="overflow-hidden">
-          {/* Visual Anchor: Icon Block - Hidden or smaller on mobile to save space if needed */}
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-control bg-brand/5 border border-brand/10 flex items-center justify-center text-brand shrink-0">
-            <Settings size={isMobile ? 18 : 20} strokeWidth={2} />
+        <Flex align="center" gap={16} className="overflow-hidden">
+          <div className="w-11 h-11 rounded-control bg-brand/5 border border-brand/10 flex items-center justify-center text-brand shrink-0">
+            <Settings size={22} strokeWidth={2} />
           </div>
 
-          {/* Textual Content Stack */}
-          <div className="flex flex-col gap-0.5 overflow-hidden">
-            {/* Main Title Row: Config Version + Single Latest Tag */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm sm:text-base font-bold text-text-primary leading-tight">
+          <div className="flex flex-col gap-1 overflow-hidden">
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="text-base font-bold text-text-primary leading-tight">
                 {isMobile ? version.version : `${t('selfhosted.deviceDetail.summary.configTitle')} ${version.version}`}
               </span>
               <VFTag 
                 variant="neutral" 
                 filled={false} 
-                className="h-4.5 text-[9px] px-1.5 font-bold opacity-60 border-border"
+                className="h-5 text-[10px] px-2 font-bold opacity-60 border-border"
               >
                 {t('selfhosted.workflowDeployment.latest')}
               </VFTag>
             </div>
 
-            {/* Metadata Row: Hide on smallest screens, simplified on mobile */}
             {!isMobile && (
-              <div className="flex items-center gap-3 text-[12px] text-text-secondary font-medium mt-1">
+              <div className="flex items-center gap-4 text-xs text-text-secondary font-medium">
                 <div className="flex items-center gap-1.5">
-                  <Clock size={13} className="text-text-tertiary opacity-60" />
+                  <Clock size={14} className="text-text-tertiary opacity-60" />
                   <span>
                     {t('selfhosted.workflowDeployment.lastUpdated')}: 
                     <span className="ml-1 text-text-tertiary font-normal">{version.timestamp}</span>
@@ -64,7 +55,7 @@ export const CurrentConfigCard: React.FC<Props> = ({ version, onViewHistory }) =
                 <span className="text-text-tertiary opacity-30 select-none">{"\u00b7"}</span>
                 
                 <div className="flex items-center gap-1.5">
-                  <User size={13} className="text-text-tertiary opacity-60" />
+                  <User size={14} className="text-text-tertiary opacity-60" />
                   <span>
                     {t('selfhosted.workflowDeployment.operator')}: 
                     <span className="ml-1 text-text-tertiary font-normal">{version.user}</span>
@@ -74,24 +65,23 @@ export const CurrentConfigCard: React.FC<Props> = ({ version, onViewHistory }) =
             )}
             
             {isMobile && (
-              <div className="text-[11px] text-text-tertiary font-medium">
+              <div className="text-xs text-text-tertiary font-medium">
                 {version.timestamp}
               </div>
             )}
           </div>
         </Flex>
 
-        {/* Right Section: Ghost Button Entry */}
-        <div className="shrink-0 ml-2">
+        <div className="shrink-0 ml-4">
           <Button 
-            icon={<History size={isMobile ? 14 : 15} />} 
+            icon={<History size={16} />} 
             onClick={onViewHistory}
             className={`
-              flex items-center gap-2 transition-all font-semibold
+              flex items-center gap-2 transition-all font-bold
               text-text-secondary border-border bg-transparent
               hover:!text-brand hover:!border-brand hover:!bg-brand/5
               rounded-control
-              ${isMobile ? 'h-8 px-2.5 text-[11px]' : 'h-9 px-4 text-[13px]'}
+              ${isMobile ? 'h-9 px-3 text-xs' : 'h-10 px-5 text-sm'}
             `}
           >
             {!isMobile && t('selfhosted.workflowDeployment.viewHistory')}

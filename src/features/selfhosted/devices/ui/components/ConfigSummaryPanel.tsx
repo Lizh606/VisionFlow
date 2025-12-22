@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Skeleton, Button } from 'antd';
@@ -16,7 +15,6 @@ export const ConfigSummaryPanel: React.FC<Props> = ({ device, loading = false })
   const { t } = useTranslation();
   const isUnbound = device.status === 'PENDING_LICENSE';
 
-  // Mock Active Streams - only show if not unbound
   const activeStreams = isUnbound ? [] : [
     { id: 's1', name: 'Main Entrance RTSP', workflow: 'Crowd Analysis v2', status: 'RUNNING' },
     { id: 's2', name: 'Loading Dock 04', workflow: 'PPE Check v1.5', status: 'RUNNING' },
@@ -48,7 +46,7 @@ export const ConfigSummaryPanel: React.FC<Props> = ({ device, loading = false })
             <p className="text-xs text-text-tertiary max-w-[200px] leading-relaxed mb-4">
               在完成授权绑定之前，无法同步工作流配置或部署 Stream 任务。
             </p>
-            <Button type="link" size="small" className="text-brand font-bold p-0">
+            <Button type="link" size="small" className="text-brand font-bold p-0 text-xs">
               去绑定授权
             </Button>
           </div>
@@ -68,10 +66,10 @@ export const ConfigSummaryPanel: React.FC<Props> = ({ device, loading = false })
                   </div>
                   <div className="flex flex-col min-w-0">
                     <div className="text-sm font-semibold text-text-primary truncate leading-tight mb-0.5">{stream.name}</div>
-                    <div className="text-[11px] text-text-tertiary truncate flex items-center gap-1.5">
+                    <div className="text-xs text-text-tertiary truncate flex items-center gap-1.5">
                       <span className="opacity-80">{stream.workflow}</span>
                       <span className="opacity-40">•</span>
-                      <span className="font-mono">{stream.id}</span>
+                      <span className="font-mono text-xs">{stream.id}</span>
                     </div>
                   </div>
                 </div>
@@ -91,8 +89,6 @@ export const ConfigSummaryPanel: React.FC<Props> = ({ device, loading = false })
              <span className="text-xs font-medium">{t('common.noData')}</span>
           </div>
         )}
-        
-        {/* Alignment spacer */}
         {!isUnbound && <div className="flex-1 min-h-[40px]" />}
       </div>
     </VFCard>

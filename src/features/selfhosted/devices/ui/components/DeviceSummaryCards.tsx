@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Space, Button, Tooltip, Dropdown, App } from 'antd';
 import type { MenuProps } from 'antd';
@@ -35,10 +34,10 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
   const InfoRow = ({ label, value, copyable, empty }: { label: string, value: string | React.ReactNode, copyable?: string, empty?: boolean }) => (
     <div className={`flex items-center justify-between py-2 border-b border-divider last:border-b-0 min-h-[44px] ${empty ? 'opacity-40' : ''}`}>
       {/* T6 Caption (12/18, 400) */}
-      <span className="text-[12px] leading-[18px] font-normal text-text-tertiary">{label}</span>
+      <span className="text-xs leading-[18px] font-normal text-text-tertiary">{label}</span>
       <div className="flex items-center gap-2 overflow-hidden">
         {/* T5 Body Strong (14/22, 500) */}
-        <div className={`text-[14px] font-medium text-text-primary leading-[22px] truncate max-w-[140px] sm:max-w-[160px] ${empty ? 'font-normal italic' : ''}`}>
+        <div className={`text-sm font-medium text-text-primary leading-[22px] truncate max-w-[140px] sm:max-w-[160px] ${empty ? 'font-normal italic' : ''}`}>
           {empty ? '---' : value}
         </div>
         {copyable && !empty && (
@@ -67,7 +66,7 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
           isAdmin ? (
             <Dropdown menu={{ items: modeMenuItems }} trigger={['click']} placement="bottomRight">
               <Button 
-                className="h-9 sm:h-8 flex items-center gap-1.5 px-3 text-[13px] font-medium border-border text-text-secondary rounded-control bg-bg-page/40"
+                className="h-9 sm:h-8 flex items-center gap-1.5 px-3 text-sm font-medium border-border text-text-secondary rounded-control bg-bg-page/40"
               >
                 {device.deployment_mode === 'EDGE' ? <Server size={14} /> : <Cloud size={14} />}
                 {device.deployment_mode}
@@ -104,7 +103,7 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
           isAdmin && (
             <Button 
               type={isUnbound ? 'primary' : 'default'}
-              className={`h-9 sm:h-8 flex items-center gap-1.5 px-3 text-[13px] font-bold rounded-control ${!isUnbound ? 'text-brand border-brand hover:bg-brand/5' : 'bg-brand'}`}
+              className={`h-9 sm:h-8 flex items-center gap-1.5 px-3 text-sm font-bold rounded-control ${!isUnbound ? 'text-brand border-brand hover:bg-brand/5' : 'bg-brand'}`}
               onClick={() => setLicModalOpen(true)}
             >
               <ExternalLink size={14} />
@@ -118,10 +117,10 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
              {isUnbound ? (
                <div className="flex items-center gap-2 text-warning animate-pulse">
                  <ShieldAlert size={18} />
-                 <span className="text-[14px] font-bold tracking-tight">Awaiting License</span>
+                 <span className="text-sm font-bold tracking-tight">Awaiting License</span>
                </div>
              ) : (
-               <div className="text-[16px] font-bold text-text-primary flex items-center gap-1.5 cursor-pointer hover:text-brand transition-colors">
+               <div className="text-base font-bold text-text-primary flex items-center gap-1.5 cursor-pointer hover:text-brand transition-colors">
                   {device.license_name || 'N/A'} 
                   <ExternalLink size={16} className="text-text-tertiary" />
                </div>
@@ -141,7 +140,7 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
           !isUnbound && (
             <Button 
               type="text" 
-              className="h-9 sm:h-8 flex items-center gap-1.5 px-2.5 text-[13px] font-semibold text-text-secondary hover:text-brand hover:bg-action-hover rounded-control"
+              className="h-9 sm:h-8 flex items-center gap-1.5 px-2.5 text-sm font-semibold text-text-secondary hover:text-brand hover:bg-action-hover rounded-control"
               icon={<History size={16} />}
             >
               {isMobile ? '' : t('selfhosted.deviceDetail.summary.viewHistory')}
@@ -154,12 +153,12 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
              {isUnbound ? (
                <div className="flex items-center gap-2 text-text-tertiary opacity-60">
                  <FileX size={18} />
-                 <span className="text-[14px] font-medium italic">No configuration found</span>
+                 <span className="text-sm font-medium italic">No configuration found</span>
                </div>
              ) : (
-               <div className="text-[16px] font-bold text-text-primary flex items-center gap-2">
+               <div className="text-base font-bold text-text-primary flex items-center gap-2">
                   {device.config_version}
-                  <VFTag variant="neutral" className="h-5 text-[10px] px-1.5 font-bold" filled={false}>
+                  <VFTag variant="neutral" className="h-5 text-xs px-1.5 font-bold" filled={false}>
                     {t('selfhosted.workflowDeployment.latest')}
                   </VFTag>
                </div>
