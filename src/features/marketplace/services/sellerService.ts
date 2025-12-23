@@ -1,14 +1,14 @@
 
 import { Listing } from '../types';
 
-const mockSellerListings: Listing[] = [
+let mockSellerListings: Listing[] = [
   {
     id: 'sl-1',
-    name: 'Smart Warehouse Traffic',
+    name: 'Smart Warehouse Traffic v2',
     status: 'DRAFT',
     type: 'WORKFLOW',
-    shortDescription: 'Optimized for low-light warehouse environments.',
-    description: 'A professional-grade traffic analysis workflow.',
+    shortDescription: 'Incomplete storefront metadata, missing technical docs.',
+    description: 'Optimized for low-light warehouse environments.',
     author: { name: 'Admin User' },
     price: 0,
     currency: 'USD',
@@ -25,8 +25,8 @@ const mockSellerListings: Listing[] = [
     name: 'PPE Safety Sentinel',
     status: 'PENDING_REVIEW',
     type: 'WORKFLOW',
-    shortDescription: 'Ensuring workplace safety.',
-    description: 'Detailed description of safety protocols...',
+    shortDescription: 'Technical validation in progress.',
+    description: 'Ensuring workplace safety.',
     author: { name: 'Admin User' },
     price: 49,
     currency: 'USD',
@@ -61,52 +61,51 @@ const mockSellerListings: Listing[] = [
     name: 'Retail Heatmap Analyzer',
     status: 'SUSPENDED',
     type: 'WORKFLOW',
-    shortDescription: 'Legacy retail tracking.',
-    description: 'Violation detected in licensing terms.',
+    shortDescription: 'Violation: Missing mandatory GDPR compliance.',
+    description: 'Restricted listing due to policy.',
+    rejectionReason: 'Missing mandatory GDPR compliance docs.',
     author: { name: 'Admin User' },
     price: 99,
     currency: 'USD',
     tags: ['Retail'],
     purchased: false,
-    rating: 4.2,
-    installCount: 89,
-    supportedDevices: ['NVIDIA Jetson'],
+    rating: 0,
+    installCount: 12,
+    supportedDevices: ['Generic x86'],
     plans: [],
-    rejectionReason: 'Subscription API is unreachable. Listing suspended by system.',
-    lastUpdated: '2025-11-20T09:00:00Z'
+    lastUpdated: '2025-12-10T14:00:00Z'
   },
   {
     id: 'sl-5',
-    name: 'Old PPE Model v1',
+    name: 'Legacy OCR Model',
     status: 'ARCHIVED',
     type: 'MODEL',
-    shortDescription: 'Deprecated model.',
-    description: 'No longer maintained.',
+    shortDescription: 'Resource retired from marketplace.',
+    description: 'Archived resource.',
     author: { name: 'Admin User' },
     price: 0,
     currency: 'USD',
-    tags: ['Safety'],
+    tags: ['AI'],
     purchased: false,
     rating: 3.5,
-    installCount: 12,
-    supportedDevices: [],
+    installCount: 890,
+    supportedDevices: ['CPU Only'],
     plans: [],
-    lastUpdated: '2024-10-01T00:00:00Z'
+    lastUpdated: '2024-12-01T09:00:00Z'
   }
 ];
 
 export const sellerService = {
   async listMyListings(): Promise<Listing[]> {
-    return new Promise(resolve => setTimeout(() => resolve(mockSellerListings), 500));
+    return new Promise(resolve => setTimeout(() => resolve([...mockSellerListings]), 500));
   },
-
   async getListing(id: string): Promise<Listing | undefined> {
-    return new Promise(resolve => setTimeout(() => resolve(mockSellerListings.find(l => l.id === id)), 300));
+    const item = mockSellerListings.find(l => l.id === id);
+    return new Promise(resolve => setTimeout(() => resolve(item), 300));
   },
-
   async createDraft(): Promise<Listing> {
-    const newId = `sl-${Date.now()}`;
-    return {
+    const newId = `sl-${Math.floor(Math.random() * 1000000)}`;
+    const newDraft: Listing = {
       id: newId,
       name: 'New Listing Draft',
       status: 'DRAFT',
@@ -114,21 +113,22 @@ export const sellerService = {
       shortDescription: '',
       description: '',
       author: { name: 'Admin User' },
-      price: 0, currency: 'USD', tags: [], purchased: false, rating: 0, installCount: 0, supportedDevices: [], plans: []
+      price: 0, 
+      currency: 'USD', 
+      tags: [], 
+      purchased: false, 
+      rating: 0, 
+      installCount: 0, 
+      supportedDevices: ['Generic x86'], 
+      plans: [],
+      lastUpdated: new Date().toISOString()
     };
+    mockSellerListings.unshift(newDraft);
+    return newDraft;
   },
-
-  async validateWorkflow(workflowId: string, version: string): Promise<{ ok: boolean; reason?: string }> {
-    await new Promise(r => setTimeout(r, 1000));
-    return { ok: true };
-  },
-
-  async uploadArtifact(file: File, onProgress: (p: number) => void): Promise<string> {
-    onProgress(100);
-    return `https://cdn.visionflow.io/mock/${file.name}`;
-  },
-
   async submitForReview(id: string): Promise<void> {
-    await new Promise(r => setTimeout(r, 1000));
+    const idx = mockSellerListings.findIndex(l => l.id === id);
+    if (idx !== -1) mockSellerListings[idx].status = 'PENDING_REVIEW';
+    return new Promise(resolve => setTimeout(resolve, 800));
   }
 };

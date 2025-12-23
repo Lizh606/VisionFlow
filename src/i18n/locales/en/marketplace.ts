@@ -13,6 +13,11 @@ export const marketplace = {
     "viewAll": "View All",
     "browseAll": "Browse All"
   },
+  "type": {
+    "workflow": "Workflow",
+    "model": "Model",
+    "plugin": "Plugin"
+  },
   "library": {
     "title": "My Library",
     "description": "Your purchased and subscribed assets.",
@@ -35,8 +40,10 @@ export const marketplace = {
   },
   "seller": {
     "dashboard": "Seller Center",
+    "dashboardDesc": "Seller center: monitor status, review progress, and storefront analytics.",
     "myListings": "My Listings",
     "createListing": "New Listing",
+    "emptyDesc": "Start by publishing your first resource.",
     "status": {
       "draft": "DRAFT",
       "pending_review": "PENDING REVIEW",
@@ -44,16 +51,103 @@ export const marketplace = {
       "suspended": "SUSPENDED",
       "archived": "ARCHIVED"
     },
+    "actions": {
+      "submissionInfo": "Submission",
+      "liveStore": "Live Storefront",
+      "submit": "Submit"
+    },
     "notices": {
-      "reviewing": "Listing is under review. Standard processing time is ~48h.",
-      "suspendedReason": "Suspended for licensing violations: {{reason}}",
-      "archived": "This listing is archived and no longer visible to public."
+      "reviewing": "Awaiting technical review (~48h)",
+      "live": "Visible on Marketplace",
+      "violation": "Violated terms",
+      "archived": "Retired from market"
     },
     "preview": {
       "bannerDraft": "Preview Mode — This listing is not yet public.",
       "bannerPublished": "Preview Mode — This is how buyers see your resource.",
       "bannerSuspended": "Preview Mode — This listing is currently suspended and hidden from market.",
       "ctaDisabled": "Action Disabled in Preview"
+    },
+    "wizard": {
+      "draftSaved": "Draft saved successfully",
+      "submitTitle": "Preview & Submit",
+      "submitDesc": "Your resource details are ready. Please preview the storefront to ensure all metadata and documents are correct before sending for approval.",
+      "previewSection": "Storefront Preview",
+      "previewHint": "Buyer Perspective",
+      "openPreview": "Preview Marketplace Listing",
+      "viewAsBuyer": "See exactly how buyers will interact with your resource.",
+      "launchPreview": "Preview",
+      "launchSubmit": "Submit",
+      "workflowTitle": "Approval Workflow",
+      "workflowDesc": "After submission, status will change to PENDING_REVIEW. Our team typically completes technical verification within 2 working days.",
+      "submitted": "Submission Successful",
+      "loadFailed": "Load Failed",
+      "missingMetadata": "Required: Short Description",
+      "submitBtn": "Confirm & Submit",
+      "backBtn": "Back",
+      "nextBtn": "Next Step",
+      "steps": {
+        "general": "General",
+        "source": "Source",
+        "artifacts": "Artifacts",
+        "pricing": "Pricing",
+        "submit": "Submit"
+      },
+      "general": {
+        "basicTitle": "Basic Information",
+        "basicSubtitle": "Storefront Identity",
+        "nameLabel": "Resource Title",
+        "namePlaceholder": "e.g. Advanced PPE Detection",
+        "nameRequired": "Title is required",
+        "descLabel": "Short Description",
+        "descPlaceholder": "Briefly explain what this resource does...",
+        "descRequired": "Description is required",
+        "classTitle": "Classification",
+        "classSubtitle": "Matching and Discovery",
+        "tagsLabel": "Category / Tags",
+        "taskLabel": "Primary Task Type",
+        "devicesLabel": "Supported Devices",
+        "devicesPlaceholder": "Type hardware (e.g. Jetson Orin)"
+      },
+      "source": {
+        "title": "Linked Vision Logic",
+        "subtitle": "Studio Asset Binding",
+        "description": "Select the workspace workflow and specific version that provides the logic for this marketplace resource. Consumers will receive a read-only copy of this asset.",
+        "workflowLabel": "Source Workflow",
+        "workflowRequired": "Please select a workflow",
+        "versionLabel": "Asset Version",
+        "syncTitle": "Logic Synchronization",
+        "syncDesc": "The marketplace binary will be updated automatically when a release is pushed to this version."
+      },
+      "artifacts": {
+        "docsTitle": "Technical Documentation",
+        "docsSubtitle": "Buyer Guidance",
+        "uploadDocs": "Upload PDF/MD Docs",
+        "examplesTitle": "Visual Examples",
+        "examplesSubtitle": "Storefront Preview"
+      },
+      "pricing": {
+        "title": "Licensing & Revenue",
+        "subtitle": "Select the pricing model that best fits your resource capabilities. Consumers will be billed automatically by VisionFlow.",
+        "plans": {
+          "free": {
+            "name": "Community Free",
+            "desc": "Standard open-source usage for non-commercial projects and personal learning."
+          },
+          "pro": {
+            "name": "Professional License",
+            "desc": "Up to 3 concurrent streams, commercial usage authorized for small teams."
+          },
+          "ent": {
+            "name": "Enterprise Monthly",
+            "desc": "Unlimited scalability, dedicated support, and custom edge deployment options."
+          }
+        },
+        "supportTitle": "Need a custom license model or bespoke pricing for enterprise clients?",
+        "supportLink": "Open a Support Ticket",
+        "feeNote": "Marketplace fees (15%) are deducted automatically from all paid transactions.",
+        "sellerTerms": "Seller Terms Apply"
+      }
     }
   },
   "detail": {

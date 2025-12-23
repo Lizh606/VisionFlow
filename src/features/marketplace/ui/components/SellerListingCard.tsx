@@ -1,128 +1,145 @@
 
-import React from 'react';
-import { Edit2, Eye, Send, AlertCircle, Clock, Archive } from 'lucide-react';
+import React, { useMemo } from 'react';
 import { Button, Tooltip } from 'antd';
+import { 
+  Edit2, Eye, Send, ExternalLink, 
+  AlertTriangle, ShieldCheck, History, Info,
+  Ban, Archive
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Listing } from '../../types';
-import { VFCard } from '../../../../shared/ui/VFCard';
+import { Listing, ListingStatus } from '../../types';
 import { VFTag } from '../../../../shared/ui/VFTag';
+import { VFListingCardBase } from './VFListingCardBase';
+import { ArtifactImage } from './ArtifactImage';
 import dayjs from 'dayjs';
 
 interface Props {
   listing: Listing;
-  onAction: (id: string, action: 'edit' | 'preview' | 'submit') => void;
+  onAction: (id: string, action: 'edit' | 'preview' | 'submit' | 'details') => void;
 }
 
 export const SellerListingCard: React.FC<Props> = ({ listing, onAction }) => {
   const { t } = useTranslation();
   
-  const isDraft = listing.status === 'DRAFT';
-  const isPending = listing.status === 'PENDING_REVIEW';
-  const isSuspended = listing.status === 'SUSPENDED';
-  const isArchived = listing.status === 'ARCHIVED';
+  // UC-MKT-001: 封面异常模拟（特定 ID 触发失败态）
+  const isImageFailure = listing.id === 'sl-2'; 
 
-  const statusConfig = {
-    DRAFT: { variant: 'neutral' as const, label: t('marketplace.seller.status.draft') },
-    PENDING_REVIEW: { variant: 'warning' as const, label: t('marketplace.seller.status.pending_review') },
-    PUBLISHED: { variant: 'success' as const, label: t('marketplace.seller.status.published') },
-    SUSPENDED: { variant: 'error' as const, label: t('marketplace.seller.status.suspended') },
-    ARCHIVED: { variant: 'default' as const, label: t('marketplace.seller.status.archived') },
-  };
-
-  const config = statusConfig[listing.status] || statusConfig.DRAFT;
+  // 基于状态的 UI 配置引擎
+  const statusConfig = useMemo(() => {
+    const configs: Record<ListingStatus, {
+      variant: any;
+      label: string;
+      infoIcon?: React.ReactNode;
+      infoText?: string;
+      infoColor?: string;
+      primary: { label: string; icon: React.ReactNode; action: 'edit' | 'preview' | 'details'; btnType?: 'primary' | 'warning' };
+      secondary?: { label: string; action: 'edit' | 'preview' | 'submit' | 'details' };
+      tertiary?: { label: string; action: 'submit'; disabled?: boolean; tooltip?: string };
+    }> = {
+      DRAFT: {
+        variant: 'neutral',
+        label: t('marketplace.seller.status.draft'),
+        infoText: listing.shortDescription ? undefined : "Missing description",
+        infoColor: 'text-text-tertiary',
+        primary: { label: t('common.edit'), icon: <Edit2 size={14} />, action: 'edit' },
+        secondary: { label: 'Preview', action: 'preview' },
+        tertiary: { label: 'Submit', action: 'submit', disabled: !listing.shortDescription, tooltip: "Required: Metadata" }
+      },
+      PENDING_REVIEW: {
+        variant: 'warning',
+        label: t('marketplace.seller.status.pending_review'),
+        infoIcon: <ShieldCheck size={14} />,
+        infoText: "Awaiting review (~48h)",
+        infoColor: 'text-warning-700',
+        primary: { label: 'Preview', icon: <Eye size={14} />, action: 'preview', btnType: 'warning' },
+        secondary: { label: 'Submission Info', action: 'details' }
+      },
+      PUBLISHED: {
+        variant: 'success',
+        label: t('marketplace.seller.status.published'),
+        infoText: "Visible on Marketplace",
+        infoColor: 'text-success',
+        primary: { label: 'Live Storefront', icon: <ExternalLink size={14} />, action: 'preview' },
+        secondary: { label: 'Edit Listing', action: 'edit' }
+      },
+      SUSPENDED: {
+        variant: 'error',
+        label: t('marketplace.seller.status.suspended'),
+        infoIcon: <Ban size={14} />,
+        infoText: listing.rejectionReason || "Violated terms",
+        infoColor: 'text-error',
+        primary: { label: 'View Details', icon: <Info size={14} />, action: 'details' }
+      },
+      ARCHIVED: {
+        variant: 'default',
+        label: t('marketplace.seller.status.archived'),
+        infoIcon: <Archive size={14} />,
+        infoText: "Retired from market",
+        infoColor: 'text-text-disabled',
+        primary: { label: 'Details', icon: <Info size={14} />, action: 'details' }
+      }
+    };
+    return configs[listing.status];
+  }, [listing, t]);
 
   return (
-    <VFCard noPadding className="h-[440px] group hover:border-brand/30 transition-all border-border shadow-none bg-bg-card flex flex-col overflow-hidden">
-      {/* 1. Media Area (Fixed Height) */}
-      <div className="h-40 bg-bg-page relative flex flex-col items-center justify-center border-b border-divider shrink-0">
-        <div className="text-text-tertiary opacity-10 group-hover:scale-105 transition-transform duration-700">
-           <Eye size={44} strokeWidth={1.5} />
+    <VFListingCardBase
+      cover={<ArtifactImage alt={listing.type} forceFail={isImageFailure} />}
+      statusTag={<VFTag variant={statusConfig.variant} filled>{statusConfig.label}</VFTag>}
+      title={listing.name}
+      meta={
+        <div className="flex items-center gap-2">
+          <span className="font-bold">{listing.type}</span>
+          <span className="opacity-30">•</span>
+          <span className="opacity-60">{dayjs(listing.lastUpdated).fromNow()}</span>
         </div>
-        <div className="absolute top-3 right-3 z-10">
-          <VFTag variant={config.variant} filled className="font-bold shadow-sm">{config.label}</VFTag>
-        </div>
-      </div>
-      
-      <div className="p-4 flex flex-col flex-1 min-h-0">
-        {/* 2. Content Section (Fixed Line Counts) */}
-        <div className="flex flex-col min-w-0 mb-3 shrink-0 h-11">
-          <Tooltip title={listing.name}>
-            <h3 className="text-base font-semibold text-text-primary m-0 line-clamp-1 leading-tight mb-1">
-              {listing.name}
-            </h3>
-          </Tooltip>
-          <div className="flex items-center gap-2 text-text-tertiary text-[11px] font-bold uppercase tracking-wider">
-             <span className="opacity-60">{listing.type}</span>
-             <span className="opacity-30">•</span>
-             <span className="opacity-60 lowercase">{dayjs(listing.lastUpdated).fromNow()}</span>
+      }
+      keyInfo={
+        statusConfig.infoText && (
+          <div className={`flex items-start gap-2 text-[11px] font-bold leading-tight ${statusConfig.infoColor}`}>
+            {statusConfig.infoIcon}
+            <span className="truncate">{statusConfig.infoText}</span>
           </div>
-        </div>
+        )
+      }
+      actions={
+        <div className="flex flex-col gap-2">
+          {/* Primary Action */}
+          <Button 
+            type="primary" 
+            block 
+            icon={statusConfig.primary.icon}
+            className={`h-9 font-bold text-[12px] uppercase tracking-wider rounded-control ${statusConfig.primary.btnType === 'warning' ? 'bg-warning border-warning' : ''}`}
+            onClick={(e) => { e.stopPropagation(); onAction(listing.id, statusConfig.primary.action); }}
+          >
+            {statusConfig.primary.label}
+          </Button>
 
-        {/* 3. Notice Section (Flexible but pushes next section) */}
-        <div className="flex-1 flex flex-col justify-start">
-          <div className="min-h-[60px]">
-            {(isPending || isSuspended || isArchived) ? (
-              <div className={`w-full p-3 rounded-tag flex items-start gap-2.5 border ${isSuspended ? 'bg-error/5 border-error/10' : (isPending ? 'bg-warning/5 border-warning/10' : 'bg-bg-page border-divider')}`}>
-                {isSuspended ? <AlertCircle size={14} className="text-error shrink-0 mt-0.5" /> : (isPending ? <Clock size={14} className="text-warning shrink-0 mt-0.5" /> : <Archive size={14} className="text-text-tertiary shrink-0 mt-0.5" />)}
-                <span className={`text-[11px] font-bold leading-relaxed line-clamp-2 ${isSuspended ? 'text-error' : (isPending ? 'text-warning-700' : 'text-text-secondary')}`}>
-                  {isSuspended ? t('marketplace.seller.notices.suspendedReason', { reason: listing.rejectionReason }) : (isPending ? t('marketplace.seller.notices.reviewing') : t('marketplace.seller.notices.archived'))}
-                </span>
-              </div>
-            ) : (
-              <p className="text-[12px] text-text-secondary leading-relaxed m-0 line-clamp-2 font-medium opacity-80">
-                {listing.shortDescription || "Manage storefront metadata and licensing."}
-              </p>
-            )}
-          </div>
-        </div>
-
-        {/* 4. Actions Area (Aligned to baseline) */}
-        <div className="mt-auto pt-4 flex flex-col gap-2 shrink-0">
+          {/* Sub-actions */}
           <div className="grid grid-cols-2 gap-2">
-            <Button 
-              block 
-              size="middle" 
-              disabled={isPending || isSuspended || isArchived}
-              className="font-bold text-[13px] rounded-control border-divider text-text-secondary hover:text-brand transition-all"
-              onClick={() => onAction(listing.id, 'edit')}
-            >
-              {t('common.edit')}
-            </Button>
-            <Button 
-              block 
-              size="middle" 
-              className="font-bold text-[13px] rounded-control border-divider text-text-secondary hover:text-brand transition-all"
-              onClick={() => onAction(listing.id, 'preview')}
-            >
-              Preview
-            </Button>
-          </div>
-          
-          <div className="h-10">
-            {isDraft ? (
+            {statusConfig.secondary && (
               <Button 
-                block 
-                size="middle" 
-                type="primary"
-                icon={<Send size={14} />}
-                className="font-bold text-[13px] rounded-control h-10 shadow-sm"
-                onClick={() => onAction(listing.id, 'submit')}
+                className="h-9 font-bold text-[12px] text-text-secondary rounded-control"
+                onClick={(e) => { e.stopPropagation(); onAction(listing.id, statusConfig.secondary.action); }}
               >
-                Submit for Review
+                {statusConfig.secondary.label}
               </Button>
-            ) : (
-              <Button 
-                block 
-                size="middle" 
-                disabled
-                className="font-bold text-[13px] rounded-control border-divider text-text-disabled bg-bg-page/50 cursor-not-allowed h-10"
-              >
-                {isArchived ? "Archived" : (isSuspended ? "Action Restricted" : "Published")}
-              </Button>
+            )}
+            {statusConfig.tertiary && (
+              <Tooltip title={statusConfig.tertiary.tooltip}>
+                <Button 
+                  disabled={statusConfig.tertiary.disabled}
+                  icon={<Send size={14} />}
+                  className="h-9 font-bold text-[12px] rounded-control"
+                  onClick={(e) => { e.stopPropagation(); onAction(listing.id, statusConfig.tertiary.action); }}
+                >
+                  {statusConfig.tertiary.label}
+                </Button>
+              </Tooltip>
             )}
           </div>
         </div>
-      </div>
-    </VFCard>
+      }
+    />
   );
 };

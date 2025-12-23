@@ -5,7 +5,7 @@ export const common = {
   "export": "Export",
   "filter": "Filters",
   "actions": "Actions",
-  "viewDetails": "View Details",
+  "viewDetails": "Details",
   "total": "Total {{total}} items",
   "loading": "Loading...",
   "allStatus": "All Status",

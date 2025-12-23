@@ -34,8 +34,8 @@ export const VFCard = React.forwardRef<HTMLDivElement, VFCardProps>((props, ref)
       ${onClick ? 'cursor-pointer hover:border-brand/30 active:scale-[0.99] active:bg-action-hover' : ''}
       ${className}
     `}>
-      {(title || extra) && (
-        <div className="
+      {(title || extra) ? (
+        <div key="card-header" className="
           flex items-center justify-between 
           px-4 sm:px-6 
           border-b border-divider 
@@ -44,19 +44,18 @@ export const VFCard = React.forwardRef<HTMLDivElement, VFCardProps>((props, ref)
           gap-4 flex-nowrap
         ">
           {title && (
-            /* V1.4: Card Title = T4 Subhead (16/24, 600) */
-            <div className="text-base font-semibold text-text-primary truncate min-w-0 flex items-center h-full">
+            <div key="header-title" className="text-base font-semibold text-text-primary truncate min-w-0 flex items-center h-full">
               {title}
             </div>
           )}
           {extra && (
-            <div className="shrink-0 flex items-center h-full whitespace-nowrap">
+            <div key="header-extra" className="shrink-0 flex items-center h-full whitespace-nowrap">
               {extra}
             </div>
           )}
         </div>
-      )}
-      <div className={`${noPadding ? '' : 'p-4 sm:p-6'} flex-1 text-text-primary h-full`}>
+      ) : null}
+      <div key="card-body" className={`${noPadding ? '' : 'p-4 sm:p-6'} flex-1 text-text-primary h-full`}>
         {children}
       </div>
     </div>

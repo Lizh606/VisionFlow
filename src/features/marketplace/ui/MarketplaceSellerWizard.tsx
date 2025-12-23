@@ -1,25 +1,18 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Steps, Button, Form, App, Divider } from 'antd';
-import { ChevronRight, Save, Send, Layout, Database, Image as ImageIcon, Package, Check, LucideIcon } from 'lucide-react';
+import { ChevronRight, Save, Send, Layout, Database, Image as ImageIcon, Package, Check, LucideIcon, ArrowLeft, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { VFPageHeader } from '../../../shared/ui/VFPageHeader';
 import { sellerService } from '../services/sellerService';
+import { useResponsive } from '../../../shared/hooks/useResponsive';
 
-// 子步骤组件导入
+// Steps
 import { GeneralStep } from './wizard/GeneralStep';
 import { SourceStep } from './wizard/SourceStep';
 import { ArtifactsStep } from './wizard/ArtifactsStep';
 import { PricingStep } from './wizard/PricingStep';
 import { SubmitStep } from './wizard/SubmitStep';
-
-const STEP_CONFIG = [
-  { title: 'General', icon: Layout },
-  { title: 'Source', icon: Database },
-  { title: 'Artifacts', icon: ImageIcon },
-  { title: 'Pricing', icon: Package },
-  { title: 'Submit', icon: Send },
-];
 
 const StepIcon: React.FC<{ index: number; current: number; icon: LucideIcon }> = ({ index, current, icon: IconComponent }) => {
   const isCompleted = index < current;
@@ -27,9 +20,9 @@ const StepIcon: React.FC<{ index: number; current: number; icon: LucideIcon }> =
   return (
     <div className="flex items-center justify-center w-full h-full">
       {isCompleted ? (
-        <Check size={18} strokeWidth={2.5} className="text-brand animate-in zoom-in-50 duration-300" />
+        <Check size={18} strokeWidth={3} className="text-brand" />
       ) : (
-        <IconComponent size={18} strokeWidth={2} className={`transition-colors duration-300 ${isActive ? 'text-brand' : 'text-text-tertiary'}`} />
+        <IconComponent size={18} strokeWidth={2} className={isActive ? 'text-brand' : 'text-text-tertiary'} />
       )}
     </div>
   );
@@ -37,7 +30,8 @@ const StepIcon: React.FC<{ index: number; current: number; icon: LucideIcon }> =
 
 export const MarketplaceSellerWizard: React.FC<{ listingId?: string; onNavigate: (p: string) => void }> = ({ listingId, onNavigate }) => {
   const { t } = useTranslation();
-  const { message, modal } = App.useApp();
+  const { isMobile } = useResponsive();
+  const { message, modal, notification } = App.useApp();
   const [current, setCurrent] = useState(0);
   const [form] = Form.useForm();
   
@@ -45,17 +39,21 @@ export const MarketplaceSellerWizard: React.FC<{ listingId?: string; onNavigate:
   const [isDirty, setIsDirty] = useState(false);
   const [lastSaved, setLastSaved] = useState<string | null>(null);
 
+  const STEP_CONFIG = useMemo(() => [
+    { title: t('marketplace.seller.wizard.steps.general'), icon: Layout },
+    { title: t('marketplace.seller.wizard.steps.source'), icon: Database },
+    { title: t('marketplace.seller.wizard.steps.artifacts'), icon: ImageIcon },
+    { title: t('marketplace.seller.wizard.steps.pricing'), icon: Package },
+    { title: t('marketplace.seller.wizard.steps.submit'), icon: Send },
+  ], [t]);
+
   useEffect(() => {
     if (listingId) {
-      sellerService.getListing(listingId).then(data => {
-        if (data) {
-          form.setFieldsValue(data);
-        }
-      });
+      sellerService.getListing(listingId).then(data => data && form.setFieldsValue(data));
     }
   }, [listingId, form]);
 
-  const handleBackToMyListings = () => {
+  const handleBack = () => {
     if (isDirty) {
       modal.confirm({
         title: t('common.unsavedTitle'),
@@ -76,118 +74,112 @@ export const MarketplaceSellerWizard: React.FC<{ listingId?: string; onNavigate:
     setLastSaved(new Date().toLocaleTimeString());
     setIsDirty(false);
     setLoading(false);
-    message.success("Draft saved successfully");
+    message.success(t('marketplace.seller.wizard.draftSaved'));
   };
 
   const handleNext = async () => {
     try {
       await form.validateFields();
       setCurrent(current + 1);
+      window.scrollTo(0, 0);
     } catch (e) {}
   };
 
-  const renderStepContent = () => {
-    switch (current) {
-      case 0: return <GeneralStep />;
-      case 1: return <SourceStep />;
-      case 2: return <ArtifactsStep />;
-      case 3: return <PricingStep />;
-      case 4: return <SubmitStep />;
-      default: return null;
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      await sellerService.submitForReview(listingId || 'draft');
+      notification.success({ 
+        message: t('marketplace.seller.wizard.submitted'), 
+        description: t('marketplace.seller.notices.reviewing') 
+      });
+      onNavigate('marketplace-seller');
+    } catch (e) {
+      modal.error({ title: t('common.retry') });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col gap-6 max-w-[1000px] mx-auto pb-32 animate-in fade-in">
+    <div className="flex flex-col gap-6 w-full max-w-[1200px] mx-auto pb-32 animate-in fade-in">
       <VFPageHeader 
-        title={listingId ? "Resource Editor" : "New Listing"}
-        onBack={handleBackToMyListings}
+        title={listingId ? t('marketplace.seller.wizard.editTitle') : t('marketplace.seller.wizard.newTitle')}
+        onBack={handleBack}
         actions={
           <div className="flex items-center gap-4">
-            {lastSaved && <span className="text-[11px] font-bold text-text-tertiary uppercase tracking-wider">{t('common.lastSaved', { time: lastSaved })}</span>}
+            {lastSaved && !isMobile && <span className="text-[11px] font-bold text-text-tertiary uppercase">{t('common.lastSaved', { time: lastSaved })}</span>}
             <Button 
               loading={loading}
               icon={<Save size={16} />} 
-              className="font-bold rounded-control border-brand text-brand hover:bg-brand/5 h-10 px-5 shadow-sm" 
+              className="font-bold rounded-control border-brand text-brand hover:bg-brand/5 h-10 px-5" 
               onClick={handleSaveDraft}
             >
-              Save Draft
+              {isMobile ? '' : t('common.save')}
             </Button>
           </div>
         }
       />
 
-      <div className="bg-bg-card border border-border rounded-card p-8 md:p-12 shadow-card">
-        <Steps 
-          current={current} 
-          className="mb-16 vf-wizard-steps"
-          items={STEP_CONFIG.map((s, idx) => ({
-            title: <span className="step-label">{s.title}</span>,
-            icon: <StepIcon index={idx} current={current} icon={s.icon} />
-          }))}
-        />
+      <div className={`bg-bg-card border border-border rounded-card shadow-sm ${isMobile ? 'p-4' : 'p-8'}`}>
+        <div className="mb-10 pt-4 overflow-x-auto custom-scrollbar">
+          <Steps 
+            current={current} 
+            responsive={false}
+            size={isMobile ? 'small' : 'default'}
+            labelPlacement={isMobile ? 'vertical' : 'horizontal'}
+            items={STEP_CONFIG.map((s, idx) => ({
+              title: isMobile && current !== idx ? '' : <span className="text-[13px] font-bold">{s.title}</span>,
+              icon: <StepIcon index={idx} current={current} icon={s.icon} />
+            }))}
+          />
+        </div>
 
         <Form 
           form={form} 
           layout="vertical" 
-          className="min-h-[460px] vf-form-wizard"
           onValuesChange={() => setIsDirty(true)}
           requiredMark={false}
-          scrollToFirstError
+          className="min-h-[400px]"
         >
-          {renderStepContent()}
+          {current === 0 && <GeneralStep />}
+          {current === 1 && <SourceStep />}
+          {current === 2 && <ArtifactsStep />}
+          {current === 3 && <PricingStep />}
+          {current === 4 && <SubmitStep listingId={listingId} onPreview={() => listingId && onNavigate(`marketplace-listing-preview-${listingId}`)} />}
         </Form>
 
-        <Divider className="my-12 opacity-30" />
+        <Divider className="my-8 opacity-40" />
 
         <div className="flex items-center justify-between">
           <Button 
-            className="h-12 px-8 font-bold border-none text-text-tertiary hover:text-text-primary hover:bg-bg-page transition-all rounded-control"
+            className="h-11 px-6 font-bold border-none text-text-tertiary hover:text-text-primary hover:bg-bg-page transition-all flex items-center gap-2"
             disabled={current === 0}
             onClick={() => setCurrent(current - 1)}
           >
-            Back
+            <ArrowLeft size={16} /> {t('marketplace.seller.wizard.backBtn')}
           </Button>
           
-          <div className="flex items-center gap-4">
-             {current < STEP_CONFIG.length - 1 ? (
-               <Button 
-                 type="primary" 
-                 className="h-12 px-12 font-bold shadow-md rounded-control flex items-center gap-2 group transition-all" 
-                 onClick={handleNext}
-               >
-                 Next Step <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
-               </Button>
-             ) : (
-               <Button 
-                type="primary" 
-                className="h-12 px-16 font-bold shadow-lg rounded-control bg-success border-success hover:!bg-success/90 flex items-center gap-2" 
-                loading={loading} 
-                onClick={() => {
-                  setLoading(true);
-                  setTimeout(() => {
-                    setLoading(false);
-                    message.success("Submission successful! Redirecting...");
-                    onNavigate('marketplace-seller');
-                  }, 1500);
-                }}
-               >
-                 <Send size={18} /> Submit for Review
-               </Button>
-             )}
-          </div>
+          {current < STEP_CONFIG.length - 1 ? (
+             <Button 
+               type="primary" 
+               className="h-11 px-10 font-bold shadow-sm rounded-control flex items-center gap-2" 
+               onClick={handleNext}
+             >
+               {t('marketplace.seller.wizard.nextBtn')} <ChevronRight size={18} />
+             </Button>
+           ) : (
+             <Button 
+               type="primary" 
+               className="h-11 px-12 font-bold shadow-md rounded-control bg-brand border-brand" 
+               loading={loading} 
+               onClick={handleSubmit}
+             >
+               <Send size={18} className="mr-2" /> {t('marketplace.seller.wizard.submitBtn')}
+             </Button>
+           )}
         </div>
       </div>
-
-      <style>{`
-        .vf-wizard-steps .ant-steps-item-title { font-weight: 500 !important; font-size: 14px !important; color: rgba(var(--vf-text-secondary), 1) !important; }
-        .vf-wizard-steps .ant-steps-item-active .ant-steps-item-title { color: rgba(var(--vf-brand), 1) !important; font-weight: 600 !important; }
-        .vf-wizard-steps .ant-steps-item-icon { background: transparent !important; border: none !important; width: 32px !important; height: 32px !important; }
-        .vf-wizard-steps .ant-steps-item-tail::after { background-color: rgba(var(--vf-divider), 1) !important; height: 2px !important; }
-        .vf-wizard-steps .ant-steps-item-finish .ant-steps-item-tail::after { background-color: rgba(var(--vf-brand), 1) !important; }
-        .vf-label { font-size: 13px; font-weight: 700; color: rgba(var(--vf-text-secondary), 1); text-transform: uppercase; tracking: -0.01em; }
-        .vf-form-wizard .ant-form-item-label { padding-bottom: 8px !important; }
-      `}</style>
     </div>
   );
 };

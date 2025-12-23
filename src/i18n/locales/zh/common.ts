@@ -5,7 +5,7 @@ export const common = {
   "export": "导出",
   "filter": "筛选器",
   "actions": "操作",
-  "viewDetails": "查看详情",
+  "viewDetails": "详情",
   "total": "共 {{total}} 项",
   "loading": "加载中...",
   "allStatus": "全部状态",

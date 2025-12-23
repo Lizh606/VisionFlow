@@ -80,7 +80,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children, activePath = '
         </div>
       </Drawer>
       
-      {/* 4. Content Area: bg-bg-page ensures #F8FAFC canvas */}
+      {/* 4. Content Area: 移除 max-w 限制，真正实现 Canvas 效果 */}
       <Layout className="flex-1 flex flex-col bg-bg-page relative overflow-hidden">
         <Content 
           className="flex-1 overflow-y-auto overflow-x-hidden relative custom-scrollbar bg-bg-page"
@@ -88,7 +88,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children, activePath = '
             padding: isMobile ? '16px' : '24px',
           }}
         >
-          <div className="w-full mx-auto max-w-[1600px] min-h-full">
+          <div className="w-full min-h-full">
             {children}
           </div>
         </Content>

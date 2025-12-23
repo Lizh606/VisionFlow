@@ -3,17 +3,18 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Row, Col, Tabs, Button, Skeleton, Alert, Tooltip, App, Divider } from 'antd';
 import { 
   Eye, User, Calendar, Zap, AlertCircle, ShoppingCart, Layout,
-  Play, ArrowUpRight, ImageIcon, Lock, Info
+  Play, ArrowUpRight, ImageIcon, Lock, Info, RefreshCw
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { VFPageHeader } from '../../../shared/ui/VFPageHeader';
 import { VFCard } from '../../../shared/ui/VFCard';
 import { VFTag } from '../../../shared/ui/VFTag';
+import { VFEmptyState } from '../../../shared/ui/VFEmptyState';
 import { sellerService } from '../services/sellerService';
 import { Listing } from '../types';
 import { CloudTestModal } from './components/CloudTestModal';
 
-// Tab Panels (Sharing same components with Detail Page)
+// Tab Panels
 import { OverviewPanel } from './tabs/OverviewPanel';
 import { ExamplesPanel } from './tabs/ExamplesPanel';
 import { DocsPanel } from './tabs/DocsPanel';
@@ -21,22 +22,27 @@ import { PricingPanel } from './tabs/PricingPanel';
 
 export const MarketplaceListingPreview: React.FC<{ listingId: string; onNavigate: (p: string) => void }> = ({ listingId, onNavigate }) => {
   const { t } = useTranslation();
-  const { message } = App.useApp();
   
   const [listing, setListing] = useState<Listing | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
   const [testModalOpen, setTestModalOpen] = useState(false);
 
-  useEffect(() => {
+  const fetchListing = () => {
     setLoading(true);
     sellerService.getListing(listingId).then(data => {
       if (data) {
         setListing(data);
         if (data.plans?.length) setSelectedPlanId(data.plans[0].id);
+      } else {
+        setListing(null);
       }
       setLoading(false);
     });
+  };
+
+  useEffect(() => {
+    fetchListing();
   }, [listingId]);
 
   const activePlan = useMemo(() => 
@@ -62,18 +68,32 @@ export const MarketplaceListingPreview: React.FC<{ listingId: string; onNavigate
     );
   }
 
-  if (!listing) return null;
+  // 修复：增加 EmptyState 容错，防止 ID 不匹配导致白屏
+  if (!listing) {
+    return (
+      <div className="flex flex-col gap-6 max-w-[1280px] mx-auto py-12">
+        <VFPageHeader title="Preview Unavailable" onBack={() => onNavigate('marketplace-seller')} />
+        <div className="bg-bg-card border border-border rounded-card p-20 shadow-none">
+          <VFEmptyState 
+            title="Resource Not Found"
+            description="The requested listing ID could not be found in your local database. It may have been deleted or the session expired."
+            actionLabel="Return to My Listings"
+            onAction={() => onNavigate('marketplace-seller')}
+            icon={<AlertCircle size={24} className="text-text-tertiary" />}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-500 pb-20 max-w-[1280px] mx-auto">
-      {/* 1. Page Header: Consistent with Detail Page but without Favorite button */}
       <VFPageHeader 
         title={listing.name}
         onBack={() => onNavigate('marketplace-seller')}
         description="Storefront Listing Preview"
       />
 
-      {/* 2. Preview Mode Banner: Explicit context for seller */}
       {bannerConfig && (
         <Alert 
           message={<span className="font-bold text-sm">{bannerConfig.message}</span>}
@@ -85,7 +105,6 @@ export const MarketplaceListingPreview: React.FC<{ listingId: string; onNavigate
       )}
 
       <Row gutter={[24, 24]}>
-        {/* Left Column: Media and Tabs */}
         <Col xs={24} lg={16}>
           <div className="flex flex-col gap-6">
             <div className="aspect-video bg-bg-page rounded-card border border-border overflow-hidden relative group shadow-sm flex flex-col items-center justify-center text-text-tertiary/10">
@@ -110,7 +129,6 @@ export const MarketplaceListingPreview: React.FC<{ listingId: string; onNavigate
           </div>
         </Col>
 
-        {/* Right Column: Pricing and Details (Identical to Detail Page) */}
         <Col xs={24} lg={8}>
           <div className="flex flex-col gap-6 sticky top-6">
             <VFCard className="border-border shadow-none bg-bg-card">
@@ -154,7 +172,6 @@ export const MarketplaceListingPreview: React.FC<{ listingId: string; onNavigate
                     </Button>
                   </div>
 
-                  {/* Market Performance: Placeholders in Preview */}
                   <div className="pt-5 border-t border-divider flex flex-col gap-3">
                      <div className="flex items-center justify-between text-xs font-bold">
                         <span className="text-text-tertiary uppercase tracking-tight">Total Installs</span>
