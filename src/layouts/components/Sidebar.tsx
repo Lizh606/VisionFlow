@@ -44,11 +44,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [activeWorkspace, setActiveWorkspace] = useState(workspaces[0]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
+  
   // 记录非折叠状态下的展开项
   const [lastOpenKeys, setLastOpenKeys] = useState<string[]>(['self-hosted', 'marketplace-menu']);
 
-  // 展开逻辑处理：折叠时清空 openKeys，取消折叠时恢复
-  const currentOpenKeys = useMemo(() => collapsed ? [] : lastOpenKeys, [collapsed, lastOpenKeys]);
+  // 仅在非折叠状态下计算展开项
+  const currentOpenKeys = useMemo(() => lastOpenKeys, [lastOpenKeys]);
 
   const handleOpenChange = (keys: string[]) => {
     if (!collapsed) {
@@ -143,14 +144,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </Dropdown>
       </div>
 
-      {/* Main Navigation Menu - 修复点：折叠时必须 overflow-visible 否则 Popup 会被截断 */}
+      {/* Main Navigation Menu - 修复点：折叠时必须 overflow-visible 且让 antd 接管 openKeys 否则 Popup 会被截断或失效 */}
       <div className={`flex-1 ${collapsed ? 'overflow-visible' : 'overflow-y-auto overflow-x-hidden custom-scrollbar'}`}>
         <Menu
           mode="inline"
           inlineCollapsed={collapsed}
           selectedKeys={[activeKey]}
-          openKeys={currentOpenKeys}
-          onOpenChange={handleOpenChange}
+          openKeys={collapsed ? undefined : currentOpenKeys}
+          onOpenChange={collapsed ? undefined : handleOpenChange}
           items={menuItems}
           onClick={handleMenuClick}
           className="vf-sidebar-menu border-none bg-transparent"
