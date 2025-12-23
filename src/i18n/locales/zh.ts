@@ -315,9 +315,9 @@ export const zh = {
     "marketplace": {
       "home": {
         "title": "资源市场",
-        "description": "探索并部署预构建的视觉模型、工作流和插件。",
-        "heroTitle": "为您的工作区寻找视觉资源。",
-        "heroDesc": "浏览资源市场列表，将您需要的资源添加至您的资产库。",
+        "description": "发现模型、工作流与插件。",
+        "heroTitle": "为您的项目寻找视觉资源。",
+        "heroDesc": "搜索、预览并添加资源到您的工作区资产库。",
         "featuredTitle": "精选推荐",
         "viewAll": "查看全部",
         "browseAll": "浏览分类"

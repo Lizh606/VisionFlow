@@ -316,9 +316,9 @@ export const en = {
     "marketplace": {
       "home": {
         "title": "Marketplace",
-        "description": "Discover and deploy pre-built vision models, workflows, and plugins.",
-        "heroTitle": "Find vision resources for your workspace.",
-        "heroDesc": "Browse Marketplace listings and add what you need to your Library.",
+        "description": "Discover models, workflows, and plugins.",
+        "heroTitle": "Find resources for your project.",
+        "heroDesc": "Search, preview, and add assets to your workspace library.",
         "featuredTitle": "Featured Resources",
         "viewAll": "View All",
         "browseAll": "Browse All"
