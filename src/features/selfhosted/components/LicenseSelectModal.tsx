@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { Modal, Radio, Space, Input } from 'antd';
 import { Search } from 'lucide-react';
@@ -31,11 +32,10 @@ export const LicenseSelectModal: React.FC<Props> = ({ open, onCancel, onSelect, 
     {
       title: '',
       key: 'select',
-      width: 48,
+      width: 56,
+      align: 'center' as const,
       render: (_: any, record: License) => (
-        <div className="flex items-center justify-center h-full">
-          <Radio checked={selectedId === record.id} />
-        </div>
+        <Radio checked={selectedId === record.id} />
       )
     },
     {
@@ -48,6 +48,7 @@ export const LicenseSelectModal: React.FC<Props> = ({ open, onCancel, onSelect, 
       title: t('selfhosted.license.cols.type'),
       dataIndex: 'type',
       key: 'type',
+      width: 100,
       render: (type: string) => (
         <VFTag variant={type === 'CLOUD' ? 'brand' : 'info'} filled={false}>
           {type === 'SELF_HOSTED' ? t('selfhosted.mode.edge', { defaultValue: '边缘端' }) : t('selfhosted.mode.cloud', { defaultValue: '云端' })}
@@ -60,7 +61,7 @@ export const LicenseSelectModal: React.FC<Props> = ({ open, onCancel, onSelect, 
       render: (_: any, r: License) => {
         const remaining = r.total_quota - r.used_devices;
         return (
-          <span className={`text-sm ${remaining <= 0 ? 'text-error font-bold' : 'text-text-secondary'}`}>
+          <span className={`text-sm ${remaining <= 0 ? 'text-error font-bold' : 'text-text-secondary font-medium'}`}>
             {t('selfhosted.license.quotaAvailable', { count: remaining, total: r.total_quota, defaultValue: '{{count}} / {{total}} 可用' })}
           </span>
         );
@@ -70,7 +71,8 @@ export const LicenseSelectModal: React.FC<Props> = ({ open, onCancel, onSelect, 
       title: t('selfhosted.license.cols.expiry'),
       dataIndex: 'expiry_date',
       key: 'expiry',
-      render: (d: string) => <span className="text-sm text-text-secondary">{dayjs(d).format('YYYY-MM-DD')}</span>
+      width: 120,
+      render: (d: string) => <span className="text-sm text-text-tertiary tabular-nums font-medium">{dayjs(d).format('YYYY-MM-DD')}</span>
     }
   ];
 
@@ -88,17 +90,18 @@ export const LicenseSelectModal: React.FC<Props> = ({ open, onCancel, onSelect, 
       width={720}
       okText={t('common.confirm', { defaultValue: '确认' })}
       cancelText={t('common.cancel')}
-      okButtonProps={{ disabled: !selectedId, className: 'h-10 px-6 font-bold' }}
+      okButtonProps={{ disabled: !selectedId, className: 'h-10 px-8 font-bold' }}
       cancelButtonProps={{ className: 'h-10 px-6' }}
       className="vf-modal-custom"
+      destroyOnClose
     >
-      <div className="flex flex-col gap-4 py-4">
+      <div className="flex flex-col gap-5 py-2">
          <Input 
            prefix={<Search size={16} className="text-text-tertiary" />}
            placeholder={t('selfhosted.devices.searchPlaceholder')}
            value={searchText}
            onChange={e => setSearchText(e.target.value)}
-           className="h-10 rounded-control text-sm"
+           className="h-11 rounded-control text-sm bg-bg-page/40"
            allowClear
          />
 
@@ -109,24 +112,24 @@ export const LicenseSelectModal: React.FC<Props> = ({ open, onCancel, onSelect, 
            pagination={false}
            onRow={(record) => ({
              onClick: () => setSelectedId(record.id),
-             className: `cursor-pointer transition-colors min-h-[44px] ${selectedId === record.id ? 'bg-brand/5' : 'hover:bg-action-hover'}`
+             className: `cursor-pointer transition-all ${selectedId === record.id ? 'bg-brand/[0.03]' : ''}`
            })}
-           scroll={{ y: 320 }}
            size="middle"
+           className="!shadow-none !border-divider"
          />
       </div>
       
       {selectedId && (
-        <div className="bg-bg-page p-4 rounded-card border border-brand/20 flex justify-between items-center animate-in slide-in-from-bottom-2 duration-300">
+        <div className="mt-4 bg-brand/5 p-4 rounded-card border border-brand/20 flex justify-between items-center animate-in slide-in-from-bottom-2 duration-300">
           <Space direction="vertical" size={0}>
-             <span className="text-xs text-text-tertiary uppercase font-bold tracking-wider">
+             <span className="text-[10px] text-text-tertiary uppercase font-bold tracking-widest leading-none mb-1">
                {t('selfhosted.license.selectedLabel', { defaultValue: '已选择授权' })}
              </span>
-             <span className="font-bold text-brand text-sm">
+             <span className="font-bold text-brand text-sm leading-tight">
                {mockLicenses.find(l => l.id === selectedId)?.name}
              </span>
           </Space>
-          <VFTag variant="brand" filled>
+          <VFTag variant="brand" filled className="h-5 text-[10px] font-bold">
             {t('common.ready', { defaultValue: '就绪' })}
           </VFTag>
         </div>
@@ -138,14 +141,17 @@ export const LicenseSelectModal: React.FC<Props> = ({ open, onCancel, onSelect, 
           border-radius: 12px !important;
         }
         .vf-modal-custom .ant-modal-header {
-          margin-bottom: 16px !important;
+          margin-bottom: 20px !important;
+          border: none !important;
         }
         .vf-modal-custom .ant-modal-title {
           font-size: 18px !important;
           font-weight: 700 !important;
+          letter-spacing: -0.02em;
         }
-        .ant-modal-body .ant-table-tbody > tr > td {
-          padding: 12px 16px !important;
+        /* 移除干扰的全局 padding 覆盖 */
+        .vf-modal-custom .ant-table-wrapper {
+          border-radius: 8px !important;
         }
       `}</style>
     </Modal>

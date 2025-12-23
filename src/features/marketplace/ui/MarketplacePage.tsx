@@ -26,7 +26,6 @@ export const MarketplacePage: React.FC<Props> = ({ subPath, onNavigate }) => {
   }
 
   if (subPath.startsWith('marketplace-checkout')) {
-    // Parse query-like string: marketplace-checkout?listing_id=xxx
     const searchParams = new URLSearchParams(subPath.split('?')[1]);
     const listingId = searchParams.get('listing_id') || '';
     const planCode = searchParams.get('plan_code') || '';

@@ -151,9 +151,11 @@ export const UsageSummaryPanel: React.FC<Props> = ({ deviceId }) => {
           ) : isUnbound ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-bg-page/10 rounded-lg border border-dashed border-border text-center px-6">
               <Ban size={32} className="text-text-tertiary mb-3 opacity-20" />
-              <span className="text-sm font-bold text-text-secondary mb-1">用量统计不可用</span>
+              <span className="text-sm font-bold text-text-secondary mb-1">
+                {t('selfhosted.deviceDetail.overview.usageDisabledTitle')}
+              </span>
               <p className="text-xs text-text-tertiary max-w-[240px]">
-                在设备未完成授权绑定前，系统无法通过遥测采集其产生的图像或视频处理数据。
+                {t('selfhosted.deviceDetail.overview.usageDisabledDesc')}
               </p>
             </div>
           ) : (

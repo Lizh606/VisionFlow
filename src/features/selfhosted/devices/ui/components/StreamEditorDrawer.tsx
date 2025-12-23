@@ -227,14 +227,20 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
           <div className="bg-bg-page/40 p-5 rounded-card border border-border flex flex-col gap-6">
             <Form.Item label={<span className="text-sm font-bold text-text-secondary">{t('selfhosted.workflowDeployment.sourceType')}</span>} name="type" className="mb-0">
               <Radio.Group className="vf-radio-group-refined w-full grid grid-cols-1 sm:grid-cols-3 gap-2">
-                <Radio.Button value="RTSP">
-                  <Video size={16} /><span>RTSP</span>
+                <Radio.Button value="RTSP" className="vf-protocol-btn">
+                  <div className="flex items-center justify-center gap-2 w-full h-full">
+                    <Video size={16} /><span>RTSP</span>
+                  </div>
                 </Radio.Button>
-                <Radio.Button value="HTTP">
-                  <Zap size={16} /><span>HTTP PUSH</span>
+                <Radio.Button value="HTTP" className="vf-protocol-btn">
+                  <div className="flex items-center justify-center gap-2 w-full h-full">
+                    <Zap size={16} /><span>HTTP PUSH</span>
+                  </div>
                 </Radio.Button>
-                <Radio.Button value="FILE">
-                  <Database size={16} /><span>FILE</span>
+                <Radio.Button value="FILE" className="vf-protocol-btn">
+                  <div className="flex items-center justify-center gap-2 w-full h-full">
+                    <Database size={16} /><span>FILE</span>
+                  </div>
                 </Radio.Button>
               </Radio.Group>
             </Form.Item>
@@ -345,6 +351,44 @@ export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, ini
           </div>
         </Section>
       </Form>
+
+      <style>{`
+        /* 修复 Protocol 按钮内容换行 */
+        .vf-protocol-btn .ant-radio-button {
+          height: 100%;
+        }
+        .ant-radio-button-wrapper > span {
+          display: flex !important;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          white-space: nowrap;
+        }
+
+        /* 修复卡片单选框重叠与原点偏移 */
+        .vf-card-radio {
+          display: flex !important;
+          position: relative;
+        }
+        /* 隐藏原生 Radio 按钮的原点，因为我们使用了卡片样式表示选中 */
+        .vf-card-radio .ant-radio {
+          position: absolute;
+          opacity: 0;
+          width: 0;
+          height: 0;
+          pointer-events: none;
+        }
+        /* 确保 label 容器撑满，以便卡片点击生效 */
+        .vf-card-radio > span:last-child {
+          display: block;
+          width: 100%;
+          padding: 0 !important;
+        }
+        
+        .vf-form-refined .ant-form-item-label {
+          padding-bottom: 8px !important;
+        }
+      `}</style>
     </Drawer>
   );
 };

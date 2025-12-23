@@ -68,6 +68,10 @@ export function VFTable<T extends object>({ className, ...props }: VFTableProps<
         <style>{`
           /* === V1.4 Standard Table Typography Overrides === */
           
+          .vf-standard-table {
+            background-color: #fff !important;
+          }
+
           /* 1. Header: T5 Body Strong (14/22, 500) */
           .vf-standard-table .ant-table-thead > tr > th {
             height: 44px !important;
@@ -93,6 +97,17 @@ export function VFTable<T extends object>({ className, ...props }: VFTableProps<
             font-weight: 400 !important;
             border-bottom: 1px solid rgba(var(--vf-divider), var(--vf-divider-alpha)) !important;
             background-color: transparent !important;
+          }
+
+          /* 修复 scroll 模式下的 Table 空白行与错位 */
+          .vf-standard-table .ant-table-header {
+             margin-bottom: 0 !important;
+             background: #fff !important;
+          }
+          
+          .vf-standard-table .ant-table-container::before,
+          .vf-standard-table .ant-table-container::after {
+            display: none !important;
           }
 
           /* Hover behavior */

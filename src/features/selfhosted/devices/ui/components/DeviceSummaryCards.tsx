@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Space, Button, Tooltip, Dropdown, App } from 'antd';
 import type { MenuProps } from 'antd';
@@ -33,10 +34,8 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
 
   const InfoRow = ({ label, value, copyable, empty }: { label: string, value: string | React.ReactNode, copyable?: string, empty?: boolean }) => (
     <div className={`flex items-center justify-between py-2 border-b border-divider last:border-b-0 min-h-[44px] ${empty ? 'opacity-40' : ''}`}>
-      {/* T6 Caption (12/18, 400) */}
       <span className="text-xs leading-[18px] font-normal text-text-tertiary">{label}</span>
       <div className="flex items-center gap-2 overflow-hidden">
-        {/* T5 Body Strong (14/22, 500) */}
         <div className={`text-sm font-medium text-text-primary leading-[22px] truncate max-w-[140px] sm:max-w-[160px] ${empty ? 'font-normal italic' : ''}`}>
           {empty ? '---' : value}
         </div>
@@ -107,7 +106,7 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
               onClick={() => setLicModalOpen(true)}
             >
               <ExternalLink size={14} />
-              {isUnbound ? 'Bind License' : (isMobile ? t('common.edit') : t('selfhosted.deviceDetail.summary.changeLicense'))}
+              {isUnbound ? t('selfhosted.actions.bind') : (isMobile ? t('common.edit') : t('selfhosted.deviceDetail.summary.changeLicense'))}
             </Button>
           )
         }
@@ -117,7 +116,7 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
              {isUnbound ? (
                <div className="flex items-center gap-2 text-warning animate-pulse">
                  <ShieldAlert size={18} />
-                 <span className="text-sm font-bold tracking-tight">Awaiting License</span>
+                 <span className="text-sm font-bold tracking-tight">{t('selfhosted.deviceDetail.summary.awaitingLicense')}</span>
                </div>
              ) : (
                <div className="text-base font-bold text-text-primary flex items-center gap-1.5 cursor-pointer hover:text-brand transition-colors">
@@ -127,9 +126,9 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
              )}
           </div>
           <div className="flex flex-col">
-            <InfoRow label={t('selfhosted.deviceDetail.summary.expiry')} value="---" empty={isUnbound} />
-            <InfoRow label={t('selfhosted.deviceDetail.summary.quota')} value="---" empty={isUnbound} />
-            <InfoRow label={t('selfhosted.deviceDetail.summary.offlineLease')} value="---" empty={isUnbound} />
+            <InfoRow label={t('selfhosted.deviceDetail.summary.expiry')} value={isUnbound ? "---" : "2026-12-23"} empty={isUnbound} />
+            <InfoRow label={t('selfhosted.deviceDetail.summary.quota')} value={isUnbound ? "---" : "10 Streams"} empty={isUnbound} />
+            <InfoRow label={t('selfhosted.deviceDetail.summary.offlineLease')} value={isUnbound ? "---" : t('common.enabled')} empty={isUnbound} />
           </div>
         </div>
       </VFCard>
@@ -153,7 +152,7 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
              {isUnbound ? (
                <div className="flex items-center gap-2 text-text-tertiary opacity-60">
                  <FileX size={18} />
-                 <span className="text-sm font-medium italic">No configuration found</span>
+                 <span className="text-sm font-medium italic">{t('selfhosted.deviceDetail.summary.noConfigFound')}</span>
                </div>
              ) : (
                <div className="text-base font-bold text-text-primary flex items-center gap-2">
@@ -167,11 +166,11 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
           <div className="flex flex-col">
             <InfoRow 
               label={t('selfhosted.deviceDetail.summary.streamsCount')} 
-              value="---" 
+              value={isUnbound ? "---" : "3 Active"} 
               empty={isUnbound}
             />
-            <InfoRow label={t('selfhosted.deviceDetail.summary.configuredBy')} value="---" empty={isUnbound} />
-            <InfoRow label={t('selfhosted.deviceDetail.summary.lastModifiedTime')} value="---" empty={isUnbound} />
+            <InfoRow label={t('selfhosted.deviceDetail.summary.configuredBy')} value={isUnbound ? "---" : "Admin (CI/CD)"} empty={isUnbound} />
+            <InfoRow label={t('selfhosted.deviceDetail.summary.lastModifiedTime')} value={isUnbound ? "---" : "2h ago"} empty={isUnbound} />
           </div>
         </div>
       </VFCard>

@@ -74,6 +74,19 @@
   justify-content: center !important;
 }
 
+/* V1.4 Refined Segmented Control for Toolbars */
+.ant-segmented {
+  background: transparent !important;
+}
+
+.ant-segmented-item {
+  transition: all 0.2s ease !important;
+}
+
+.ant-segmented-item-selected {
+  box-shadow: none !important;
+}
+
 /* Sidebar System Dropdown specific overrides */
 .vf-system-dropdown .ant-dropdown-menu-item,
 .vf-system-dropdown .ant-dropdown-menu-submenu-title {

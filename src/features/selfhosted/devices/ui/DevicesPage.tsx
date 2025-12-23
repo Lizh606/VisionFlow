@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { Button, Input, Select, Tooltip, Dropdown } from 'antd';
 import { 
@@ -127,15 +128,15 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
       width: 60,
       render: (_: any, record: Device) => {
         const items = [
-          { key: 'view', label: t('common.viewDetails'), onClick: () => onDeviceClick?.(record.id) },
+          { key: 'view', label: t('selfhosted.actions.view'), onClick: () => onDeviceClick?.(record.id) },
           record.status === 'PENDING_LICENSE' ? { 
             key: 'bind', 
-            label: 'Bind License', 
+            label: t('selfhosted.actions.bind'), 
             icon: <Link size={14} />, 
             className: 'text-brand',
             onClick: () => handleBindClick(record)
           } : null,
-          { key: 'drain', label: 'Drain', icon: <XCircle size={14} />, danger: true },
+          { key: 'drain', label: t('selfhosted.actions.drain'), icon: <XCircle size={14} />, danger: true },
         ].filter(Boolean);
 
         return (

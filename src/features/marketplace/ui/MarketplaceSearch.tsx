@@ -159,7 +159,7 @@ export const MarketplaceSearch: React.FC<{ onNavigate: (p: string) => void }> = 
             className="vf-search-slider"
           />
         </div>
-        <div className="flex justify-between text-[11px] text-text-tertiary font-mono font-medium">
+        <div className="justify-between text-[11px] text-text-tertiary font-mono font-medium hidden sm:flex">
           <span>$0</span>
           <span>$1,000+</span>
         </div>
@@ -274,8 +274,8 @@ export const MarketplaceSearch: React.FC<{ onNavigate: (p: string) => void }> = 
                       <ListingCard 
                         listing={item} 
                         onClick={(id) => onNavigate(`marketplace-listing-${id}`)}
-                        // Handler must be async to match signature
                         onFavorite={async (id, e) => {
+                          e.stopPropagation();
                           setResults(prev => prev.map(l => l.id === id ? { ...l, isFavorite: !l.isFavorite } : l));
                         }}
                       />

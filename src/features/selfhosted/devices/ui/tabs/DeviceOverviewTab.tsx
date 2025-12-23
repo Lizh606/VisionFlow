@@ -34,7 +34,7 @@ export const DeviceOverviewTab: React.FC<Props> = ({ device }) => {
                   {t('selfhosted.devices.unbound')}
                 </span>
                 <span className="text-xs text-text-secondary">
-                  This device is not linked to a valid license. Monitoring and deployment are disabled.
+                  {t('selfhosted.deviceDetail.overview.unboundBanner')}
                 </span>
               </div>
               <Button 
@@ -43,7 +43,7 @@ export const DeviceOverviewTab: React.FC<Props> = ({ device }) => {
                 className="h-8 px-4 font-bold bg-warning border-warning hover:bg-warning/80 flex items-center gap-1.5 shrink-0"
                 onClick={() => console.log('Open license modal')}
               >
-                Bind License <ArrowRight size={14} />
+                {t('selfhosted.actions.bind')} <ArrowRight size={14} />
               </Button>
             </div>
           }

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Skeleton, Button } from 'antd';
@@ -42,12 +43,14 @@ export const ConfigSummaryPanel: React.FC<Props> = ({ device, loading = false })
             <div className="w-12 h-12 rounded-full bg-warning/10 flex items-center justify-center text-warning mb-4">
               <ShieldAlert size={24} />
             </div>
-            <h4 className="text-sm font-bold text-text-primary mb-1">未授权设备</h4>
+            <h4 className="text-sm font-bold text-text-primary mb-1">
+              {t('selfhosted.deviceDetail.summary.awaitingLicense')}
+            </h4>
             <p className="text-xs text-text-tertiary max-w-[200px] leading-relaxed mb-4">
-              在完成授权绑定之前，无法同步工作流配置或部署 Stream 任务。
+              {t('selfhosted.deviceDetail.summary.noConfigDesc')}
             </p>
             <Button type="link" size="small" className="text-brand font-bold p-0 text-xs">
-              去绑定授权
+              {t('selfhosted.actions.bind')}
             </Button>
           </div>
         ) : activeStreams.length > 0 ? (

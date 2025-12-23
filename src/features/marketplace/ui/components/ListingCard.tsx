@@ -27,7 +27,11 @@ export const ListingCard: React.FC<Props> = ({ listing, onClick, onFavorite }) =
     >
       <div className="aspect-video bg-bg-page relative flex flex-col items-center justify-center text-text-tertiary/10 border-b border-divider/60">
         <ImageIcon size={48} strokeWidth={1} />
-        <div className="absolute top-2.5 right-2.5">
+        {/* V1.4 Fix: 显式阻止容器点击冒泡，确保收藏操作不触发卡片跳转 */}
+        <div 
+          className="absolute top-2.5 right-2.5 z-20"
+          onClick={(e) => e.stopPropagation()}
+        >
           <FavoriteButton isFavorite={listing.isFavorite} onToggle={(e) => onFavorite(listing.id, e)} />
         </div>
         <div className="absolute inset-0 bg-brand/5 opacity-0 group-hover:opacity-100 transition-opacity" />

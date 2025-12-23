@@ -10,6 +10,12 @@ import {
   Search,
   ChevronDown,
   ShoppingBag,
+  Store,
+  Package,
+  Layers,
+  LayoutDashboard,
+  Cpu,
+  KeyRound
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { SidebarSystemArea } from './SidebarSystemArea';
@@ -60,9 +66,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: <ShoppingBag size={18} strokeWidth={1.5} />,
       label: t('menu.marketplace'),
       children: [
-        { key: 'marketplace', label: t('menu.overview'), onClick: () => onNavigate?.('marketplace') },
-        { key: 'marketplace-library', label: t('marketplace.library.title'), onClick: () => onNavigate?.('marketplace-library') },
-        { key: 'marketplace-seller', label: t('marketplace.seller.dashboard'), onClick: () => onNavigate?.('marketplace-seller') },
+        { 
+          key: 'marketplace', 
+          icon: <Store size={16} />, 
+          label: t('marketplace.home.title'), 
+          onClick: () => onNavigate?.('marketplace') 
+        },
+        { 
+          key: 'marketplace-library', 
+          icon: <Package size={16} />, 
+          label: t('marketplace.library.title'), 
+          onClick: () => onNavigate?.('marketplace-library') 
+        },
+        { 
+          key: 'marketplace-seller', 
+          icon: <Layers size={16} />, 
+          label: t('marketplace.seller.myListings'), 
+          onClick: () => onNavigate?.('marketplace-seller') 
+        },
       ],
     },
     {
@@ -70,9 +91,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: <Server size={18} strokeWidth={1.5} />,
       label: t('menu.selfHosted'),
       children: [
-        { key: 'sh-overview', label: t('menu.overview'), onClick: () => onNavigate?.('sh-overview') },
-        { key: 'sh-devices', label: t('menu.devices'), onClick: () => onNavigate?.('sh-devices') },
-        { key: 'sh-license', label: t('menu.license'), onClick: () => onNavigate?.('sh-license') },
+        { 
+          key: 'sh-overview', 
+          icon: <LayoutDashboard size={14} />,
+          label: t('menu.overview'), 
+          onClick: () => onNavigate?.('sh-overview') 
+        },
+        { 
+          key: 'sh-devices', 
+          icon: <Cpu size={14} />,
+          label: t('menu.devices'), 
+          onClick: () => onNavigate?.('sh-devices') 
+        },
+        { 
+          key: 'sh-license', 
+          icon: <KeyRound size={14} />,
+          label: t('menu.license'), 
+          onClick: () => onNavigate?.('sh-license') 
+        },
       ],
     },
   ];
@@ -122,13 +158,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <div className="flex flex-col h-full bg-bg-card">
-      {/* A) Standardized Brand Header */}
       <VFBrand 
         collapsed={collapsed} 
         onClick={() => onNavigate?.('workflows')} 
       />
 
-      {/* B) Workspace Selector: Consistent with spec */}
       <div className={`px-4 mt-2 mb-4 shrink-0 ${collapsed ? 'hidden' : ''}`}>
         <Dropdown 
           open={dropdownOpen} 
@@ -179,6 +213,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
         .vf-sidebar-menu.ant-menu-inline, 
         .vf-sidebar-menu.ant-menu-vertical {
           border-inline-end: none !important;
+        }
+        /* Style for sub-menu items icons to match size and consistency */
+        .ant-menu-sub .ant-menu-item .ant-menu-item-icon {
+          font-size: 16px !important;
+          opacity: 0.8;
+        }
+        .ant-menu-sub .ant-menu-item-selected .ant-menu-item-icon {
+          opacity: 1;
         }
       `}</style>
     </div>

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button, Row, Col, Space } from 'antd';
-import { Plus, BarChart3, Package, Settings } from 'lucide-react';
+import { Plus, BarChart3, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { VFPageHeader } from '../../../shared/ui/VFPageHeader';
 import { VFStatCard } from '../../../shared/ui/VFStatCard';
@@ -14,7 +14,7 @@ export const MarketplaceSellerDashboard: React.FC<{ onNavigate: (p: string) => v
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-500">
       <VFPageHeader 
-        title={t('marketplace.seller.dashboard')}
+        title={t('marketplace.seller.myListings')}
         onBack={() => onNavigate('marketplace')}
         actions={
           <Button 
@@ -39,7 +39,7 @@ export const MarketplaceSellerDashboard: React.FC<{ onNavigate: (p: string) => v
         </Col>
       </Row>
 
-      <div className="bg-bg-card rounded-card border border-border overflow-hidden">
+      <div className="bg-bg-card rounded-card border border-border overflow-hidden shadow-none">
         <div className="px-6 py-4 border-b border-divider flex items-center justify-between">
           <h3 className="text-base font-bold text-text-primary m-0">
             {t('marketplace.seller.myListings')}
