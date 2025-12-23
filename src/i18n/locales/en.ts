@@ -27,17 +27,25 @@ export const en = {
       "start": "Start",
       "enabled": "Enabled",
       "disabled": "Disabled",
-      "language": "Language"
+      "language": "Language",
+      "back": "Back",
+      "retry": "Retry",
+      "noPreview": "No Preview",
+      "free": "Free",
+      "upload": "Upload Image",
+      "run": "Run Inference"
     },
     "menu": {
       "workflows": "Workflows",
+      "marketplace": "Marketplace",
       "selfHosted": "Self-hosted",
       "overview": "Overview",
       "devices": "Devices",
       "license": "License",
       "support": "Help & Support",
       "settings": "Settings",
-      "security": "Security"
+      "security": "Security",
+      "folders": "Folders"
     },
     "workflows": {
       "title": "Workflows",
@@ -53,144 +61,141 @@ export const en = {
         "explore": "Explore Templates",
         "create": "Create Workflow"
       },
-      "folders": {
-        "count": "{{count}} Workflow",
-        "count_plural": "{{count}} Workflows",
-        "create": "Create folder",
-        "nameLabel": "Folder Name",
-        "namePlaceholder": "e.g. Production Workflows",
-        "nameRequired": "Please enter folder name"
-      },
       "table": {
         "name": "Workflow Name",
         "updated": "Last Updated"
       },
+      "folders": {
+        "count": "{{count}} Workflow",
+        "count_plural": "{{count}} Workflows",
+        "create": "New Folder",
+        "nameLabel": "Folder Name",
+        "nameRequired": "Please enter folder name",
+        "namePlaceholder": "e.g., Traffic Analysis"
+      },
       "empty": {
-        "folder": "This folder is empty",
-        "folderDesc": "Start by creating a workflow inside this folder.",
         "global": "No workflows found",
-        "globalDesc": "Create your first workflow to get started."
+        "globalDesc": "Get started by creating your first vision pipeline.",
+        "folder": "Empty Folder",
+        "folderDesc": "There are no workflows in this folder yet."
       },
       "templates": {
-        "modalTitle": "Choose a template and configure",
-        "gallery": "Gallery",
-        "popular": "Popular Templates",
-        "emptyTitle": "Select a template to preview and configure",
-        "emptyDesc": "Browse the gallery on the left to see workflow architectures and customization options.",
-        "architecture": "Workflow Architecture",
+        "modalTitle": "Create from Template",
+        "architecture": "Architecture",
         "customize": "Customize",
-        "customizeDesc": "Select a model or configure parameters.",
-        "pickModel": "Pick a model:",
-        "noConfig": "No configuration required",
-        "noConfigDesc": "This template uses built-in processing logic and does not require an external vision model to start.",
-        "footerHint": "Please select a template from the gallery",
-        "advancedHint": "Advanced logic and inference nodes can be further customized in the workflow editor after creation."
+        "customizeDesc": "Select model and runtime parameters.",
+        "pickModel": "Pick a detection model",
+        "noConfig": "Auto-configuration",
+        "noConfigDesc": "This template uses default blocks.",
+        "emptyTitle": "Select a template",
+        "emptyDesc": "Pick a template from the gallery to view architecture and customize details.",
+        "footerHint": "Select a template to continue"
       }
     },
     "selfhosted": {
       "overview": {
-        "title": "Self-hosted Overview",
-        "timeRange": {
-          "24h": "Last 24h",
-          "7d": "Last 7d",
-          "30d": "Last 30d"
-        },
+        "title": "Edge Overview",
         "kpi": {
           "totalDevices": "Total Devices",
           "online": "Online",
           "pendingLicense": "Pending License",
           "offline": "Offline",
-          "licenseUsage": "License Usage",
+          "licenseUsage": "License Quota",
           "expiringSoon": "{{count}} expiring soon",
-          "usageSummary": "Usage Summary",
+          "usageSummary": "Data Telemetry",
           "utilization": "Quota Utilization",
           "activeLicenses": "Active Licenses",
           "expiring": "Expiring Soon",
-          "pending": "Pending Devices"
+          "pending": "Unbound Devices"
         },
         "charts": {
           "deviceStatus": "Device Status Distribution",
+          "count": "Count",
           "usageTrend": "Processing Trend",
-          "edge": "Edge Processing",
-          "cloud": "Cloud Processing",
+          "edge": "Edge",
+          "cloud": "Cloud",
           "images": "Images",
           "video": "Video",
-          "count": "Count",
           "breakdown": "License Breakdown",
           "usageSeries": "Actual Usage",
-          "quotaSeries": "Total Quota"
+          "quotaSeries": "Quota Limit"
         },
         "alerts": {
-          "title": "Active Alerts",
-          "viewAll": "View All",
+          "title": "Recent Alerts",
           "critical": "Critical",
           "warning": "Warning",
           "info": "Info",
-          "target": "Target"
+          "target": "Target",
+          "viewAll": "View All"
         },
-        "shortcuts": {
-          "title": "Quick Access",
-          "viewDeviceList": "Device Fleet",
-          "manageLicenses": "License Management",
-          "recentDeployments": "Deployment Logs"
+        "timeRange": {
+          "24h": "Last 24h",
+          "7d": "7 Days",
+          "30d": "30 Days"
         },
         "quickActions": {
           "title": "Quick Actions"
         },
         "actions": {
           "upload": "Upload License",
-          "devices": "Manage Devices",
-          "manage": "Licenses",
+          "devices": "View Devices",
+          "manage": "Manage Keys",
           "guide": "Setup Guide"
+        },
+        "shortcuts": {
+          "title": "Shortcuts",
+          "viewDeviceList": "View Device List",
+          "manageLicenses": "Manage Licenses",
+          "recentDeployments": "Recent Deployments"
         }
       },
       "devices": {
         "title": "Device Fleet",
         "searchPlaceholder": "Search by name or device ID...",
-        "unbound": "Unlicensed",
-        "noData": "No devices matched your filters",
+        "noData": "No devices found",
+        "unbound": "License Required",
         "cols": {
           "name": "Device Name",
           "id": "Device ID",
           "status": "Status",
           "mode": "Mode",
-          "license": "License",
+          "license": "Active License",
           "lastSeen": "Last Seen"
         },
         "alert": {
-          "pendingMessage": "There are <bold>{{count}}</bold> devices awaiting license assignment.",
-          "filterAction": "View Pending"
+          "pendingMessage": "You have <bold>{{count}} unbound devices</bold> awaiting license assignment.",
+          "filterAction": "Filter pending"
         }
       },
       "deviceDetail": {
-        "summary": {
-          "overviewTitle": "Device Overview",
-          "deviceId": "Device ID",
-          "runtimeId": "Runtime ID",
-          "lastSeen": "Last Seen",
-          "changeMode": "Change Mode",
-          "licenseTitle": "License & Entitlement",
-          "changeLicense": "Change",
-          "expiry": "Expiration",
-          "quota": "Usage Quota",
-          "offlineLease": "Offline Lease",
-          "configTitle": "Deployment Config",
-          "viewHistory": "History",
-          "streamsCount": "Active Streams",
-          "configuredBy": "Configured By",
-          "lastModifiedTime": "Last Modified",
-          "mode": "Deployment Mode"
-        },
-        "overview": {
-          "units": "Inference Calls",
-          "unitsTooltip": "Total processed inferences in the selected time window.",
-          "recentAlerts": "Recent Alerts"
-        },
         "tabs": {
           "overview": "Overview",
           "workflow": "Deployment",
-          "usage": "Telemetry",
+          "usage": "Analytics",
           "logs": "System Logs"
+        },
+        "summary": {
+          "overviewTitle": "Device Identity",
+          "licenseTitle": "License Status",
+          "configTitle": "Deployment",
+          "deviceId": "Hardware ID",
+          "runtimeId": "Runtime ID",
+          "lastSeen": "Last Seen",
+          "expiry": "Expiration",
+          "quota": "Stream Quota",
+          "offlineLease": "Offline Lease",
+          "changeLicense": "Change License",
+          "viewHistory": "History",
+          "latest": "LATEST",
+          "streamsCount": "Active Streams",
+          "configuredBy": "Configured By",
+          "lastModifiedTime": "Last Modified",
+          "changeMode": "Change Deployment Mode"
+        },
+        "overview": {
+          "units": "Inferences",
+          "unitsTooltip": "Total number of frames processed by all workflows.",
+          "recentAlerts": "Device Alerts"
         },
         "workflow": {
           "rollback": "Rollback to this version"
@@ -199,92 +204,93 @@ export const en = {
       "workflowDeployment": {
         "title": "Stream Deployments",
         "addStream": "Deploy Stream",
+        "latest": "LATEST",
+        "lastUpdated": "Updated",
+        "operator": "By",
+        "viewHistory": "History",
         "streamName": "Stream Name",
         "input": "Input",
-        "workflow": "Workflow",
+        "workflow": "Vision Logic",
         "status": "Status",
         "telemetry": "Telemetry",
         "updated": "Updated",
-        "latest": "LATEST",
+        "empty": "No active deployments",
         "historyTitle": "Deployment History",
-        "lastUpdated": "Last Deployment",
-        "operator": "Operator",
-        "viewHistory": "History",
-        "editTitle": "Edit Stream Deployment",
-        "createTitle": "Deploy New Stream",
-        "basicInfo": "General Identity",
-        "nameLabel": "Stream Name",
-        "nameRequired": "Stream name is required",
-        "namePlaceholder": "e.g. South Parking Cam",
-        "inputSource": "Input Configuration",
-        "sourceType": "Source Type",
-        "endpoint": "Endpoint URL",
-        "endpointRequired": "Connection URL is required",
-        "workflowBinding": "Workflow & Logic",
-        "selectWorkflow": "Vision Workflow",
-        "selectWorkflowPlaceholder": "Choose a workflow...",
-        "versionStrategy": "Version Logic",
-        "runPolicy": "Inference Policy",
-        "concurrency": "Workers",
+        "editTitle": "Edit Deployment",
+        "createTitle": "New Deployment",
+        "basicInfo": "Basic Information",
+        "nameLabel": "Deployment Name",
+        "nameRequired": "Enter a name",
+        "namePlaceholder": "e.g., Gate Entrance Cam",
+        "inputSource": "Input Source",
+        "sourceType": "Protocol",
+        "endpoint": "Endpoint",
+        "endpointRequired": "URL is required",
+        "workflowBinding": "Workflow Binding",
+        "selectWorkflow": "Select Workflow",
+        "selectWorkflowPlaceholder": "Choose a logic pipeline",
+        "versionStrategy": "Version Policy",
+        "runPolicy": "Execution Policy",
+        "concurrency": "Concurrency",
         "telemetryGranularity": "Telemetry Level",
-        "applyImmediately": "Atomic Restart",
-        "applyImmediatelyDesc": "Automatically restart processing nodes to apply these changes immediately.",
+        "applyImmediately": "Apply Changes Immediately",
+        "applyImmediatelyDesc": "Restart stream instance to apply new config.",
         "updateBtn": "Deploy Changes",
-        "createBtn": "Start Stream",
+        "createBtn": "Deploy Stream",
+        "noSnapshot": "No configuration snapshot available",
+        "loadingDiff": "Calculating differences...",
         "snapshot": "Snapshot",
         "diff": "Diff",
-        "noSnapshot": "No configuration snapshot available",
-        "loadingDiff": "Calculating configuration differences...",
-        "rollbackTitle": "Rollback to {{version}}?",
-        "rollbackDesc": "This will stop current processing and restart nodes with the selected historical configuration.",
+        "rollbackTitle": "Rollback to {{version}}",
+        "rollbackDesc": "The current configuration will be replaced by this historical version.",
         "rollbackConfirm": "Confirm Rollback"
-      },
-      "usage": {
-        "dim": "Dimension",
-        "dimWorkflow": "By Workflow",
-        "dimStream": "By Stream",
-        "metric": "Metric",
-        "metricImg": "Images",
-        "metricVid": "Video",
-        "dateRange": "Time Window",
-        "modeFilter": "Compute Mode",
-        "modes": {
-          "all": "All Modes",
-          "edge": "Edge Only",
-          "cloud": "Cloud Only"
-        },
-        "tableCols": {
-          "calls": "Inference Calls",
-          "errors": "Failures",
-          "errorRate": "Error Rate"
-        },
-        "footerNote": "Telemetry data is aggregated across all active nodes with a 5-minute latency."
-      },
-      "logs": {
-        "title": "Centralized Observability",
-        "description": "System logs for device <bold>{{id}}</bold> are streamed to your centralized logging backend.",
-        "launchBtn": "Open Log Console"
       },
       "license": {
         "title": "License Management",
-        "upload": "Add License",
-        "noData": "No licenses found in this workspace",
-        "selectTitle": "Select Entitlement License",
+        "upload": "Upload New License",
+        "noData": "No license keys found",
+        "selectTitle": "Select License",
+        "selectedLabel": "Selected",
         "quotaAvailable": "{{count}} / {{total}} Available",
-        "selectedLabel": "Selected License",
         "daysLeft": "{{count}} days left",
         "cols": {
           "name": "License Name",
           "key": "License Key",
           "type": "Type",
           "billing": "Billing",
-          "usage": "Capacity",
+          "usage": "Utilization",
           "expiry": "Expiry"
         },
         "actions": {
-          "viewUsage": "Usage Report",
+          "viewUsage": "View Usage",
           "extend": "Renew License"
         }
+      },
+      "usage": {
+        "dim": "Dimension",
+        "dimWorkflow": "Workflow",
+        "dimStream": "Stream",
+        "metric": "Metric",
+        "metricImg": "Images",
+        "metricVid": "Video Sec",
+        "dateRange": "Time Range",
+        "modeFilter": "Deployment Mode",
+        "modes": {
+          "all": "All Modes",
+          "edge": "Edge Only",
+          "cloud": "Cloud Only"
+        },
+        "tableCols": {
+          "calls": "Total Calls",
+          "errors": "Errors",
+          "errorRate": "Error Rate"
+        },
+        "footerNote": "Telemetry data is cached locally and synchronized with the cloud every 5 minutes."
+      },
+      "logs": {
+        "title": "Advanced Trace Analysis",
+        "description": "Access full system logs and execution traces for device <bold>{{id}}</bold> via SigNoz integration.",
+        "launchBtn": "Launch Monitoring Console"
       },
       "status": {
         "online": "Online",
@@ -292,14 +298,102 @@ export const en = {
         "maintenance": "Draining",
         "error": "Error",
         "pending": "Pending License",
-        "decommissioned": "Decommissioned"
+        "decommissioned": "Decommissioned",
+        "ONLINE": "Online",
+        "OFFLINE": "Offline",
+        "ERROR": "Error",
+        "PENDING_LICENSE": "Pending License",
+        "DRAINING": "Draining",
+        "DECOMMISSIONED": "Decommissioned"
       },
       "mode": {
+        "edgeDesc": "Local edge processing.",
+        "cloudDesc": "Scale on Cloud runners.",
         "edge": "Edge",
-        "edgeDesc": "Processed locally. License metering only.",
-        "cloud": "Cloud",
-        "cloudDesc": "Processed on VisionFlow Cloud. Usage billing applies."
+        "cloud": "Cloud"
       }
+    },
+    "marketplace": {
+      "home": {
+        "title": "Marketplace",
+        "description": "Discover and deploy pre-built vision models, workflows, and plugins.",
+        "heroTitle": "Find vision resources for your workspace.",
+        "heroDesc": "Browse Marketplace listings and add what you need to your Library.",
+        "featuredTitle": "Featured Resources",
+        "viewAll": "View All",
+        "browseAll": "Browse All"
+      },
+      "detail": {
+        "overview": "Overview",
+        "examples": "Examples",
+        "docs": "Documentation",
+        "pricing": "Pricing",
+        "author": "Developer",
+        "released": "Released",
+        "installs": "Installs",
+        "supportedDevices": "Supported Devices",
+        "cta": {
+          "loginToAction": "Log in to Test / Buy",
+          "cloudTest": "Cloud Test",
+          "buyNow": "Buy Now",
+          "getFree": "Get for Free",
+          "openStudio": "Open in Studio",
+          "deploy": "Deploy to Self-hosted",
+          "viewEntitlement": "View Entitlement",
+          "unavailable": "Listing Unavailable",
+          "suspendedDesc": "This resource is suspended by the developer.",
+          "archivedDesc": "This is an archived version and no longer for sale."
+        }
+      },
+      "cloudTest": {
+        "title": "Cloud Test Sandbox",
+        "inputSection": "Test Input",
+        "configSection": "Runtime Config",
+        "resultSection": "Analysis Results",
+        "selectExample": "Pick from Examples",
+        "dropZone": "Drag and drop or click to upload",
+        "threshold": "Confidence Threshold",
+        "maxDetections": "Max Detections",
+        "running": "Inference Running...",
+        "queued": "In Queue...",
+        "success": "Inference Completed",
+        "viewRaw": "View Raw JSON",
+        "errors": {
+          "quota": "Test Quota Exhausted",
+          "quotaDesc": "You have used all your free test credits for this resource.",
+          "invalid": "Unsupported Image Format",
+          "studio": "Cloud Inference Engine Error",
+          "buyToContinue": "Buy Resource to unlock unlimited testing"
+        }
+      },
+      "search": {
+        "title": "Search Marketplace",
+        "placeholder": "Search models, workflows, plugins..."
+      },
+      "filters": {
+        "title": "Filters",
+        "reset": "Reset",
+        "tags": "Tags",
+        "taskType": "Task Type",
+        "devices": "Supported Devices",
+        "priceRange": "Price Range (USD)",
+        "showResults": "Show Results"
+      },
+      "library": {
+        "title": "My Library",
+        "description": "Your purchased and subscribed assets."
+      },
+      "seller": {
+        "dashboard": "Seller Dashboard",
+        "myListings": "My Listings",
+        "createListing": "New Listing"
+      },
+      "status": {
+        "published": "Published",
+        "draft": "Draft",
+        "reviewing": "Reviewing"
+      },
+      "installs": "installs"
     }
   }
 };

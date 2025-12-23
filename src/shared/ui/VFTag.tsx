@@ -11,17 +11,22 @@ interface VFTagProps {
   className?: string;
   title?: string;
   minWidth?: string | number; 
+  // Add onClick to VFTagProps to support interactive tags
+  onClick?: (e: React.MouseEvent<HTMLSpanElement>) => void;
 }
 
-export const VFTag: React.FC<VFTagProps> = ({ 
-  children, 
-  variant = 'default', 
-  filled = false,
-  icon, 
-  className = '',
-  title,
-  minWidth
-}) => {
+export const VFTag = React.forwardRef<HTMLSpanElement, VFTagProps>((props, ref) => {
+  const { 
+    children, 
+    variant = 'default', 
+    filled = false,
+    icon, 
+    className = '',
+    title,
+    minWidth,
+    onClick
+  } = props;
+
   /**
    * VisionFlow V1.4 统一 Soft Pill 算法:
    * - Height: h-6 (24px)
@@ -61,17 +66,22 @@ export const VFTag: React.FC<VFTagProps> = ({
 
   return (
     <span 
-      className={`${baseClasses} ${className} group/tag`} 
+      ref={ref}
+      // Pass onClick to the span
+      onClick={onClick}
+      // Add cursor-pointer if onClick is provided
+      className={`${baseClasses} ${onClick ? 'cursor-pointer' : ''} ${className} group/tag`} 
       title={title}
       style={{ 
         minWidth, 
         ...(filled ? filledStyle : softStyle)
       }}
     >
-      {icon && (
+      {/* Ensure icon is a valid element and cast to any to allow setting size/strokeWidth props */}
+      {React.isValidElement(icon) && (
         <span className="w-4 flex justify-center shrink-0">
-          {/* 强制图标大小为 12x12 */}
-          {React.cloneElement(icon as React.ReactElement, { size: 12, strokeWidth: 2.5 })}
+          {/* 强制图标大小为 12x12, cast to any to fix TS errors with cloneElement props */}
+          {React.cloneElement(icon as React.ReactElement<any>, { size: 12, strokeWidth: 2.5 })}
         </span>
       )}
       <span className="leading-none">{children}</span>
@@ -83,4 +93,4 @@ export const VFTag: React.FC<VFTagProps> = ({
       `}</style>
     </span>
   );
-};
+});

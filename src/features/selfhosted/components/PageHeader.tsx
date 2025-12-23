@@ -15,7 +15,8 @@ export const PageHeader: React.FC<Props> = ({ title, description, actions, onOpe
       title={title}
       description={description}
       actions={actions}
-      onOpenMenu={onOpenMenu}
+      // Removed onOpenMenu as VFPageHeader does not accept it. 
+      // Global navigation is handled by MainLayout's MobileAppBar.
     />
   );
 };

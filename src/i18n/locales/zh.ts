@@ -6,7 +6,7 @@ export const zh = {
       "search": "搜索...",
       "refresh": "刷新",
       "export": "导出",
-      "filter": "筛选",
+      "filter": "筛选器",
       "actions": "操作",
       "viewDetails": "查看详情",
       "total": "共 {{total}} 项",
@@ -27,23 +27,31 @@ export const zh = {
       "start": "启动",
       "enabled": "已启用",
       "disabled": "已禁用",
-      "language": "语言"
+      "language": "语言",
+      "back": "返回",
+      "retry": "重试",
+      "noPreview": "无预览图",
+      "free": "免费",
+      "upload": "上传图像",
+      "run": "运行测试"
     },
     "menu": {
       "workflows": "工作流",
+      "marketplace": "资源市场",
       "selfHosted": "自托管",
       "overview": "概览",
-      "devices": "设备",
-      "license": "许可证书",
+      "devices": "设备列表",
+      "license": "证书管理",
       "support": "帮助与支持",
       "settings": "设置",
-      "security": "安全"
+      "security": "安全",
+      "folders": "文件夹"
     },
     "workflows": {
-      "title": "工作流",
+      "title": "工作流管理",
       "inviteTeam": "邀请成员",
-      "helpTooltip": "管理您的计算机视觉处理逻辑与工作流。",
-      "searchPlaceholder": "搜索工作流...",
+      "helpTooltip": "管理您的视觉处理逻辑与 Pipeline 编排。",
+      "searchPlaceholder": "搜索工作流名称...",
       "view": {
         "list": "列表视图",
         "grid": "网格视图"
@@ -53,238 +61,235 @@ export const zh = {
         "explore": "探索模板",
         "create": "创建工作流"
       },
-      "folders": {
-        "count": "{{count}} 个工作流",
-        "count_plural": "{{count}} 个工作流",
-        "create": "创建文件夹",
-        "nameLabel": "文件夹名称",
-        "namePlaceholder": "例如：生产环境工作流",
-        "nameRequired": "请输入文件夹名称"
-      },
       "table": {
         "name": "工作流名称",
         "updated": "最后更新时间"
       },
+      "folders": {
+        "count": "{{count}} 个工作流",
+        "create": "新建文件夹",
+        "nameLabel": "文件夹名称",
+        "nameRequired": "请输入文件夹名称",
+        "namePlaceholder": "例如：交通分析项目"
+      },
       "empty": {
-        "folder": "此文件夹为空",
-        "folderDesc": "在此文件夹中创建您的第一个工作流。",
-        "global": "未找到工作流",
-        "globalDesc": "立即创建您的第一个工作流开始使用。"
+        "global": "暂无工作流",
+        "globalDesc": "开始创建您的第一个视觉算法工作流。",
+        "folder": "文件夹为空",
+        "folderDesc": "该文件夹内尚未添加任何工作流。"
       },
       "templates": {
-        "modalTitle": "选择模板并配置",
-        "gallery": "图库",
-        "popular": "热门模板",
-        "emptyTitle": "选择一个模板进行预览和配置",
-        "emptyDesc": "浏览左侧图库，查看工作流架构和自定义选项。",
-        "architecture": "工作流架构",
-        "customize": "自定义配置",
-        "customizeDesc": "选择模型或配置参数。",
-        "pickModel": "选择模型：",
-        "noConfig": "无需配置",
-        "noConfigDesc": "此模板使用内置处理逻辑，无需外部视觉模型即可启动。",
-        "footerHint": "请从左侧图库中选择一个模板",
-        "advancedHint": "创建后，可以在工作流编辑器中进一步自定义高级逻辑和推理节点。"
+        "modalTitle": "从模板创建工作流",
+        "architecture": "架构预览",
+        "customize": "参数定制",
+        "customizeDesc": "选择基础模型与运行环境参数。",
+        "pickModel": "选择检测模型",
+        "noConfig": "默认配置",
+        "noConfigDesc": "该模板将使用预设的推荐配置块。",
+        "emptyTitle": "请选择一个模板",
+        "emptyDesc": "从左侧列表选择模板，查看其处理链路及配置详情。",
+        "footerHint": "请先选择一个模板以继续"
       }
     },
     "selfhosted": {
       "overview": {
-        "title": "自托管概览",
-        "timeRange": {
-          "24h": "最近 24 小时",
-          "7d": "最近 7 天",
-          "30d": "最近 30 天"
-        },
+        "title": "边缘节点概览",
         "kpi": {
           "totalDevices": "设备总数",
           "online": "在线",
           "pendingLicense": "待授权",
           "offline": "离线",
-          "licenseUsage": "许可配额使用率",
+          "licenseUsage": "授权配额",
           "expiringSoon": "{{count}} 个即将过期",
-          "usageSummary": "处理量统计",
+          "usageSummary": "遥测数据摘要",
           "utilization": "配额利用率",
-          "activeLicenses": "活动证书",
-          "expiring": "即将到期",
-          "pending": "待处理设备"
+          "activeLicenses": "活跃证书",
+          "expiring": "即将过期",
+          "pending": "未绑定设备"
         },
         "charts": {
           "deviceStatus": "设备状态分布",
+          "count": "数量",
           "usageTrend": "数据处理趋势",
-          "edge": "边缘端处理",
-          "cloud": "云端处理",
+          "edge": "边缘端",
+          "cloud": "云端",
           "images": "图像",
           "video": "视频",
-          "count": "数量",
-          "breakdown": "许可类型分布",
-          "usageSeries": "实际使用",
-          "quotaSeries": "总配额"
+          "breakdown": "授权类型分布",
+          "usageSeries": "实际用量",
+          "quotaSeries": "配额上限"
         },
         "alerts": {
-          "title": "活动告警",
-          "viewAll": "查看全部",
-          "critical": "严重",
+          "title": "最近告警",
+          "critical": "致命",
           "warning": "警告",
-          "info": "提示",
-          "target": "目标对象"
+          "info": "信息",
+          "target": "对象",
+          "viewAll": "查看全部"
         },
-        "shortcuts": {
-          "title": "快捷入口",
-          "viewDeviceList": "查看设备列表",
-          "manageLicenses": "管理许可证书",
-          "recentDeployments": "最近部署记录"
+        "timeRange": {
+          "24h": "过去 24 小时",
+          "7d": "最近 7 天",
+          "30d": "最近 30 天"
         },
         "quickActions": {
           "title": "快捷操作"
         },
         "actions": {
-          "upload": "上传许可",
-          "devices": "设备管理",
-          "manage": "管理许可",
+          "upload": "上传证书",
+          "devices": "查看设备",
+          "manage": "管理 Key",
           "guide": "配置指南"
+        },
+        "shortcuts": {
+          "title": "快捷入口",
+          "viewDeviceList": "设备列表",
+          "manageLicenses": "管理授权",
+          "recentDeployments": "最近部署"
         }
       },
       "devices": {
-        "title": "设备舰队",
-        "searchPlaceholder": "搜索名称或设备 ID...",
-        "unbound": "未绑定授权",
-        "noData": "未找到符合条件的设备",
+        "title": "边缘设备群",
+        "searchPlaceholder": "搜索设备名称或 ID...",
+        "noData": "未发现匹配设备",
+        "unbound": "需要绑定授权",
         "cols": {
           "name": "设备名称",
           "id": "设备 ID",
           "status": "状态",
-          "mode": "模式",
-          "license": "所属许可",
+          "mode": "运行模式",
+          "license": "绑定证书",
           "lastSeen": "最后在线"
         },
         "alert": {
-          "pendingMessage": "当前有 <bold>{{count}}</bold> 台设备等待绑定许可证书。",
-          "filterAction": "立即查看"
+          "pendingMessage": "您有 <bold>{{count}} 台设备</bold> 尚未绑定授权证书。",
+          "filterAction": "立即筛选"
         }
       },
       "deviceDetail": {
-        "summary": {
-          "overviewTitle": "设备概览",
-          "deviceId": "设备 ID",
-          "runtimeId": "运行环境 ID",
-          "lastSeen": "最后在线",
-          "changeMode": "切换模式",
-          "licenseTitle": "授权与证书",
-          "changeLicense": "更换证书",
-          "expiry": "过期时间",
-          "quota": "使用配额",
-          "offlineLease": "离线租约",
-          "configTitle": "部署配置",
-          "viewHistory": "历史记录",
-          "streamsCount": "活动数据流",
-          "configuredBy": "配置人员",
-          "lastModifiedTime": "最后修改",
-          "mode": "部署模式"
-        },
-        "overview": {
-          "units": "推理调用次数",
-          "unitsTooltip": "在所选时间范围内汇总的推理操作次数。",
-          "recentAlerts": "最近告警"
-        },
         "tabs": {
-          "overview": "概览",
-          "workflow": "部署配置",
-          "usage": "遥测数据",
+          "overview": "概况",
+          "workflow": "任务部署",
+          "usage": "数据分析",
           "logs": "系统日志"
         },
+        "summary": {
+          "overviewTitle": "设备标识",
+          "licenseTitle": "授权状态",
+          "configTitle": "部署信息",
+          "deviceId": "硬件 ID",
+          "runtimeId": "运行时 ID",
+          "lastSeen": "最后在线",
+          "expiry": "到期时间",
+          "quota": "流配额",
+          "offlineLease": "离线租约",
+          "changeLicense": "更换证书",
+          "viewHistory": "历史记录",
+          "latest": "最新",
+          "streamsCount": "活跃数据流",
+          "configuredBy": "配置人员",
+          "lastModifiedTime": "最后修改",
+          "changeMode": "切换部署模式"
+        },
+        "overview": {
+          "units": "推理次数",
+          "unitsTooltip": "所有工作流处理的总帧数或推理请求数。",
+          "recentAlerts": "设备告警"
+        },
         "workflow": {
-          "rollback": "回滚到此版本"
+          "rollback": "回滚至此版本"
         }
       },
       "workflowDeployment": {
-        "title": "数据流部署",
-        "addStream": "添加数据流",
-        "streamName": "流名称",
+        "title": "任务流部署",
+        "addStream": "部署新任务",
+        "latest": "最新版本",
+        "lastUpdated": "最后更新",
+        "operator": "操作人",
+        "viewHistory": "版本历史",
+        "streamName": "任务名称",
         "input": "输入源",
-        "workflow": "工作流",
+        "workflow": "视觉逻辑",
         "status": "状态",
         "telemetry": "遥测级别",
         "updated": "更新时间",
-        "latest": "最新",
-        "historyTitle": "部署历史记录",
-        "lastUpdated": "最后部署",
-        "operator": "操作人",
-        "viewHistory": "查看历史",
-        "editTitle": "编辑数据流部署",
-        "createTitle": "部署新数据流",
-        "basicInfo": "基础身份信息",
-        "nameLabel": "数据流名称",
-        "nameRequired": "请输入数据流名称",
-        "namePlaceholder": "例如：南门停车场摄像头",
+        "empty": "暂无活跃任务",
+        "historyTitle": "版本历史记录",
+        "editTitle": "编辑部署配置",
+        "createTitle": "新建任务部署",
+        "basicInfo": "基础信息",
+        "nameLabel": "任务名称",
+        "nameRequired": "请输入任务名称",
+        "namePlaceholder": "例如：正门入口监控",
         "inputSource": "输入源配置",
-        "sourceType": "源类型",
-        "endpoint": "接入地址 (URL)",
-        "endpointRequired": "请输入连接地址",
-        "workflowBinding": "工作流与逻辑绑定",
-        "selectWorkflow": "视觉工作流",
-        "selectWorkflowPlaceholder": "选择要运行的工作流...",
+        "sourceType": "传输协议",
+        "endpoint": "访问地址",
+        "endpointRequired": "必须输入地址",
+        "workflowBinding": "逻辑绑定",
+        "selectWorkflow": "选择工作流",
+        "selectWorkflowPlaceholder": "选择视觉 Pipeline",
         "versionStrategy": "版本策略",
         "runPolicy": "运行策略",
-        "concurrency": "并行处理数",
-        "telemetryGranularity": "遥测数据粒度",
-        "applyImmediately": "原子重启",
-        "applyImmediatelyDesc": "保存后自动重启处理节点以立即应用更改。",
-        "updateBtn": "部署更改",
-        "createBtn": "启动数据流",
-        "snapshot": "快照",
-        "diff": "差异",
-        "noSnapshot": "无配置快照",
-        "loadingDiff": "正在计算配置差异...",
-        "rollbackTitle": "回滚到版本 {{version}}?",
-        "rollbackDesc": "此操作将停止当前处理并使用所选的历史配置重新启动节点。",
+        "concurrency": "并行实例",
+        "telemetryGranularity": "采集粒度",
+        "applyImmediately": "立即应用更改",
+        "applyImmediatelyDesc": "保存后将重启任务实例以使配置生效。",
+        "updateBtn": "更新部署",
+        "createBtn": "立即部署",
+        "noSnapshot": "无可用快照",
+        "loadingDiff": "正在计算差异...",
+        "snapshot": "快照详情",
+        "diff": "代码差异",
+        "rollbackTitle": "回滚至版本 {{version}}",
+        "rollbackDesc": "当前配置将被此历史版本完全覆盖。",
         "rollbackConfirm": "确认回滚"
       },
+      "license": {
+        "title": "授权证书管理",
+        "upload": "上传新证书",
+        "noData": "暂无授权证书",
+        "selectTitle": "选择授权证书",
+        "selectedLabel": "当前选择",
+        "quotaAvailable": "{{count}} / {{total}} 可用",
+        "daysLeft": "剩余 {{count}} 天",
+        "cols": {
+          "name": "证书名称",
+          "key": "证书秘钥",
+          "type": "类型",
+          "billing": "计费模式",
+          "usage": "利用率",
+          "expiry": "到期时间"
+        },
+        "actions": {
+          "viewUsage": "查看用量",
+          "extend": "续期"
+        }
+      },
       "usage": {
-        "dim": "统计维度",
+        "dim": "分析维度",
         "dimWorkflow": "按工作流",
-        "dimStream": "按数据流",
-        "metric": "统计指标",
+        "dimStream": "按任务流",
+        "metric": "分析指标",
         "metricImg": "图像处理量",
         "metricVid": "视频处理时长",
         "dateRange": "时间范围",
-        "modeFilter": "计算模式",
+        "modeFilter": "部署模式筛选",
         "modes": {
           "all": "全部模式",
           "edge": "仅边缘端",
           "cloud": "仅云端"
         },
         "tableCols": {
-          "calls": "推理调用次数",
-          "errors": "失败次数",
+          "calls": "总调用次数",
+          "errors": "错误数",
           "errorRate": "错误率"
         },
-        "footerNote": "遥测数据由所有活动节点汇总，存在约 5 分钟的统计延迟。"
+        "footerNote": "遥测数据在本地缓存并每 5 分钟与云端同步一次。"
       },
       "logs": {
-        "title": "集中式观测",
-        "description": "设备 <bold>{{id}}</bold> 的系统日志已实时流向您的集中式日志分析后端。",
-        "launchBtn": "打开日志控制台"
-      },
-      "license": {
-        "title": "许可证书管理",
-        "upload": "上传证书",
-        "noData": "当前工作空间下无可用证书",
-        "selectTitle": "选择授权证书",
-        "quotaAvailable": "{{count}} / {{total}} 可用",
-        "selectedLabel": "已选择授权",
-        "daysLeft": "剩余 {{count}} 天",
-        "cols": {
-          "name": "证书名称",
-          "key": "许可密钥",
-          "type": "类型",
-          "billing": "计费模式",
-          "usage": "容量状态",
-          "expiry": "过期时间"
-        },
-        "actions": {
-          "viewUsage": "使用统计",
-          "extend": "续费证书"
-        }
+        "title": "深度追踪分析",
+        "description": "通过 SigNoz 集成访问设备 <bold>{{id}}</bold> 的全量系统日志与执行链路追踪。",
+        "launchBtn": "打开监控控制台"
       },
       "status": {
         "online": "在线",
@@ -292,14 +297,102 @@ export const zh = {
         "maintenance": "排空中",
         "error": "异常",
         "pending": "待许可",
-        "decommissioned": "已退役"
+        "decommissioned": "已退役",
+        "ONLINE": "在线",
+        "OFFLINE": "离线",
+        "ERROR": "异常",
+        "PENDING_LICENSE": "待绑定",
+        "DRAINING": "排空中",
+        "DECOMMISSIONED": "已退役"
       },
       "mode": {
+        "edgeDesc": "本地边缘侧处理。",
+        "cloudDesc": "在云端执行单元运行。",
         "edge": "边缘端",
-        "edgeDesc": "本地处理。仅进行许可计量。",
-        "cloud": "云端",
-        "cloudDesc": "在 VisionFlow 云端处理。按量计费。"
+        "cloud": "云端"
       }
+    },
+    "marketplace": {
+      "home": {
+        "title": "资源市场",
+        "description": "探索并部署预构建的视觉模型、工作流和插件。",
+        "heroTitle": "为您的工作区寻找视觉资源。",
+        "heroDesc": "浏览资源市场列表，将您需要的资源添加至您的资产库。",
+        "featuredTitle": "精选推荐",
+        "viewAll": "查看全部",
+        "browseAll": "浏览分类"
+      },
+      "detail": {
+        "overview": "概述",
+        "examples": "示例展示",
+        "docs": "技术文档",
+        "pricing": "定价计划",
+        "author": "开发者",
+        "released": "发布时间",
+        "installs": "次安装",
+        "supportedDevices": "支持设备",
+        "cta": {
+          "loginToAction": "登录后测试/购买",
+          "cloudTest": "云端测试",
+          "buyNow": "立即购买",
+          "getFree": "免费获取",
+          "openStudio": "在编辑器中打开",
+          "deploy": "部署到自托管设备",
+          "viewEntitlement": "查看权益详情",
+          "unavailable": "资源已不可用",
+          "suspendedDesc": "该资源已被开发者暂时下架。",
+          "archivedDesc": "此为存档版本，已停止新购。"
+        }
+      },
+      "cloudTest": {
+        "title": "云端测试沙盒",
+        "inputSection": "测试输入",
+        "configSection": "运行配置",
+        "resultSection": "分析结果",
+        "selectExample": "选择示例图",
+        "dropZone": "点击或拖拽上传图片",
+        "threshold": "置信度阈值",
+        "maxDetections": "最大检测数",
+        "running": "正在进行云端推理...",
+        "queued": "正在排队...",
+        "success": "测试已完成",
+        "viewRaw": "查看原始 JSON",
+        "errors": {
+          "quota": "测试次数已耗尽",
+          "quotaDesc": "您已用完该资源的免费测试额度。",
+          "invalid": "不支持的图像格式",
+          "studio": "云端推理引擎故障",
+          "buyToContinue": "购买该资源以解锁无限次测试"
+        }
+      },
+      "search": {
+        "title": "搜索市场",
+        "placeholder": "搜索模型、工作流、插件..."
+      },
+      "filters": {
+        "title": "筛选器",
+        "reset": "置",
+        "tags": "标签",
+        "taskType": "任务类型",
+        "devices": "支持设备",
+        "priceRange": "价格范围 (USD)",
+        "showResults": "查看结果"
+      },
+      "library": {
+        "title": "我的资产",
+        "description": "您已购买或订阅的资源。"
+      },
+      "seller": {
+        "dashboard": "卖家中心",
+        "myListings": "我的商品",
+        "createListing": "发布商品"
+      },
+      "status": {
+        "published": "已发布",
+        "draft": "草稿",
+        "reviewing": "审核中"
+      },
+      "installs": "次安装"
     }
   }
 };

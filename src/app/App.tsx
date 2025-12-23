@@ -7,6 +7,7 @@ import { SelfHostedOverviewPage } from '../pages/SelfHostedOverviewPage';
 import { DevicesPage } from '../features/selfhosted/devices/ui/DevicesPage';
 import { LicensesPage } from '../features/selfhosted/licenses/ui/LicensesPage';
 import { DeviceDetailPage } from '../features/selfhosted/devices/ui/DeviceDetailPage';
+import { MarketplacePage } from '../features/marketplace/ui/MarketplacePage';
 
 import '../i18n/config';
 
@@ -16,13 +17,19 @@ const App: React.FC = () => {
   const renderContent = () => {
     // Basic route matching logic
     if (currentPath === 'workflows') return <WorkflowsPage />;
+    
+    // Self-hosted
     if (currentPath === 'sh-overview') return <SelfHostedOverviewPage onNavigate={setCurrentPath} />;
     if (currentPath === 'sh-devices') return <DevicesPage onDeviceClick={(id) => setCurrentPath(`sh-device-detail-${id}`)} />;
     if (currentPath === 'sh-license') return <LicensesPage />;
-    
     if (currentPath.startsWith('sh-device-detail-')) {
       const deviceId = currentPath.split('sh-device-detail-')[1];
       return <DeviceDetailPage deviceId={deviceId} onBack={() => setCurrentPath('sh-devices')} />;
+    }
+
+    // Marketplace
+    if (currentPath.startsWith('marketplace')) {
+      return <MarketplacePage subPath={currentPath} onNavigate={setCurrentPath} />;
     }
 
     return <WorkflowsPage />;

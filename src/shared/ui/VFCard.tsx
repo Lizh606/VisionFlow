@@ -11,17 +11,20 @@ export interface VFCardProps {
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-export const VFCard: React.FC<VFCardProps> = ({ 
-  title, 
-  extra, 
-  children, 
-  className = '',
-  noPadding = false,
-  bordered = true,
-  onClick
-}) => {
+export const VFCard = React.forwardRef<HTMLDivElement, VFCardProps>((props, ref) => {
+  const { 
+    title, 
+    extra, 
+    children, 
+    className = '',
+    noPadding = false,
+    bordered = true,
+    onClick
+  } = props;
+
   return (
     <div 
+      ref={ref}
       onClick={onClick}
       className={`
       bg-bg-card rounded-card 
@@ -58,4 +61,4 @@ export const VFCard: React.FC<VFCardProps> = ({
       </div>
     </div>
   );
-};
+});

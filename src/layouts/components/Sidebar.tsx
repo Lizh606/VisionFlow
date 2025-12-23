@@ -9,6 +9,7 @@ import {
   Plus,
   Search,
   ChevronDown,
+  ShoppingBag,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { SidebarSystemArea } from './SidebarSystemArea';
@@ -36,11 +37,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [activeWorkspace, setActiveWorkspace] = useState(workspaces[0]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
-  const [openKeys, setOpenKeys] = useState<string[]>(['self-hosted']);
+  const [openKeys, setOpenKeys] = useState<string[]>(['self-hosted', 'marketplace-menu']);
 
   useEffect(() => {
     if (activeKey.startsWith('sh-')) {
-      setOpenKeys(['self-hosted']);
+      setOpenKeys(prev => Array.from(new Set([...prev, 'self-hosted'])));
+    }
+    if (activeKey.startsWith('marketplace')) {
+      setOpenKeys(prev => Array.from(new Set([...prev, 'marketplace-menu'])));
     }
   }, [activeKey]);
 
@@ -50,6 +54,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: <LayoutGrid size={18} strokeWidth={1.5} />,
       label: t('menu.workflows'),
       onClick: () => onNavigate?.('workflows'),
+    },
+    {
+      key: 'marketplace-menu',
+      icon: <ShoppingBag size={18} strokeWidth={1.5} />,
+      label: t('menu.marketplace'),
+      children: [
+        { key: 'marketplace', label: t('menu.overview'), onClick: () => onNavigate?.('marketplace') },
+        { key: 'marketplace-library', label: t('marketplace.library.title'), onClick: () => onNavigate?.('marketplace-library') },
+        { key: 'marketplace-seller', label: t('marketplace.seller.dashboard'), onClick: () => onNavigate?.('marketplace-seller') },
+      ],
     },
     {
       key: 'self-hosted',

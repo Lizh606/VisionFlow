@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from 'antd';
 import { ChevronLeft } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useResponsive } from '../../shared/hooks/useResponsive';
 
 interface VFPageHeaderProps {
@@ -22,6 +23,7 @@ export const VFPageHeader: React.FC<VFPageHeaderProps> = ({
   className = ''
 }) => {
   const { isMobile } = useResponsive();
+  const { t } = useTranslation();
 
   return (
     <div className={`
@@ -30,28 +32,28 @@ export const VFPageHeader: React.FC<VFPageHeaderProps> = ({
       ${className}
     `}>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div className="flex items-start gap-4">
+        <div className="flex items-start gap-4 flex-1 min-w-0">
           {/* Back Button (Desktop style) */}
           {onBack && !isMobile && (
             <Button 
               type="text" 
               icon={<ChevronLeft size={20} />} 
               onClick={onBack}
-              className="flex items-center justify-center w-9 h-9 rounded-control hover:bg-action-hover text-text-secondary"
+              className="flex items-center justify-center w-9 h-9 rounded-control hover:bg-action-hover text-text-secondary shrink-0"
             />
           )}
 
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 min-w-0 overflow-hidden">
             {/* T2 Page Title (24px, 600 weight) */}
-            <h1 className="text-2xl font-semibold text-text-primary m-0 tracking-tight leading-tight flex items-center gap-3">
+            <h1 className="text-2xl font-semibold text-text-primary m-0 tracking-tight leading-tight flex items-center gap-3 truncate">
               {onBack && isMobile && (
                  <ChevronLeft 
                    size={20} 
-                   className="text-text-secondary cursor-pointer" 
+                   className="text-text-secondary cursor-pointer shrink-0" 
                    onClick={onBack} 
                  />
               )}
-              {title}
+              <span className="truncate">{title}</span>
             </h1>
             {/* T5 Body Secondary (14px, 400 weight) */}
             {description && (
@@ -63,7 +65,7 @@ export const VFPageHeader: React.FC<VFPageHeaderProps> = ({
         </div>
         
         {actions && (
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-3 shrink-0 flex-wrap md:flex-nowrap">
             {actions}
           </div>
         )}

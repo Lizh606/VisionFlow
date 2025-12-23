@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { VFCard } from './VFCard';
 
@@ -9,7 +10,9 @@ interface VFStatCardProps {
   footer?: string;
 }
 
-export const VFStatCard: React.FC<VFStatCardProps> = ({ title, value, trend, trendStatus = 'neutral', footer }) => {
+export const VFStatCard = React.forwardRef<HTMLDivElement, VFStatCardProps>((props, ref) => {
+  const { title, value, trend, trendStatus = 'neutral', footer } = props;
+  
   const trendColor = {
     success: 'text-success',
     warning: 'text-warning',
@@ -18,7 +21,7 @@ export const VFStatCard: React.FC<VFStatCardProps> = ({ title, value, trend, tre
   }[trendStatus];
 
   return (
-    <VFCard className="h-full">
+    <VFCard ref={ref} className="h-full">
       <div className="flex flex-col h-full justify-between">
         <div>
           <div className="text-sm font-semibold text-text-tertiary mb-2 uppercase tracking-wider">{title}</div>
@@ -38,4 +41,4 @@ export const VFStatCard: React.FC<VFStatCardProps> = ({ title, value, trend, tre
       </div>
     </VFCard>
   );
-};
+});
