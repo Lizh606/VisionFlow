@@ -31,5 +31,11 @@ export const common = {
   "free": "免费",
   "upload": "上传图像",
   "run": "运行测试",
-  "dateFormat": "YYYY年MM月DD日"
+  "dateFormat": "YYYY年MM月DD日",
+  "discard": "放弃更改",
+  "keepEditing": "继续编辑",
+  "unsavedTitle": "未保存的更改",
+  "unsavedDesc": "您有尚未保存的内容，离开将导致当前进度丢失。",
+  "lastSaved": "最后保存于 {{time}}",
+  "autoSaving": "自动保存中..."
 };

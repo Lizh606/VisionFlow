@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Menu, Dropdown, Input } from 'antd';
+import { Menu, Dropdown, Input, Divider } from 'antd';
 import type { MenuProps } from 'antd';
 import {
   LayoutGrid,
@@ -12,10 +12,10 @@ import {
   ShoppingBag,
   Store,
   Package,
-  Layers,
   LayoutDashboard,
   Cpu,
-  KeyRound
+  KeyRound,
+  Inbox
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { SidebarSystemArea } from './SidebarSystemArea';
@@ -25,7 +25,6 @@ const workspaces = [
   { id: '1', name: 'Vision Team', plan: 'Pro', members: 8 },
   { id: '2', name: 'Personal', plan: 'Free', members: 1 },
   { id: '3', name: 'R&D Dept', plan: 'Ent', members: 24 },
-  { id: '4', name: 'Marketing', plan: 'Pro', members: 5 },
 ];
 
 interface SidebarProps {
@@ -54,69 +53,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
   }, [activeKey]);
 
-  const mainItems: MenuProps['items'] = [
-    {
-      key: 'workflows',
-      icon: <LayoutGrid size={18} strokeWidth={1.5} />,
-      label: t('menu.workflows'),
-      onClick: () => onNavigate?.('workflows'),
-    },
-    {
-      key: 'marketplace-menu',
-      icon: <ShoppingBag size={18} strokeWidth={1.5} />,
-      label: t('menu.marketplace'),
-      children: [
-        { 
-          key: 'marketplace', 
-          icon: <Store size={16} />, 
-          label: t('marketplace.home.title'), 
-          onClick: () => onNavigate?.('marketplace') 
-        },
-        { 
-          key: 'marketplace-library', 
-          icon: <Package size={16} />, 
-          label: t('marketplace.library.title'), 
-          onClick: () => onNavigate?.('marketplace-library') 
-        },
-        { 
-          key: 'marketplace-seller', 
-          icon: <Layers size={16} />, 
-          label: t('marketplace.seller.myListings'), 
-          onClick: () => onNavigate?.('marketplace-seller') 
-        },
-      ],
-    },
-    {
-      key: 'self-hosted',
-      icon: <Server size={18} strokeWidth={1.5} />,
-      label: t('menu.selfHosted'),
-      children: [
-        { 
-          key: 'sh-overview', 
-          icon: <LayoutDashboard size={14} />,
-          label: t('menu.overview'), 
-          onClick: () => onNavigate?.('sh-overview') 
-        },
-        { 
-          key: 'sh-devices', 
-          icon: <Cpu size={14} />,
-          label: t('menu.devices'), 
-          onClick: () => onNavigate?.('sh-devices') 
-        },
-        { 
-          key: 'sh-license', 
-          icon: <KeyRound size={14} />,
-          label: t('menu.license'), 
-          onClick: () => onNavigate?.('sh-license') 
-        },
-      ],
-    },
-  ];
-
+  // 搜索过滤逻辑
   const filteredWorkspaces = workspaces.filter(ws => 
     ws.name.toLowerCase().includes(searchText.toLowerCase())
   );
 
+  // 下拉菜单内容还原
   const workspaceDropdownContent = (
     <div className="bg-bg-card rounded-[14px] shadow-overlay border border-border p-3 flex flex-col gap-1 w-[260px] animate-in fade-in slide-in-from-top-1 duration-150">
       <div className="px-1 mb-2">
@@ -126,6 +68,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           className="bg-bg-page border-border text-sm rounded-control h-10 hover:border-brand/40 focus:border-brand transition-all"
+          onClick={(e) => e.stopPropagation()}
         />
       </div>
       <div className="flex flex-col gap-1 max-h-[320px] overflow-y-auto custom-scrollbar">
@@ -156,13 +99,40 @@ export const Sidebar: React.FC<SidebarProps> = ({
     </div>
   );
 
+  const mainItems: MenuProps['items'] = [
+    {
+      key: 'workflows',
+      icon: <LayoutGrid size={18} />,
+      label: <span className="vf-t5-strong">{t('menu.workflows')}</span>,
+      onClick: () => onNavigate?.('workflows'),
+    },
+    {
+      key: 'marketplace-menu',
+      icon: <ShoppingBag size={18} />,
+      label: <span className="vf-t5-strong">{t('menu.marketplace')}</span>,
+      children: [
+        { key: 'marketplace', icon: <Store size={16} />, label: <span className="vf-t5">{t('marketplace.home.title')}</span>, onClick: () => onNavigate?.('marketplace') },
+        { key: 'marketplace-library', icon: <Package size={16} />, label: <span className="vf-t5">{t('marketplace.library.title')}</span>, onClick: () => onNavigate?.('marketplace-library') },
+        { key: 'marketplace-seller', icon: <Inbox size={16} />, label: <span className="vf-t5">{t('marketplace.seller.myListings')}</span>, onClick: () => onNavigate?.('marketplace-seller') },
+      ],
+    },
+    {
+      key: 'self-hosted',
+      icon: <Server size={18} />,
+      label: <span className="vf-t5-strong">{t('menu.selfHosted')}</span>,
+      children: [
+        { key: 'sh-overview', icon: <LayoutDashboard size={14} />, label: <span className="vf-t5">{t('menu.overview')}</span>, onClick: () => onNavigate?.('sh-overview') },
+        { key: 'sh-devices', icon: <Cpu size={14} />, label: <span className="vf-t5">{t('menu.devices')}</span>, onClick: () => onNavigate?.('sh-devices') },
+        { key: 'sh-license', icon: <KeyRound size={14} />, label: <span className="vf-t5">{t('menu.license')}</span>, onClick: () => onNavigate?.('sh-license') },
+      ],
+    },
+  ];
+
   return (
     <div className="flex flex-col h-full bg-bg-card">
-      <VFBrand 
-        collapsed={collapsed} 
-        onClick={() => onNavigate?.('workflows')} 
-      />
-
+      <VFBrand collapsed={collapsed} onClick={() => onNavigate?.('workflows')} />
+      
+      {/* Workspace Selector Segment */}
       <div className={`px-4 mt-2 mb-4 shrink-0 ${collapsed ? 'hidden' : ''}`}>
         <Dropdown 
           open={dropdownOpen} 
@@ -174,6 +144,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div 
             tabIndex={0}
             className={`
+              ant-dropdown-trigger 
               group flex items-center justify-between h-[52px] px-3.5 rounded-[12px] border transition-all duration-200
               cursor-pointer outline-none bg-bg-card
               ${dropdownOpen ? 'border-brand ring-4 ring-brand/5 shadow-sm' : 'border-border hover:bg-action-hover'}
@@ -183,7 +154,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <span className={`text-[13px] font-bold truncate leading-tight transition-colors ${dropdownOpen ? 'text-brand' : 'text-text-primary'}`}>
                 {activeWorkspace.name}
               </span>
-              <span className="text-[11px] font-medium text-text-secondary truncate mt-0.5 opacity-70">
+              <span className={`text-[11px] font-medium text-text-secondary truncate mt-0.5 opacity-70`}>
                 {activeWorkspace.plan} Plan
               </span>
             </div>
@@ -206,21 +177,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
           className="vf-sidebar-menu border-none bg-transparent"
         />
       </div>
-
+      
       <SidebarSystemArea collapsed={collapsed} />
       
       <style>{`
-        .vf-sidebar-menu.ant-menu-inline, 
-        .vf-sidebar-menu.ant-menu-vertical {
-          border-inline-end: none !important;
+        .vf-sidebar-menu .ant-menu-item-selected {
+           background-color: rgba(var(--vf-brand), 0.06) !important;
+           color: rgba(var(--vf-brand), 1) !important;
         }
-        /* Style for sub-menu items icons to match size and consistency */
-        .ant-menu-sub .ant-menu-item .ant-menu-item-icon {
-          font-size: 16px !important;
-          opacity: 0.8;
-        }
-        .ant-menu-sub .ant-menu-item-selected .ant-menu-item-icon {
-          opacity: 1;
+        .vf-sidebar-menu .ant-menu-item, .vf-sidebar-menu .ant-menu-submenu-title {
+           height: 40px !important;
+           line-height: 40px !important;
         }
       `}</style>
     </div>

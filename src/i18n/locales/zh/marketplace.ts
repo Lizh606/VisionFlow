@@ -35,7 +35,25 @@ export const marketplace = {
   "seller": {
     "dashboard": "卖家中心",
     "myListings": "我的商品",
-    "createListing": "发布商品"
+    "createListing": "发布商品",
+    "status": {
+      "draft": "草稿",
+      "pending_review": "待审核",
+      "published": "已发布",
+      "suspended": "已禁封",
+      "archived": "已归档"
+    },
+    "notices": {
+      "reviewing": "商品正在审核中。标准审核耗时约 48 小时。",
+      "suspendedReason": "由于违反许可协议，该商品已被禁封：{{reason}}",
+      "archived": "商品已归档，不再对公众可见。"
+    },
+    "preview": {
+      "bannerDraft": "预览模式 — 该商品尚未公开上架。",
+      "bannerPublished": "预览模式 — 这是买家看到的商品呈现效果。",
+      "bannerSuspended": "预览模式 — 该商品已被禁封，在市场中处于隐藏状态。",
+      "ctaDisabled": "预览模式下禁用交易"
+    }
   },
   "detail": {
     "overview": "概述",

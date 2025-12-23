@@ -31,5 +31,11 @@ export const common = {
   "free": "Free",
   "upload": "Upload Image",
   "run": "Run Inference",
-  "dateFormat": "MMM D, YYYY"
+  "dateFormat": "MMM D, YYYY",
+  "discard": "Discard Changes",
+  "keepEditing": "Keep Editing",
+  "unsavedTitle": "Unsaved Changes",
+  "unsavedDesc": "You have unsaved changes. Leaving now will result in loss of progress.",
+  "lastSaved": "Last saved at {{time}}",
+  "autoSaving": "Auto-saving..."
 };

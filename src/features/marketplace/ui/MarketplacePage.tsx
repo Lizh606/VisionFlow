@@ -7,6 +7,7 @@ import { MarketplaceListingDetail } from './MarketplaceListingDetail';
 import { MarketplaceSellerDashboard } from './MarketplaceSellerDashboard';
 import { MarketplaceCheckout } from './MarketplaceCheckout';
 import { MarketplaceOrderResult } from './MarketplaceOrderResult';
+import { MarketplaceListingPreview } from './MarketplaceListingPreview';
 
 interface Props {
   subPath: string;
@@ -14,12 +15,16 @@ interface Props {
 }
 
 export const MarketplacePage: React.FC<Props> = ({ subPath, onNavigate }) => {
-  // Simple routing for marketplace sub-pages
   if (subPath === 'marketplace') return <MarketplaceHome onNavigate={onNavigate} />;
   if (subPath === 'marketplace-search') return <MarketplaceSearch onNavigate={onNavigate} />;
   if (subPath === 'marketplace-library') return <MarketplaceLibrary onNavigate={onNavigate} />;
   if (subPath === 'marketplace-seller') return <MarketplaceSellerDashboard onNavigate={onNavigate} />;
   
+  if (subPath.startsWith('marketplace-listing-preview-')) {
+    const id = subPath.replace('marketplace-listing-preview-', '');
+    return <MarketplaceListingPreview listingId={id} onNavigate={onNavigate} />;
+  }
+
   if (subPath.startsWith('marketplace-listing-')) {
     const id = subPath.replace('marketplace-listing-', '');
     return <MarketplaceListingDetail listingId={id} onNavigate={onNavigate} />;

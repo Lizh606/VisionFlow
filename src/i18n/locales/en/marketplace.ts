@@ -36,7 +36,25 @@ export const marketplace = {
   "seller": {
     "dashboard": "Seller Center",
     "myListings": "My Listings",
-    "createListing": "New Listing"
+    "createListing": "New Listing",
+    "status": {
+      "draft": "DRAFT",
+      "pending_review": "PENDING REVIEW",
+      "published": "PUBLISHED",
+      "suspended": "SUSPENDED",
+      "archived": "ARCHIVED"
+    },
+    "notices": {
+      "reviewing": "Listing is under review. Standard processing time is ~48h.",
+      "suspendedReason": "Suspended for licensing violations: {{reason}}",
+      "archived": "This listing is archived and no longer visible to public."
+    },
+    "preview": {
+      "bannerDraft": "Preview Mode — This listing is not yet public.",
+      "bannerPublished": "Preview Mode — This is how buyers see your resource.",
+      "bannerSuspended": "Preview Mode — This listing is currently suspended and hidden from market.",
+      "ctaDisabled": "Action Disabled in Preview"
+    }
   },
   "detail": {
     "overview": "Overview",

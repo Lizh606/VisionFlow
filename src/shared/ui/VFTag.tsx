@@ -13,6 +13,8 @@ interface VFTagProps {
   minWidth?: string | number; 
   // Add onClick to VFTagProps to support interactive tags
   onClick?: (e: React.MouseEvent<HTMLSpanElement>) => void;
+  // Add onMouseDown to VFTagProps to support AntD tagRender requirements
+  onMouseDown?: (e: React.MouseEvent<HTMLSpanElement>) => void;
 }
 
 export const VFTag = React.forwardRef<HTMLSpanElement, VFTagProps>((props, ref) => {
@@ -24,7 +26,8 @@ export const VFTag = React.forwardRef<HTMLSpanElement, VFTagProps>((props, ref) 
     className = '',
     title,
     minWidth,
-    onClick
+    onClick,
+    onMouseDown
   } = props;
 
   /**
@@ -69,6 +72,8 @@ export const VFTag = React.forwardRef<HTMLSpanElement, VFTagProps>((props, ref) 
       ref={ref}
       // Pass onClick to the span
       onClick={onClick}
+      // Fix: Add onMouseDown to support AntD tagRender functionality to prevent unexpected dropdown behavior
+      onMouseDown={onMouseDown}
       // Add cursor-pointer if onClick is provided
       className={`${baseClasses} ${onClick ? 'cursor-pointer' : ''} ${className} group/tag`} 
       title={title}
