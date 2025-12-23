@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { VFText } from '../../ui/VFText';
 
 export interface VFCardProps {
   title?: React.ReactNode;
@@ -44,8 +45,11 @@ export const VFCard = React.forwardRef<HTMLDivElement, VFCardProps>((props, ref)
           gap-4 flex-nowrap
         ">
           {title && (
-            <div key="header-title" className="text-base font-semibold text-text-primary truncate min-w-0 flex items-center h-full">
-              {title}
+            <div key="header-title" className="truncate min-w-0 flex items-center h-full">
+              {/* T4 Subhead (16px/24px, 600 weight) */}
+              <VFText variant="t4" as="span" truncate>
+                {title}
+              </VFText>
             </div>
           )}
           {extra && (

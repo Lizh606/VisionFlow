@@ -4,6 +4,7 @@ import { Row, Col } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { Check, CheckCircle2, Circle } from 'lucide-react';
 import { Listing, Plan } from '../../types';
+import { VFText } from '../../../../ui/VFText';
 
 interface Props {
   listing: Listing;
@@ -21,10 +22,10 @@ export const PricingPanel: React.FC<Props> = ({ listing, selectedPlanId, onSelec
         <div className="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center text-success mb-4">
           <CheckCircle2 size={24} />
         </div>
-        <h3 className="text-base font-bold text-text-primary mb-1">License Already Active</h3>
-        <p className="text-sm text-text-secondary max-w-[320px]">
+        <VFText variant="t4" color="primary" className="mb-1 block">License Already Active</VFText>
+        <VFText variant="t5" color="secondary" className="max-w-[320px] block">
            Manage this resource via the Studio or check detailed deployment quota in your library.
-        </p>
+        </VFText>
       </div>
     );
   }
@@ -32,8 +33,9 @@ export const PricingPanel: React.FC<Props> = ({ listing, selectedPlanId, onSelec
   return (
     <div className="animate-in fade-in duration-500 flex flex-col gap-8">
       <div className="flex flex-col gap-1">
-         <h3 className="text-[16px] font-semibold text-text-primary m-0 tracking-tight">Available Plans</h3>
-         <p className="text-[13px] text-text-secondary font-medium">Select a licensing plan to synchronize with the purchase action.</p>
+         {/* V1.4: Section Title = T3 */}
+         <VFText variant="t3" color="primary">Available Plans</VFText>
+         <VFText variant="t5" color="secondary" className="font-medium">Select a licensing plan to synchronize with the purchase action.</VFText>
       </div>
 
       <Row gutter={[16, 16]}>
@@ -52,13 +54,16 @@ export const PricingPanel: React.FC<Props> = ({ listing, selectedPlanId, onSelec
               >
                  <div className="flex justify-between items-start mb-6">
                    <div className="flex flex-col gap-0.5">
-                     <span className={`text-[14px] font-bold ${isSelected ? 'text-brand' : 'text-text-primary'}`}>{plan.name}</span>
-                     <span className="text-[10px] font-bold text-text-tertiary uppercase tracking-tight">{plan.interval}</span>
+                     {/* V1.4: Plan Name = T4 */}
+                     <VFText variant="t4" color={isSelected ? 'brand' : 'primary'}>{plan.name}</VFText>
+                     {/* V1.4: Interval = T6 Strong */}
+                     <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-tight">{plan.interval}</VFText>
                    </div>
                    <div className="flex items-center gap-2">
-                     <span className="text-xl font-bold text-text-primary tabular-nums">
+                     {/* V1.4: Price = T3 Section Title Size */}
+                     <VFText variant="t3" color="primary" tabularNums>
                        {plan.price === 0 ? t('common.free') : `$${plan.price}`}
-                     </span>
+                     </VFText>
                      {isSelected ? (
                        <CheckCircle2 size={18} className="text-brand" fill="currentColor" fillOpacity={0.1} />
                      ) : (
@@ -69,9 +74,9 @@ export const PricingPanel: React.FC<Props> = ({ listing, selectedPlanId, onSelec
 
                  <div className="flex-1 flex flex-col gap-3 mb-2">
                    {plan.features.map((f, i) => (
-                     <div key={i} className="flex items-start gap-2.5 text-[12px] text-text-secondary font-medium">
+                     <div key={i} className="flex items-start gap-2.5">
                         <Check size={14} className="text-success shrink-0 mt-0.5" strokeWidth={3} />
-                        <span className="leading-tight">{f}</span>
+                        <VFText variant="t5" color="secondary" className="font-medium leading-tight">{f}</VFText>
                      </div>
                    ))}
                  </div>
@@ -82,9 +87,10 @@ export const PricingPanel: React.FC<Props> = ({ listing, selectedPlanId, onSelec
       </Row>
 
       <div className="flex justify-center p-2">
-        <p className="text-[11px] text-text-tertiary italic font-medium">
+        {/* V1.4: Note = T6 Caption */}
+        <VFText variant="t6" color="tertiary" className="italic font-medium">
           Note: Enterprise terms and bulk licenses require direct sales contact.
-        </p>
+        </VFText>
       </div>
     </div>
   );

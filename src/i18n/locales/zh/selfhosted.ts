@@ -59,7 +59,10 @@ export const selfhosted = {
     "maintenance": "排空中",
     "error": "异常",
     "pending": "待许可",
-    "decommissioned": "已退役"
+    "decommissioned": "已退役",
+    "running": "运行中",
+    "paused": "已暂停",
+    "disabled": "已禁用"
   },
   "mode": {
     "edgeDesc": "本地边缘侧处理。",
@@ -70,7 +73,11 @@ export const selfhosted = {
   "actions": {
     "bind": "绑定证书",
     "drain": "排空",
-    "view": "查看详情"
+    "view": "查看详情",
+    "edit": "编辑",
+    "delete": "删除",
+    "start": "启动",
+    "pause": "暂停"
   },
   "devices": {
     "title": "边缘设备群",
@@ -192,7 +199,20 @@ export const selfhosted = {
     "rollbackDesc": "这将把设备配置恢复到版本 {{version}}。",
     "rollbackConfirm": "确认回滚",
     "noSnapshot": "该版本无具体配置快照",
-    "loadingDiff": "正在计算配置变更细节..."
+    "loadingDiff": "正在计算配置变更细节...",
+    "historyType": {
+      "initial": "初始化",
+      "update": "版本更新",
+      "rollback": "触发回滚"
+    },
+    "telemetryLevel": {
+      "heartbeat": "仅心跳",
+      "heartbeatDesc": "最轻量级的在线检查。",
+      "metrics": "标准指标",
+      "metricsDesc": "采集吞吐量、帧率与错误率。",
+      "diagnostic": "诊断追踪",
+      "diagnosticDesc": "完整链路追踪，用于排查逻辑错误。"
+    }
   },
   "usage": {
     "dim": "分析维度",

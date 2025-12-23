@@ -1,12 +1,13 @@
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Button, Tooltip } from 'antd';
-import { Zap, ArrowUpRight, Clock, Info, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Zap, ArrowUpRight, Clock, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Purchase } from '../../types';
 import { VFTag } from '../../../../shared/ui/VFTag';
 import { VFListingCardBase } from './VFListingCardBase';
 import { ArtifactImage } from './ArtifactImage';
+import { VFText } from '../../../../ui/VFText';
 import dayjs from 'dayjs';
 
 interface Props {
@@ -21,12 +22,7 @@ export const PurchaseCard: React.FC<Props> = ({ purchase, onOpen, onDeploy, onVi
   
   const status = purchase.status;
   const isReady = status === 'READY';
-  const isPending = status === 'PENDING';
   const isExpired = status === 'EXPIRED';
-
-  const expiryDateLabel = purchase.expiryAt 
-    ? t('marketplace.purchase.label.expires', { date: dayjs(purchase.expiryAt).format('YYYY-MM-DD') })
-    : t('marketplace.purchase.label.lifetime');
 
   return (
     <VFListingCardBase
@@ -36,50 +32,56 @@ export const PurchaseCard: React.FC<Props> = ({ purchase, onOpen, onDeploy, onVi
         isExpired ? <VFTag variant="error" icon={<AlertCircle />} filled>{t('marketplace.purchase.status.expired')}</VFTag> :
         <VFTag variant="info" icon={<Loader2 className="animate-spin" />} filled>{t('marketplace.purchase.status.syncing')}</VFTag>
       }
-      title={purchase.listingName}
+      /* V1.4: Card Title = T4 Subhead */
+      title={<VFText variant="t4" color="primary" truncate>{purchase.listingName}</VFText>}
       disabled={isExpired}
       meta={
         <div className="flex items-center gap-2">
-          <span className="font-bold text-text-tertiary">{t(`marketplace.type.${purchase.type.toLowerCase()}` as any)}</span>
-          <span className="opacity-30">•</span>
-          <span className="uppercase font-bold tracking-wider">{purchase.planName || 'Standard'}</span>
+          {/* V1.4: Metadata = T6 Bold */}
+          <VFText variant="t6" color="tertiary" className="font-bold">
+            {t(`marketplace.type.${purchase.type.toLowerCase()}` as any)}
+          </VFText>
+          <span className="opacity-30">/</span>
+          <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-wider">
+            {purchase.planName || 'Standard'}
+          </VFText>
         </div>
       }
       keyInfo={
         <div className="flex flex-col gap-1.5">
-          <div className="flex items-center gap-2 text-[11px] font-bold text-text-secondary">
-            <Clock size={12} className="opacity-60" />
-            <span>{expiryDateLabel}</span>
+          <div className="flex items-center gap-2">
+            <Clock size={12} className="text-text-tertiary opacity-60" />
+            {/* V1.4: Meta Hint = T6 */}
+            <VFText variant="t6" color="secondary" className="font-medium">
+              {purchase.expiryAt 
+                ? t('marketplace.purchase.label.expires', { date: dayjs(purchase.expiryAt).format(t('common.dateFormat')) })
+                : t('marketplace.purchase.label.lifetime')}
+            </VFText>
           </div>
-          {/* V1.4 Fix: Removed isPending pulse text as it duplicates top-right StatusTag */}
         </div>
       }
       actions={
         <div className="flex flex-col gap-2">
-          <div className="grid grid-cols-2 gap-2" key="main-actions">
+          <div className="grid grid-cols-2 gap-2">
             <Button 
               type="primary" 
               disabled={!isReady || !purchase.entitlements.can_use}
               icon={<Zap size={14} />}
-              className="h-9 font-bold text-[12px] rounded-control uppercase tracking-wider"
+              className="h-9 font-bold text-[12px] uppercase tracking-wider rounded-control"
               onClick={(e) => { e.stopPropagation(); onOpen(purchase); }}
             >
               {t('marketplace.purchase.label.open')}
             </Button>
-            
-            <Tooltip title={isReady && !purchase.entitlements.can_self_host ? "Cloud Only Plan" : ""}>
-              <Button 
-                disabled={!isReady || !purchase.entitlements.can_self_host}
-                icon={<ArrowUpRight size={14} />}
-                className="h-9 font-bold text-[12px] rounded-control border-divider text-text-secondary hover:text-brand transition-all uppercase tracking-wider"
-                onClick={(e) => { e.stopPropagation(); onDeploy(purchase); }}
-              >
-                {t('marketplace.purchase.label.deploy')}
-              </Button>
-            </Tooltip>
+            <Button 
+              disabled={!isReady || !purchase.entitlements.can_self_host}
+              icon={<ArrowUpRight size={14} />}
+              className="h-9 font-bold text-[12px] uppercase tracking-wider rounded-control"
+              onClick={(e) => { e.stopPropagation(); onDeploy(purchase); }}
+            >
+              {t('marketplace.purchase.label.deploy')}
+            </Button>
           </div>
           <Button 
-            key="view-details"
             type="link" 
             size="small" 
             className="text-[12px] font-bold text-text-tertiary hover:text-brand h-auto p-0 flex items-center justify-center gap-1"

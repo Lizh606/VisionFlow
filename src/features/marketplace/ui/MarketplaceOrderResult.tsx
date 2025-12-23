@@ -1,26 +1,19 @@
 
 import React, { useEffect, useState, useRef } from 'react';
-import { Button, App, Skeleton, Divider, Typography } from 'antd';
+import { Button, App, Skeleton, Typography } from 'antd';
 import { 
   CheckCircle2, 
   XCircle, 
   RefreshCw, 
-  ArrowRight, 
-  ExternalLink, 
   Clock, 
   ShieldCheck, 
-  CreditCard,
-  HelpCircle,
   PackageCheck,
-  LayoutGrid,
-  X
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { VFCard } from '../../../shared/ui/VFCard';
 import { marketplaceService } from '../../../services/marketplaceService';
 import { Order } from '../types';
-
-const { Text } = Typography;
+import { VFText } from '../../../ui/VFText';
 
 const DEV_MOCK_KEY = "vf_mkt_order_result_mock_status";
 
@@ -96,15 +89,6 @@ export const MarketplaceOrderResult: React.FC<{ orderId: string; onNavigate: (p:
     };
   }, [orderId]);
 
-  const setDevMock = (status: string | null) => {
-    if (status) {
-      localStorage.setItem(DEV_MOCK_KEY, status);
-    } else {
-      localStorage.removeItem(DEV_MOCK_KEY);
-    }
-    fetchStatus(true);
-  };
-
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center p-20 gap-4 animate-in fade-in">
@@ -121,7 +105,6 @@ export const MarketplaceOrderResult: React.FC<{ orderId: string; onNavigate: (p:
   const isPaid = order.status === 'SUCCESS';
   const isEntitled = order.entitlementStatus === 'READY';
   const isEntitlementPending = isPaid && order.entitlementStatus === 'PENDING';
-  const isPendingPayment = order.status === 'PENDING_PAYMENT';
   const isFailed = order.status === 'FAILED' || order.status === 'TIMEOUT' || order.status === 'CANCELLED';
 
   return (
@@ -132,7 +115,8 @@ export const MarketplaceOrderResult: React.FC<{ orderId: string; onNavigate: (p:
              <div className="w-16 h-16 rounded-full bg-success/10 flex items-center justify-center text-success mb-2 scale-in duration-500">
                <CheckCircle2 size={36} strokeWidth={2.5} />
              </div>
-             <h1 className="text-2xl font-bold text-text-primary m-0 tracking-tight">Purchase Successful</h1>
+             {/* V1.4: Title = T2 */}
+             <VFText variant="t2" color="primary">Purchase Successful</VFText>
            </>
          )}
          {isEntitlementPending && (
@@ -141,7 +125,7 @@ export const MarketplaceOrderResult: React.FC<{ orderId: string; onNavigate: (p:
                <Clock size={36} strokeWidth={2} />
                <div className="absolute inset-0 rounded-full border-2 border-brand/20 border-t-brand animate-spin" />
              </div>
-             <h1 className="text-2xl font-bold text-text-primary m-0 tracking-tight">Provisioning Resource</h1>
+             <VFText variant="t2" color="primary">Provisioning Resource</VFText>
            </>
          )}
          {isFailed && (
@@ -149,7 +133,7 @@ export const MarketplaceOrderResult: React.FC<{ orderId: string; onNavigate: (p:
              <div className="w-16 h-16 rounded-full bg-error/10 flex items-center justify-center text-error mb-2">
                <XCircle size={36} strokeWidth={2.5} />
              </div>
-             <h1 className="text-2xl font-bold text-text-primary m-0 tracking-tight">Transaction Failed</h1>
+             <VFText variant="t2" color="primary">Transaction Failed</VFText>
            </>
          )}
       </div>
@@ -162,14 +146,18 @@ export const MarketplaceOrderResult: React.FC<{ orderId: string; onNavigate: (p:
                      <ShieldCheck size={20} />
                   </div>
                   <div className="flex flex-col min-w-0">
-                     <span className="text-sm font-bold text-text-primary truncate">{order.listingName}</span>
-                     <span className="text-xs font-bold text-text-tertiary uppercase tracking-wider">{order.planName || "License Plan"}</span>
+                     {/* V1.4: Item Name = T5 Strong */}
+                     <VFText variant="t5-strong" color="primary" truncate>{order.listingName}</VFText>
+                     {/* V1.4: Meta = T6 Strong */}
+                     <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-wider">{order.planName || "License Plan"}</VFText>
                   </div>
                </div>
                <div className="flex flex-col items-end">
-                  {/* FIX: Ensure amount is numeric before toFixed */}
-                  <span className="text-base font-bold text-text-primary tabular-nums">${Number(order.amount || 0).toFixed(2)}</span>
-                  <span className="text-[10px] font-bold text-text-tertiary uppercase">{order.currency}</span>
+                  {/* V1.4: Amount = T4 (Tabular) */}
+                  <VFText variant="t4" color="primary" tabularNums className="font-bold">
+                    ${Number(order.amount || 0).toFixed(2)}
+                  </VFText>
+                  <VFText variant="t6" color="tertiary" className="uppercase font-bold">{order.currency}</VFText>
                </div>
             </div>
          </div>

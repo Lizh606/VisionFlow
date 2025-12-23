@@ -20,6 +20,7 @@ import {
 import { VFTag } from '../../../../../shared/ui/VFTag';
 import { VersionHistory, Stream } from '../../hooks/useWorkflowDeployment';
 import { useResponsive } from '../../../../../shared/hooks/useResponsive';
+import { VFText } from '../../../../../ui/VFText';
 
 interface Props {
   open: boolean;
@@ -37,7 +38,7 @@ const SnapshotView: React.FC<{ data: Partial<Stream>[] }> = ({ data }) => {
       <div className="py-8 text-center">
         <Empty 
           image={Empty.PRESENTED_IMAGE_SIMPLE} 
-          description={<span className="text-text-tertiary text-xs">{t('selfhosted.workflowDeployment.noSnapshot')}</span>} 
+          description={<VFText variant="t6" color="tertiary">{t('selfhosted.workflowDeployment.noSnapshot')}</VFText>} 
         />
       </div>
     );
@@ -53,7 +54,7 @@ const SnapshotView: React.FC<{ data: Partial<Stream>[] }> = ({ data }) => {
           <div className="flex items-center justify-between mb-1.5">
             <div className="flex items-center gap-2 min-w-0">
               <Video size={14} className="text-text-tertiary shrink-0" />
-              <span className="text-sm font-semibold text-text-primary truncate">{s.name}</span>
+              <VFText variant="t5-strong" color="primary" truncate>{s.name}</VFText>
             </div>
             <VFTag variant="neutral" className="h-5 text-xs font-mono uppercase" filled={false}>
               {s.type}
@@ -63,12 +64,12 @@ const SnapshotView: React.FC<{ data: Partial<Stream>[] }> = ({ data }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 min-w-0">
               <Zap size={12} className="text-brand opacity-60 shrink-0" />
-              <span className="text-xs text-text-secondary truncate font-medium">{s.workflow}</span>
-              <span className="text-xs text-text-tertiary font-mono opacity-40">{s.version}</span>
+              <VFText variant="t6" color="secondary" truncate className="font-medium">{s.workflow}</VFText>
+              <VFText variant="t7" color="tertiary" className="opacity-40">{s.version}</VFText>
             </div>
-            <div className="flex items-center gap-1 text-xs text-text-tertiary whitespace-nowrap">
-              <Activity size={10} className="opacity-40" />
-              <span className="opacity-60">{s.telemetry}</span>
+            <div className="flex items-center gap-1">
+              <Activity size={10} className="text-text-tertiary opacity-40" />
+              <VFText variant="t7" color="tertiary" className="opacity-60">{s.telemetry}</VFText>
             </div>
           </div>
         </div>
@@ -82,7 +83,7 @@ const DiffView: React.FC = () => {
   return (
     <div className="py-12 flex flex-col items-center justify-center bg-bg-page/20 rounded-card border border-dashed border-border/40">
       <FileCode size={32} className="text-text-tertiary opacity-20 mb-3" />
-      <span className="text-xs text-text-tertiary font-medium">{t('selfhosted.workflowDeployment.loadingDiff')}</span>
+      <VFText variant="t6" color="tertiary" className="font-medium">{t('selfhosted.workflowDeployment.loadingDiff')}</VFText>
     </div>
   );
 };
@@ -97,9 +98,9 @@ const HistoryCard: React.FC<{
   const [activeTab, setActiveTab] = useState<string>('snapshot');
 
   const typeConfig = {
-    INITIAL: { variant: 'neutral', label: 'INITIAL' },
-    UPDATE: { variant: 'brand', label: 'UPDATE' },
-    ROLLBACK: { variant: 'warning', label: 'ROLLBACK' },
+    INITIAL: { variant: 'neutral' as const, label: t('selfhosted.workflowDeployment.historyType.initial') },
+    UPDATE: { variant: 'brand' as const, label: t('selfhosted.workflowDeployment.historyType.update') },
+    ROLLBACK: { variant: 'warning' as const, label: t('selfhosted.workflowDeployment.historyType.rollback') },
   };
 
   const currentType = typeConfig[item.type as keyof typeof typeConfig] || typeConfig.UPDATE;
@@ -115,11 +116,11 @@ const HistoryCard: React.FC<{
       >
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-3 overflow-hidden">
-            <span className="text-sm font-bold text-text-primary whitespace-nowrap font-mono tracking-tight bg-bg-page px-1.5 py-0.5 rounded border border-border">
+            <VFText variant="t7" color="primary" className="whitespace-nowrap font-bold tracking-tight bg-bg-page px-1.5 py-0.5 rounded border border-border">
               {item.version}
-            </span>
+            </VFText>
             <VFTag 
-              variant={item.isCurrent ? 'success' : (currentType.variant as any)} 
+              variant={item.isCurrent ? 'success' : currentType.variant} 
               filled={item.isCurrent} 
               className="h-5 text-xs font-bold tracking-wider px-2"
             >
@@ -132,18 +133,18 @@ const HistoryCard: React.FC<{
           </div>
         </div>
 
-        <p className={`text-sm text-text-secondary leading-relaxed mb-3 ${expanded ? '' : 'line-clamp-1'}`}>
+        <VFText variant="t5" color="secondary" className={`leading-relaxed mb-3 ${expanded ? '' : 'line-clamp-1 block'}`}>
           {item.description}
-        </p>
+        </VFText>
 
-        <div className="flex items-center gap-4 text-xs text-text-tertiary font-medium">
+        <div className="flex items-center gap-4">
           <div className="flex items-center gap-1.5">
-            <User size={12} className="opacity-50" />
-            <span>{item.user}</span>
+            <User size={12} className="text-text-tertiary opacity-50" />
+            <VFText variant="t6" color="tertiary" className="font-medium">{item.user}</VFText>
           </div>
           <div className="flex items-center gap-1.5">
-            <Calendar size={12} className="opacity-50" />
-            <span>{item.timestamp}</span>
+            <Calendar size={12} className="text-text-tertiary opacity-50" />
+            <VFText variant="t6" color="tertiary" className="font-medium" tabularNums>{item.timestamp}</VFText>
           </div>
         </div>
       </div>
@@ -216,7 +217,7 @@ export const VersionHistoryDrawer: React.FC<Props> = ({ open, onClose, history, 
       title={
         <div className="flex items-center gap-3 text-text-primary">
           <History size={20} className="text-brand" strokeWidth={2.5} />
-          <span className="font-bold text-base">{t('selfhosted.workflowDeployment.historyTitle')}</span>
+          <VFText variant="t4" color="primary">{t('selfhosted.workflowDeployment.historyTitle')}</VFText>
         </div>
       }
       width={isMobile ? '100%' : 560}

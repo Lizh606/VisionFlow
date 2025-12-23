@@ -18,7 +18,15 @@ export const en = {
       "support": "Help & Support",
       "settings": "Settings",
       "security": "Security",
-      "folders": "Folders"
+      "folders": "Folders",
+      "settingsHelp": "Settings & Help",
+      "theme": "Theme",
+      "language": "Language",
+      "profile": "My Profile",
+      "accountSettings": "Account Settings",
+      "logout": "Logout",
+      "lightMode": "Light Mode",
+      "darkMode": "Dark Mode"
     },
     "workflows": workflows,
     "selfhosted": selfhosted,

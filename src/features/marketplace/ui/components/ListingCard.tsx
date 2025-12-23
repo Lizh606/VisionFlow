@@ -6,6 +6,7 @@ import { Listing } from '../../types';
 import { VFCard } from '../../../../shared/ui/VFCard';
 import { VFTag } from '../../../../shared/ui/VFTag';
 import { FavoriteButton } from './FavoriteButton';
+import { VFText } from '../../../../ui/VFText';
 
 interface Props {
   listing: Listing;
@@ -31,39 +32,45 @@ export const ListingCard: React.FC<Props> = ({ listing, onClick, onFavorite }) =
 
       <div className="p-4 flex flex-col flex-1 gap-2.5">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="text-[14px] font-bold text-text-primary m-0 line-clamp-1 flex-1 tracking-tight">{listing.name}</h3>
-          <VFTag variant="neutral" className="scale-90 origin-right shrink-0 opacity-70" filled={false}>
+          {/* V1.4: Card Title = T4 Subhead */}
+          <VFText variant="t4" color="primary" truncate className="flex-1">
+            {listing.name}
+          </VFText>
+          <VFTag variant="neutral" className="scale-90 origin-right shrink-0 opacity-70 font-bold" filled={false}>
             {t(`marketplace.type.${listing.type.toLowerCase()}` as any)}
           </VFTag>
         </div>
         
-        <p className="text-[12px] text-text-secondary m-0 line-clamp-2 min-h-[36px] font-medium leading-relaxed">
+        {/* V1.4: Description = T5 Body */}
+        <VFText variant="t5" color="secondary" className="line-clamp-2 min-h-[44px] leading-relaxed">
           {listing.shortDescription || listing.description}
-        </p>
+        </VFText>
 
         <div className="flex items-center gap-3.5 mt-1">
           <div className="flex items-center gap-1.5 text-warning">
              <Star size={12} fill="currentColor" />
-             <span className="text-[11px] font-bold tabular-nums">{(listing.rating || 0).toFixed(1)}</span>
+             {/* V1.4: Numbers = T5 Strong (Tabular) */}
+             <VFText variant="t5-strong" color="inherit" tabularNums>{(listing.rating || 0).toFixed(1)}</VFText>
           </div>
-          <span className="text-[11px] text-text-tertiary font-bold uppercase tracking-tight opacity-60">
+          {/* V1.4: Meta = T6 Caption */}
+          <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-tight opacity-60">
              {(listing.installCount || 0).toLocaleString()} {t('marketplace.installs')}
-          </span>
+          </VFText>
         </div>
 
         <div className="mt-auto pt-3 border-t border-divider/40 flex items-center justify-between">
-          <span className="text-[10px] text-text-tertiary font-bold truncate max-w-[90px] opacity-50 uppercase tracking-tighter">
+          <VFText variant="t6" color="tertiary" truncate className="max-w-[90px] opacity-50 uppercase font-bold tracking-tighter">
             {listing.author.name}
-          </span>
+          </VFText>
           <div className="flex items-center gap-2">
             {listing.purchased ? (
               <VFTag variant="success" icon={<CheckCircle2 />} className="h-5 px-1.5 text-[10px] font-bold">
                 {t('marketplace.purchase.status.ready').toUpperCase()}
               </VFTag>
             ) : (
-              <span className="text-[14px] font-bold tabular-nums text-text-primary">
+              <VFText variant="t5-strong" color="primary" tabularNums>
                 {listing.price === 0 ? t('common.free') : `$${listing.price}`}
-              </span>
+              </VFText>
             )}
           </div>
         </div>

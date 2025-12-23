@@ -8,6 +8,7 @@ import { VFTable } from '../../../../../shared/ui/VFTable';
 import { VFTag } from '../../../../../shared/ui/VFTag';
 import { Stream } from '../../hooks/useWorkflowDeployment';
 import { useResponsive } from '../../../../../shared/hooks/useResponsive';
+import { VFText } from '../../../../../ui/VFText';
 
 interface Props {
   data: Stream[];
@@ -47,12 +48,14 @@ const StreamCard: React.FC<{
             <Video size={18} strokeWidth={1.5} />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="font-bold text-text-primary text-base leading-tight truncate">
+            {/* V1.4: Card Title = T5 Strong */}
+            <VFText variant="t5-strong" color="primary" truncate className="leading-tight">
               {stream.name}
-            </span>
-            <span className="text-xs font-mono text-text-tertiary mt-1 font-medium opacity-60">
+            </VFText>
+            {/* V1.4: ID = T7 Mono */}
+            <VFText variant="t7" color="tertiary" className="mt-0.5 opacity-60">
               {stream.id}
-            </span>
+            </VFText>
           </div>
         </div>
         
@@ -70,8 +73,8 @@ const StreamCard: React.FC<{
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2 min-w-0">
           <Zap size={14} className="text-brand opacity-70 shrink-0" />
-          <span className="text-sm font-semibold text-text-secondary truncate">{stream.workflow}</span>
-          <VFTag variant="brand" className="h-5 text-[10px] px-1.5 opacity-70" filled={false}>
+          <VFText variant="t5" color="secondary" truncate className="font-semibold">{stream.workflow}</VFText>
+          <VFTag variant="brand" className="h-5 text-[10px] px-1.5 font-bold opacity-70" filled={false}>
             {stream.version}
           </VFTag>
         </div>
@@ -86,17 +89,18 @@ const StreamCard: React.FC<{
 
       <div className="flex items-center justify-between mt-1 pt-3 border-t border-divider/40">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1.5 text-xs text-text-tertiary">
-            <Activity size={12} className="opacity-50" />
-            <span className="font-bold uppercase tracking-tight">{stream.telemetry}</span>
+          <div className="flex items-center gap-1.5">
+            <Activity size={12} className="text-text-tertiary opacity-50" />
+            <VFText variant="t6" color="tertiary" className="font-bold uppercase tracking-tight opacity-70">{stream.telemetry}</VFText>
           </div>
           <VFTag variant="neutral" className="h-5 text-[10px] px-2 font-mono" filled={false}>
             {stream.type}
           </VFTag>
         </div>
-        <div className="flex items-center gap-1.5 text-xs text-text-tertiary font-medium">
-          <Clock size={12} className="opacity-40" />
-          <span>{dayjs(stream.updatedAt).fromNow()}</span>
+        <div className="flex items-center gap-1.5">
+          <Clock size={12} className="text-text-tertiary opacity-40" />
+          {/* V1.4: Meta = T6 */}
+          <VFText variant="t6" color="tertiary" className="font-medium opacity-80">{dayjs(stream.updatedAt).fromNow()}</VFText>
         </div>
       </div>
     </div>
@@ -116,7 +120,7 @@ export const StreamsTable: React.FC<Props> = ({ data, isAdmin, onEdit, onToggleS
           locale={{ 
             emptyText: (
               <div className="py-16 flex flex-col items-center justify-center">
-                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span className="text-sm text-text-tertiary">{t('selfhosted.workflowDeployment.empty')}</span>} />
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<VFText variant="t5" color="tertiary">{t('selfhosted.workflowDeployment.empty')}</VFText>} />
               </div>
             )
           }}
@@ -161,12 +165,12 @@ export const StreamsTable: React.FC<Props> = ({ data, isAdmin, onEdit, onToggleS
             <Video size={16} strokeWidth={1.5} />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="font-bold text-text-primary text-sm leading-tight truncate">
+            <VFText variant="t5-strong" color="primary" truncate className="leading-tight">
               {text}
-            </span>
-            <span className="text-xs font-mono text-text-tertiary mt-0.5 font-medium tracking-tight opacity-50">
+            </VFText>
+            <VFText variant="t7" color="tertiary" className="mt-0.5 opacity-50 tracking-tight">
               {record.id}
-            </span>
+            </VFText>
           </div>
         </div>
       ),
@@ -189,7 +193,7 @@ export const StreamsTable: React.FC<Props> = ({ data, isAdmin, onEdit, onToggleS
       width: '24%',
       render: (text: string, record: Stream) => (
         <div className="flex items-center gap-2">
-          <span className="text-sm font-bold text-brand hover:underline cursor-pointer truncate max-w-[160px]">{text}</span>
+          <VFText variant="t5" color="brand" className="font-bold hover:underline cursor-pointer truncate max-w-[160px]">{text}</VFText>
           <VFTag variant="brand" className="h-4.5 text-[9px] px-1.5 font-bold opacity-60" filled={false}>
             {record.version}
           </VFTag>
@@ -232,9 +236,9 @@ export const StreamsTable: React.FC<Props> = ({ data, isAdmin, onEdit, onToggleS
       width: '14%',
       render: (date: string) => (
         <Tooltip title={dayjs(date).format('YYYY-MM-DD HH:mm:ss')}>
-          <div className="flex items-center gap-2 text-xs text-text-tertiary font-medium">
-            <Clock size={14} className="opacity-40" />
-            <span>{dayjs(date).fromNow()}</span>
+          <div className="flex items-center gap-2">
+            <Clock size={14} className="text-text-tertiary opacity-40 shrink-0" />
+            <VFText variant="t6" color="tertiary" className="font-medium whitespace-nowrap">{dayjs(date).fromNow()}</VFText>
           </div>
         </Tooltip>
       )

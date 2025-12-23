@@ -1,27 +1,17 @@
 
-import React, { useEffect, useMemo, useState } from 'react';
-import { Drawer, Form, Input, Select, Switch, Button, Radio } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Form, Input, Select, Switch, Button, Radio, Alert, Space } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { 
-  Zap, 
-  ShieldCheck, 
-  Activity, 
-  Info, 
-  Video, 
-  Database, 
-  Network, 
-  Plus, 
-  AlertCircle,
-  X,
-  Eye,
-  EyeOff,
-  ChevronRight,
-  Settings2,
-  CheckCircle2
+  Zap, ShieldCheck, Activity, Info, Video, 
+  Database, Network, Plus, AlertCircle, 
+  Settings2, CheckCircle2 
 } from 'lucide-react';
 import { Stream } from '../../hooks/useWorkflowDeployment';
-import { useResponsive } from '../../../../../shared/hooks/useResponsive';
+import { VFDrawer } from '../../../../../ui/VFDrawer';
+import { VFSection } from '../../../../../ui/VFSection';
 import { VFTag } from '../../../../../shared/ui/VFTag';
+import { VFText } from '../../../../../ui/VFText';
 
 interface Props {
   open: boolean;
@@ -29,30 +19,6 @@ interface Props {
   onSave: (values: any) => void;
   initialValues?: Stream | null;
 }
-
-interface SectionProps {
-  title: string;
-  subtitle?: string;
-  icon: any;
-  children: React.ReactNode;
-}
-
-const Section: React.FC<SectionProps> = ({ title, subtitle, icon: Icon, children }) => (
-  <div className="flex flex-col gap-4 mb-10 last:mb-0">
-    <div className="flex items-center gap-3 border-b border-divider pb-3">
-      <div className="flex items-center justify-center w-8 h-8 rounded-control bg-bg-page border border-border text-text-secondary shrink-0">
-        <Icon size={16} strokeWidth={2} />
-      </div>
-      <div className="flex flex-col min-w-0">
-        <span className="text-sm font-bold text-text-primary uppercase tracking-wider leading-none mb-1">
-          {title}
-        </span>
-        {subtitle && <span className="text-xs text-text-tertiary font-medium truncate">{subtitle}</span>}
-      </div>
-    </div>
-    <div className="px-0 sm:px-1">{children}</div>
-  </div>
-);
 
 const TelemetryLevelCard = ({ icon: Icon, title, desc, recommended, active }: any) => (
   <div className={`
@@ -70,325 +36,155 @@ const TelemetryLevelCard = ({ icon: Icon, title, desc, recommended, active }: an
 
     <div className="flex flex-col min-w-0 flex-1">
       <div className="flex items-center justify-between gap-2 mb-1">
-        <span className={`text-sm font-bold leading-none ${active ? 'text-brand' : 'text-text-primary'}`}>
-          {title}
-        </span>
+        <VFText variant="t5-strong" color={active ? 'brand' : 'primary'}>{title}</VFText>
         {recommended && (
-          <VFTag variant="brand" className="h-4.5 px-1.5 text-[10px] font-bold opacity-80" filled={false}>
-            REC
-          </VFTag>
+          <VFTag variant="brand" className="h-4.5 px-1.5 text-[10px] font-bold opacity-80" filled={false}>REC</VFTag>
         )}
       </div>
-      <p className="text-xs text-text-tertiary leading-snug line-clamp-2 m-0 font-medium opacity-80">
-        {desc}
-      </p>
+      <VFText variant="t6" color="secondary" className="line-clamp-2 opacity-80">{desc}</VFText>
     </div>
-
-    {active && (
-      <div className="absolute top-2 right-2 text-brand/40">
-        <CheckCircle2 size={12} fill="currentColor" className="text-white" />
-      </div>
-    )}
   </div>
 );
 
 export const StreamEditorDrawer: React.FC<Props> = ({ open, onClose, onSave, initialValues }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const { isMobile } = useResponsive();
   const isEdit = !!initialValues;
 
-  const [isDirty, setIsDirty] = useState(false);
-  const sourceType = Form.useWatch('type', form);
-  const strategy = Form.useWatch('strategy', form);
   const telemetry = Form.useWatch('telemetry', form);
 
-  const initialData = useMemo(() => {
-    if (!initialValues) {
-      return {
+  useEffect(() => {
+    if (open) {
+      form.setFieldsValue(initialValues || {
         concurrency: "1",
         applyImmediately: true,
         telemetry: 'METRICS',
         type: 'RTSP',
         strategy: 'LATEST'
-      };
+      });
     }
-    return {
-      ...initialValues,
-      concurrency: String(initialValues.concurrency || "1"),
-      strategy: initialValues.version === 'LATEST' ? 'LATEST' : 'SPECIFIC'
-    };
-  }, [initialValues]);
-
-  useEffect(() => {
-    if (open) {
-      form.setFieldsValue(initialData);
-      setIsDirty(false);
-    }
-  }, [open, initialData, form]);
+  }, [open, initialValues, form]);
 
   const handleFinish = (values: any) => {
     onSave({
       ...values,
-      concurrency: parseInt(values.concurrency, 10) || 1,
-      version: values.strategy === 'LATEST' ? 'LATEST' : values.version,
       id: initialValues?.id || `STR_${Math.floor(Math.random() * 100000)}`,
       updatedAt: new Date().toISOString()
     });
   };
 
   return (
-    <Drawer
-      title={
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-control bg-brand/5 border border-brand/10 text-brand flex items-center justify-center shrink-0 shadow-sm">
-            {isEdit ? <Settings2 size={22} /> : <Plus size={22} />}
-          </div>
-          <div className="flex flex-col gap-1">
-            <span className="font-bold text-base text-text-primary leading-tight">
-              {isEdit ? t('selfhosted.workflowDeployment.editTitle') : t('selfhosted.workflowDeployment.createTitle')}
-            </span>
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-text-tertiary font-bold tracking-wider uppercase opacity-60">Stream ID:</span>
-              <span className="text-xs font-mono font-bold text-text-secondary">
-                {isEdit ? initialValues?.id : 'AUTO_ASSIGNED'}
-              </span>
-            </div>
-          </div>
-        </div>
-      }
-      width={isMobile ? '100%' : 640}
-      onClose={onClose}
+    <VFDrawer
+      title={isEdit ? t('selfhosted.workflowDeployment.editTitle') : t('selfhosted.workflowDeployment.createTitle')}
+      subtitle={`${t('selfhosted.workflowDeployment.streamName')} ID: ${isEdit ? initialValues?.id : 'NEW'}`}
       open={open}
-      destroyOnClose
-      closeIcon={<X size={20} className="text-text-tertiary hover:text-text-primary transition-colors" />}
+      onClose={onClose}
+      size="M"
       footer={
-        <div className="flex flex-col bg-bg-card">
-          {isEdit && isDirty && (
-            <div className="px-6 py-3 bg-warning/5 border-b border-warning/10 flex items-center gap-3">
-              <AlertCircle size={14} className="text-warning shrink-0" />
-              <span className="text-xs font-medium text-warning-700">
-                Changes may cause stream restart
-              </span>
-            </div>
-          )}
-          
-          <div className="flex items-center justify-between px-6 py-5">
-            <Button 
-              onClick={onClose} 
-              className="h-11 px-8 font-semibold border-none text-text-secondary hover:text-text-primary hover:bg-bg-page transition-all"
-            >
-              {t('common.cancel')}
-            </Button>
-            <Button 
-              type="primary" 
-              onClick={() => form.submit()} 
-              className="h-11 px-12 font-bold shadow-md rounded-control"
-            >
-              {isEdit ? t('selfhosted.workflowDeployment.updateBtn') : t('selfhosted.workflowDeployment.createBtn')}
-            </Button>
-          </div>
+        <div className="flex items-center justify-between w-full">
+          <Button onClick={onClose} className="px-8 h-11 border-none hover:bg-bg-page font-medium">
+            {t('common.cancel')}
+          </Button>
+          <Button type="primary" onClick={() => form.submit()} className="px-12 h-11 font-bold shadow-md">
+            {isEdit ? t('selfhosted.workflowDeployment.updateBtn') : t('selfhosted.workflowDeployment.createBtn')}
+          </Button>
         </div>
       }
-      styles={{ 
-        body: { padding: isMobile ? '24px 20px' : '32px 40px' },
-        footer: { padding: 0, borderTop: '1px solid rgba(var(--vf-divider), var(--vf-divider-alpha))' }
-      }}
     >
-      <Form 
-        form={form} 
-        layout="vertical" 
-        onFinish={handleFinish} 
-        onValuesChange={() => isEdit && setIsDirty(true)}
-        autoComplete="off"
-        requiredMark={false}
-        className="vf-form-refined"
-      >
-        <Section title={t('selfhosted.workflowDeployment.basicInfo')} icon={Info} subtitle="Set identification and discovery info">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
-            <Form.Item 
-              label={<span className="text-sm font-bold text-text-secondary">{t('selfhosted.workflowDeployment.nameLabel')}</span>} 
-              name="name" 
-              rules={[{ required: true, message: t('selfhosted.workflowDeployment.nameRequired') }]}
-              className="mb-0"
-            >
-              <Input placeholder={t('selfhosted.workflowDeployment.namePlaceholder')} className="h-11" allowClear />
-            </Form.Item>
-            <Form.Item 
-              label={<span className="text-sm font-bold text-text-secondary">Stream ID</span>} 
-              className="mb-0 opacity-70"
-            >
-              <Input value={isEdit ? initialValues?.id : "AUTO"} disabled className="h-11 font-mono" />
-            </Form.Item>
-          </div>
-        </Section>
+      <Form form={form} layout="vertical" onFinish={handleFinish} autoComplete="off" requiredMark={false}>
+        
+        <VFSection title={t('selfhosted.workflowDeployment.basicInfo')} level={4}>
+          <Form.Item 
+            label={<VFText variant="t5-strong" color="secondary">{t('selfhosted.workflowDeployment.nameLabel')}</VFText>} 
+            name="name" 
+            rules={[{ required: true, message: t('selfhosted.workflowDeployment.nameRequired') }]} 
+            className="mb-0"
+          >
+            <Input placeholder={t('selfhosted.workflowDeployment.namePlaceholder')} className="h-11" />
+          </Form.Item>
+        </VFSection>
 
-        <Section title={t('selfhosted.workflowDeployment.inputSource')} icon={Network} subtitle="Connection protocol and endpoint">
-          <div className="bg-bg-page/40 p-5 rounded-card border border-border flex flex-col gap-6">
-            <Form.Item label={<span className="text-sm font-bold text-text-secondary">{t('selfhosted.workflowDeployment.sourceType')}</span>} name="type" className="mb-0">
-              <Radio.Group className="vf-radio-group-refined w-full grid grid-cols-1 sm:grid-cols-3 gap-2">
-                <Radio.Button value="RTSP" className="vf-protocol-btn">
-                  <div className="flex items-center justify-center gap-2 w-full h-full">
-                    <Video size={16} /><span>RTSP</span>
-                  </div>
-                </Radio.Button>
-                <Radio.Button value="HTTP" className="vf-protocol-btn">
-                  <div className="flex items-center justify-center gap-2 w-full h-full">
-                    <Zap size={16} /><span>HTTP PUSH</span>
-                  </div>
-                </Radio.Button>
-                <Radio.Button value="FILE" className="vf-protocol-btn">
-                  <div className="flex items-center justify-center gap-2 w-full h-full">
-                    <Database size={16} /><span>FILE</span>
-                  </div>
-                </Radio.Button>
+        <VFSection title={t('selfhosted.workflowDeployment.inputSource')} level={4} description={t('selfhosted.mode.edgeDesc')}>
+          <div className="flex flex-col gap-6 bg-bg-card p-5 rounded-card border border-divider">
+            <Form.Item name="type" className="mb-0">
+              <Radio.Group className="w-full grid grid-cols-3 gap-2">
+                <Radio.Button value="RTSP" className="h-12 flex items-center justify-center font-bold">RTSP</Radio.Button>
+                <Radio.Button value="HTTP" className="h-12 flex items-center justify-center font-bold">HTTP</Radio.Button>
+                <Radio.Button value="FILE" className="h-12 flex items-center justify-center font-bold">FILE</Radio.Button>
               </Radio.Group>
             </Form.Item>
-            
             <Form.Item 
-              label={<span className="text-sm font-bold text-text-secondary">{t('selfhosted.workflowDeployment.endpoint')}</span>} 
+              label={<VFText variant="t5-strong" color="secondary">{t('selfhosted.workflowDeployment.endpoint')}</VFText>} 
               name="endpoint" 
-              rules={[{ required: true, message: t('selfhosted.workflowDeployment.endpointRequired') }]}
+              rules={[{ required: true, message: t('selfhosted.workflowDeployment.endpointRequired') }]} 
               className="mb-0"
             >
-              {sourceType === 'RTSP' ? (
-                <Input.Password 
-                  placeholder="rtsp://admin:****@192.168.1.1:554/ch1" 
-                  className="h-11 font-mono text-sm" 
-                  iconRender={visible => (visible ? <Eye size={18} /> : <EyeOff size={18} />)}
-                />
-              ) : (
-                <Input placeholder={sourceType === 'FILE' ? "/data/recordings/clip_01.mp4" : "https://api.visionflow.io/ingest/..."} className="h-11 font-mono text-sm" />
-              )}
+              <Input placeholder="rtsp://admin:****@192.168.1.100" className="h-11 font-mono text-sm" />
             </Form.Item>
           </div>
-        </Section>
+        </VFSection>
 
-        <Section title={t('selfhosted.workflowDeployment.workflowBinding')} icon={Database} subtitle="Assign vision logic to this stream">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6">
-            <Form.Item label={<span className="text-sm font-bold text-text-secondary">{t('selfhosted.workflowDeployment.selectWorkflow')}</span>} name="workflowId" rules={[{ required: true }]} className="mb-0">
-              <Select 
-                showSearch
-                className="h-11 w-full"
-                placeholder={t('selfhosted.workflowDeployment.selectWorkflowPlaceholder')} 
-                options={[
-                  { value: 'wf_crowd_01', label: 'Crowd Analysis' },
-                  { value: 'wf_ppe_05', label: 'PPE Compliance' }
-                ]} 
-              />
+        <VFSection title={t('selfhosted.workflowDeployment.workflowBinding')} level={4}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Form.Item 
+              label={<VFText variant="t5-strong" color="secondary">{t('selfhosted.workflowDeployment.selectWorkflow')}</VFText>} 
+              name="workflowId" 
+              rules={[{ required: true, message: t('selfhosted.workflowDeployment.selectWorkflowPlaceholder') }]}
+            >
+              <Select className="h-11" placeholder={t('selfhosted.workflowDeployment.selectWorkflowPlaceholder')} options={[{ label: 'Crowd Analysis', value: 'wf_1' }]} />
             </Form.Item>
-            
-            <div className="flex flex-col gap-4">
-              <Form.Item label={<span className="text-sm font-bold text-text-secondary">{t('selfhosted.workflowDeployment.versionStrategy')}</span>} name="strategy" className="mb-0">
-                <Radio.Group className="vf-radio-group-refined w-full grid grid-cols-2 gap-2">
-                  <Radio.Button value="LATEST">LATEST</Radio.Button>
-                  <Radio.Button value="SPECIFIC">SPECIFIC</Radio.Button>
-                </Radio.Group>
-              </Form.Item>
-              
-              {strategy === 'SPECIFIC' && (
-                <Form.Item name="version" rules={[{ required: true }]} className="animate-in slide-in-from-top-2 duration-200 mb-0">
-                  <Select 
-                    placeholder="Select version..."
-                    className="h-11 w-full"
-                    options={[
-                      { value: 'v2.4', label: 'v2.4.0 (Stable)' },
-                      { value: 'v2.3', label: 'v2.3.9 (Legacy)' },
-                    ]}
-                  />
-                </Form.Item>
-              )}
-            </div>
+            <Form.Item 
+              label={<VFText variant="t5-strong" color="secondary">{t('selfhosted.workflowDeployment.versionStrategy')}</VFText>} 
+              name="strategy"
+            >
+              <Radio.Group className="w-full h-11 flex">
+                <Radio.Button value="LATEST" className="flex-1 flex items-center justify-center font-bold">{t('selfhosted.workflowDeployment.latest')}</Radio.Button>
+                <Radio.Button value="SPECIFIC" className="flex-1 flex items-center justify-center font-bold">Fixed</Radio.Button>
+              </Radio.Group>
+            </Form.Item>
           </div>
-        </Section>
+        </VFSection>
 
-        <Section title={t('selfhosted.workflowDeployment.runPolicy')} icon={Zap} subtitle="Runtime and telemetry settings">
-          <div className="flex flex-col gap-8">
-            <Form.Item label={<span className="text-sm font-bold text-text-secondary">{t('selfhosted.workflowDeployment.concurrency')}</span>} name="concurrency" className="mb-0 max-w-full sm:max-w-[200px]">
-              <Input type="number" min={1} max={10} className="h-11 font-bold text-center" suffix="INST" />
-            </Form.Item>
-
-            <div className="flex flex-col gap-4">
-              <span className="text-sm font-bold text-text-secondary">{t('selfhosted.workflowDeployment.telemetryGranularity')}</span>
-              <Form.Item name="telemetry" className="mb-0">
-                <Radio.Group className="w-full grid grid-cols-1 sm:grid-cols-3 gap-4 items-stretch">
+        <VFSection title={t('selfhosted.workflowDeployment.runPolicy')} level={4}>
+          <div className="flex flex-col gap-6">
+             <Form.Item 
+                label={<VFText variant="t5-strong" color="secondary">{t('selfhosted.workflowDeployment.telemetryGranularity')}</VFText>} 
+                name="telemetry" 
+                className="mb-0"
+              >
+                <Radio.Group className="w-full grid grid-cols-1 gap-3">
                   {[
-                    { value: 'HEARTBEAT', title: 'Heartbeat', desc: 'Online check only', icon: ShieldCheck },
-                    { value: 'METRICS', title: 'Metrics', desc: 'Throughput & FPS', icon: Activity, recommended: true },
-                    { value: 'DIAGNOSTIC', title: 'Diagnostic', desc: 'Full traces', icon: Video },
+                    { value: 'HEARTBEAT', title: t('selfhosted.workflowDeployment.telemetryLevel.heartbeat'), desc: t('selfhosted.workflowDeployment.telemetryLevel.heartbeatDesc'), icon: ShieldCheck },
+                    { value: 'METRICS', title: t('selfhosted.workflowDeployment.telemetryLevel.metrics'), desc: t('selfhosted.workflowDeployment.telemetryLevel.metricsDesc'), icon: Activity, recommended: true },
+                    { value: 'DIAGNOSTIC', title: t('selfhosted.workflowDeployment.telemetryLevel.diagnostic'), desc: t('selfhosted.workflowDeployment.telemetryLevel.diagnosticDesc'), icon: Video },
                   ].map(opt => (
                     <Radio key={opt.value} value={opt.value} className="vf-card-radio !m-0 !p-0">
-                      <TelemetryLevelCard 
-                        {...opt} 
-                        active={telemetry === opt.value} 
-                      />
+                      <TelemetryLevelCard {...opt} active={telemetry === opt.value} />
                     </Radio>
                   ))}
                 </Radio.Group>
-              </Form.Item>
-            </div>
-
-            <div className="p-4 rounded-card border border-brand/20 bg-brand/5 flex items-start gap-4 mb-4">
-              <div className="pt-1 text-brand"><AlertCircle size={18} /></div>
-              <div className="flex-1">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-sm font-bold text-text-primary">{t('selfhosted.workflowDeployment.applyImmediately')}</span>
-                  <Form.Item name="applyImmediately" valuePropName="checked" className="mb-0">
-                    <Switch size="small" />
-                  </Form.Item>
-                </div>
-                <p className="text-xs text-text-tertiary font-medium m-0 leading-relaxed">
-                  {t('selfhosted.workflowDeployment.applyImmediatelyDesc')}
-                </p>
-                {isEdit && (
-                   <div className="text-xs text-brand font-bold mt-2.5 flex items-center gap-1.5">
-                     <ChevronRight size={12} strokeWidth={3} />
-                     {!form.getFieldValue('applyImmediately') && "Changes applied on next release"}
-                   </div>
-                )}
-              </div>
-            </div>
+             </Form.Item>
+             
+             <div className="p-4 bg-brand/5 border border-brand/20 rounded-card flex gap-4">
+               <AlertCircle size={18} className="text-brand shrink-0 mt-0.5" />
+               <div className="flex flex-col gap-1">
+                 <div className="flex items-center justify-between">
+                    <span className="text-sm font-bold text-text-primary">{t('selfhosted.workflowDeployment.applyImmediately')}</span>
+                    <Form.Item name="applyImmediately" valuePropName="checked" className="mb-0">
+                      <Switch size="small" />
+                    </Form.Item>
+                 </div>
+                 <p className="text-xs text-text-tertiary m-0 leading-relaxed font-medium">{t('selfhosted.workflowDeployment.applyImmediatelyDesc')}</p>
+               </div>
+             </div>
           </div>
-        </Section>
+        </VFSection>
       </Form>
 
       <style>{`
-        /* 修复 Protocol 按钮内容换行 */
-        .vf-protocol-btn .ant-radio-button {
-          height: 100%;
-        }
-        .ant-radio-button-wrapper > span {
-          display: flex !important;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-          white-space: nowrap;
-        }
-
-        /* 修复卡片单选框重叠与原点偏移 */
-        .vf-card-radio {
-          display: flex !important;
-          position: relative;
-        }
-        /* 隐藏原生 Radio 按钮的原点，因为我们使用了卡片样式表示选中 */
-        .vf-card-radio .ant-radio {
-          position: absolute;
-          opacity: 0;
-          width: 0;
-          height: 0;
-          pointer-events: none;
-        }
-        /* 确保 label 容器撑满，以便卡片点击生效 */
-        .vf-card-radio > span:last-child {
-          display: block;
-          width: 100%;
-          padding: 0 !important;
-        }
-        
-        .vf-form-refined .ant-form-item-label {
-          padding-bottom: 8px !important;
-        }
+        .vf-card-radio .ant-radio { position: absolute; opacity: 0; width: 0; height: 0; }
+        .vf-card-radio > span:last-child { display: block; width: 100%; padding: 0 !important; }
       `}</style>
-    </Drawer>
+    </VFDrawer>
   );
 };

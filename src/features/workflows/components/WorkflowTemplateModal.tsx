@@ -7,6 +7,7 @@ import { TemplateGallery } from './TemplateGallery';
 import { ArchitecturePreview } from './ArchitecturePreview';
 import { CustomizePanel } from './CustomizePanel';
 import { useResponsive } from '../../../shared/hooks/useResponsive';
+import { VFText } from '../../../ui/VFText';
 
 export interface Template {
   id: string;
@@ -69,10 +70,11 @@ export const WorkflowTemplateModal: React.FC<Props> = ({ open, onCancel, onCreat
         {/* Header */}
         <header className="h-[60px] px-4 md:px-6 border-b border-divider flex items-center justify-between shrink-0 bg-bg-card z-10">
           <div className="flex items-center gap-3">
-            <LayoutGrid size={18} className="text-text-secondary" strokeWidth={2} />
-            <h2 className="m-0 text-[15px] font-bold text-text-primary tracking-tight">
+            <LayoutGrid size={18} className="text-brand" strokeWidth={2.5} />
+            {/* V1.4: Modal Header Title (Internal) = T4 Subhead */}
+            <VFText variant="t4" color="primary" className="tracking-tight">
               {t('workflows.templates.modalTitle')}
-            </h2>
+            </VFText>
           </div>
           <Button 
             type="text" 
@@ -101,12 +103,14 @@ export const WorkflowTemplateModal: React.FC<Props> = ({ open, onCancel, onCreat
             {selectedTemplate ? (
               <div className="flex flex-col h-full overflow-hidden">
                 <div className="px-6 md:px-8 py-5 md:py-7 border-b border-divider shrink-0 bg-bg-card">
-                  <h3 className="m-0 text-lg md:text-[22px] font-bold text-text-primary mb-1 tracking-tight leading-none">
+                  {/* V1.4: Main Title = T2 Page Title */}
+                  <VFText variant="t2" color="primary" className="tracking-tight mb-1 block">
                     {selectedTemplate.name}
-                  </h3>
-                  <p className="m-0 text-[13px] text-text-secondary leading-relaxed max-w-[560px]">
+                  </VFText>
+                  {/* V1.4: Description = T5 Body */}
+                  <VFText variant="t5" color="secondary" className="max-w-[560px] block">
                     {selectedTemplate.description}
-                  </p>
+                  </VFText>
                 </div>
 
                 <div className={`flex-1 flex overflow-hidden ${isTablet || isMobile ? 'flex-col' : 'flex-row'}`}>
@@ -123,12 +127,14 @@ export const WorkflowTemplateModal: React.FC<Props> = ({ open, onCancel, onCreat
                 <div className="w-16 h-16 rounded-full bg-brand/5 border border-brand/10 flex items-center justify-center text-brand/30 mb-5">
                   <MousePointerClick size={32} strokeWidth={1.5} />
                 </div>
-                <h4 className="text-[16px] font-bold text-text-primary mb-2">
+                {/* V1.4: Empty State Title = T4 Subhead */}
+                <VFText variant="t4" color="primary" className="mb-2 block">
                   {t('workflows.templates.emptyTitle')}
-                </h4>
-                <p className="text-[13px] text-text-tertiary max-w-[300px] leading-relaxed">
+                </VFText>
+                {/* V1.4: Empty State Desc = T6 Caption */}
+                <VFText variant="t6" color="tertiary" className="max-w-[300px] block">
                   {t('workflows.templates.emptyDesc')}
-                </p>
+                </VFText>
               </div>
             )}
 

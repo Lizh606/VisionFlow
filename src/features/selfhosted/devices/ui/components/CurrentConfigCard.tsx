@@ -6,6 +6,7 @@ import { Settings, History, Clock, User } from 'lucide-react';
 import { VFTag } from '../../../../../shared/ui/VFTag';
 import { VersionHistory } from '../../hooks/useWorkflowDeployment';
 import { useResponsive } from '../../../../../shared/hooks/useResponsive';
+import { VFText } from '../../../../../ui/VFText';
 
 interface Props {
   version?: VersionHistory;
@@ -30,9 +31,11 @@ export const CurrentConfigCard: React.FC<Props> = ({ version, onViewHistory }) =
 
           <div className="flex flex-col gap-1 overflow-hidden">
             <div className="flex items-center gap-3 flex-wrap">
-              <span className="text-base font-bold text-text-primary leading-tight">
+              {/* V1.4: Card Subhead = T4 (16/24, 600) */}
+              <VFText variant="t4" color="primary" className="leading-tight">
                 {isMobile ? version.version : `${t('selfhosted.deviceDetail.summary.configTitle')} ${version.version}`}
-              </span>
+              </VFText>
+              
               <VFTag 
                 variant="neutral" 
                 filled={false} 
@@ -43,31 +46,32 @@ export const CurrentConfigCard: React.FC<Props> = ({ version, onViewHistory }) =
             </div>
 
             {!isMobile && (
-              <div className="flex items-center gap-4 text-xs text-text-secondary font-medium">
+              <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1.5">
                   <Clock size={14} className="text-text-tertiary opacity-60" />
-                  <span>
+                  {/* V1.4: Meta = T6 */}
+                  <VFText variant="t6" color="secondary" className="font-medium">
                     {t('selfhosted.workflowDeployment.lastUpdated')}: 
                     <span className="ml-1 text-text-tertiary font-normal">{version.timestamp}</span>
-                  </span>
+                  </VFText>
                 </div>
                 
                 <span className="text-text-tertiary opacity-30 select-none">{"\u00b7"}</span>
                 
                 <div className="flex items-center gap-1.5">
                   <User size={14} className="text-text-tertiary opacity-60" />
-                  <span>
+                  <VFText variant="t6" color="secondary" className="font-medium">
                     {t('selfhosted.workflowDeployment.operator')}: 
                     <span className="ml-1 text-text-tertiary font-normal">{version.user}</span>
-                  </span>
+                  </VFText>
                 </div>
               </div>
             )}
             
             {isMobile && (
-              <div className="text-xs text-text-tertiary font-medium">
+              <VFText variant="t6" color="tertiary" className="font-medium">
                 {version.timestamp}
-              </div>
+              </VFText>
             )}
           </div>
         </Flex>

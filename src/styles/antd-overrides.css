@@ -4,119 +4,80 @@
 .ant-tag { border-radius: var(--vf-radius-tag) !important; }
 .ant-select-selector { border-radius: var(--vf-radius-control) !important; }
 .ant-input { border-radius: var(--vf-radius-control) !important; }
-.ant-modal-content { border-radius: var(--vf-radius-card) !important; }
+.ant-modal-content { 
+  border-radius: var(--vf-radius-card) !important; 
+  box-shadow: var(--vf-shadow-overlay) !important;
+  border: 1px solid rgba(var(--vf-border), 0.5) !important;
+}
 
-/* 屏蔽 Menu 默认的右侧边框，防止双栏布局出现重复的竖线 */
-.ant-menu-inline, 
-.ant-menu-vertical {
+/* 抽屉风格 (Spec 7.2) */
+.vf-drawer-standard .ant-drawer-content-holder {
+  box-shadow: var(--vf-shadow-overlay) !important;
+  border-inline-start: 1px solid rgba(var(--vf-border), 0.5) !important;
+}
+
+/* Sidebar Menu 核心重塑 */
+.vf-sidebar-menu.ant-menu-inline, 
+.vf-sidebar-menu.ant-menu-vertical {
   border-inline-end: none !important;
 }
 
-/* Button Style Overrides */
+/* 菜单项文字样式：对齐 T5 Body Strong */
+.vf-sidebar-menu .ant-menu-title-content {
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  letter-spacing: -0.01em;
+}
+
+/* 选中态：背景与文字颜色 */
+.vf-sidebar-menu .ant-menu-item-selected {
+  background-color: rgba(var(--vf-brand), 0.06) !important;
+  color: rgba(var(--vf-brand), 1) !important;
+}
+
+/* 选中态：图标颜色 */
+.vf-sidebar-menu .ant-menu-item-selected .ant-menu-item-icon {
+  color: rgba(var(--vf-brand), 1) !important;
+}
+
+/* Hover 态 */
+.vf-sidebar-menu .ant-menu-item:not(.ant-menu-item-selected):hover,
+.vf-sidebar-menu .ant-menu-submenu-title:hover {
+  background-color: rgba(var(--vf-hover), var(--vf-hover-alpha)) !important;
+}
+
+/* 侧边栏折叠后的弹出菜单 (Spec 4.3 & 7.1) */
+/* 确保弹出层 z-index 足够高，且拥有 VisionFlow 的卡片视觉 */
+.ant-menu-submenu-popup {
+  z-index: 1050 !important;
+}
+
+.ant-menu-submenu-popup .ant-menu {
+  background-color: #FFFFFF !important;
+  border-radius: var(--vf-radius-card) !important;
+  border: 1px solid rgba(var(--vf-border), 1) !important;
+  box-shadow: var(--vf-shadow-overlay) !important;
+  padding: 4px !important;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .ant-menu-submenu-popup .ant-menu {
+  background-color: #1E2330 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* 弹出菜单内的项间距优化 */
+.ant-menu-submenu-popup .ant-menu-item {
+  margin-block: 2px !important;
+  margin-inline: 4px !important;
+  width: calc(100% - 8px) !important;
+  border-radius: var(--vf-radius-control) !important;
+}
+
+/* Button 样式强化 */
 .ant-btn-primary:not(.ant-btn-dangerous) {
   background-color: rgba(var(--vf-brand), 1) !important;
   border-color: rgba(var(--vf-brand), 1) !important;
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.05);
   text-shadow: none !important;
-  color: #fff !important;
-}
-
-.ant-btn-primary:not(.ant-btn-dangerous):not(:disabled):hover {
-  background-color: rgba(var(--vf-brand-hover), 1) !important;
-  border-color: rgba(var(--vf-brand-hover), 1) !important;
-}
-
-.ant-btn-primary:not(.ant-btn-dangerous):not(:disabled):active {
-  background-color: rgba(var(--vf-brand-active), 1) !important;
-  border-color: rgba(var(--vf-brand-active), 1) !important;
-}
-
-.ant-btn-primary:disabled {
-  background-color: rgba(var(--vf-text-disabled), 0.15) !important;
-  border-color: transparent !important;
-  color: rgba(var(--vf-text-disabled), 1) !important;
-  opacity: 0.6;
-}
-
-.ant-btn-default:not(:disabled):hover {
-  color: rgba(var(--vf-brand), 1) !important;
-  border-color: rgba(var(--vf-brand), 1) !important;
-}
-
-.ant-btn-link:not(.ant-btn-dangerous) {
-  color: rgba(var(--vf-brand), 1);
-}
-
-.ant-btn-dangerous.ant-btn-dangerous {
-  color: rgba(var(--vf-error), 1) !important;
-}
-
-.ant-btn-primary.ant-btn-dangerous {
-  background-color: rgba(var(--vf-error), 1) !important;
-  border-color: rgba(var(--vf-error), 1) !important;
-  color: #fff !important;
-}
-
-.ant-drawer-header {
-  border-bottom: 1px solid rgba(var(--vf-divider), var(--vf-divider-alpha)) !important;
-}
-
-.ant-modal-header {
-  border-bottom: 1px solid rgba(var(--vf-divider), var(--vf-divider-alpha)) !important;
-  margin-bottom: 16px !important;
-  padding-bottom: 12px !important;
-}
-
-.ant-switch-inner-unchecked,
-.ant-switch-inner-checked {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-/* V1.4 Refined Segmented Control for Toolbars */
-.ant-segmented {
-  background: transparent !important;
-}
-
-.ant-segmented-item {
-  transition: all 0.2s ease !important;
-}
-
-.ant-segmented-item-selected {
-  box-shadow: none !important;
-}
-
-/* Sidebar System Dropdown specific overrides */
-.vf-system-dropdown .ant-dropdown-menu-item,
-.vf-system-dropdown .ant-dropdown-menu-submenu-title {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  padding: 8px 12px !important;
-}
-
-.vf-system-dropdown .ant-dropdown-menu-item-icon {
-  display: none !important;
-}
-
-.vf-system-dropdown .ant-dropdown-menu-title-content {
-  flex: 1 !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-.vf-system-dropdown .ant-dropdown-menu-submenu-expand-icon {
-  position: relative !important;
-  right: 0 !important;
-  margin-left: 8px !important;
-}
-
-/* 针对移动端弹出菜单向右溢出的样式兜底方案 */
-@media (max-width: 767px) {
-  /* 当主菜单使用 bottomRight 时，子菜单默认向右弹出，通过此样式强制其在无空间时向左偏移 */
-  .ant-dropdown-menu-submenu-popup {
-    margin-inline-start: -100% !important; /* 使子菜单相对于父菜单项向左偏移 */
-    transform: translateX(-12px) !important;
-  }
 }

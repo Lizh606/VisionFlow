@@ -1,16 +1,16 @@
 
 import React from 'react';
-import { Drawer, Button, Divider, Tooltip, Collapse, ConfigProvider } from 'antd';
+import { Drawer, Button, Divider, Tooltip, Collapse } from 'antd';
 import { 
-  Package, CheckCircle2, XCircle, 
-  ShieldCheck, HelpCircle, X,
+  Package, CheckCircle2, XCircle, X,
   Zap, ArrowUpRight, Info, Loader2,
-  ChevronDown, Activity
+  ChevronDown, Activity, ShieldCheck
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Purchase } from '../../types';
 import { VFTag } from '../../../../shared/ui/VFTag';
 import { useResponsive } from '../../../../shared/hooks/useResponsive';
+import { VFText } from '../../../../ui/VFText';
 import dayjs from 'dayjs';
 
 interface Props {
@@ -19,11 +19,15 @@ interface Props {
   onClose: () => void;
 }
 
-const InfoRow = ({ label, value }: { label: string, value: React.ReactNode }) => (
+const InfoRow = ({ label, value, tabular }: { label: string, value: React.ReactNode, tabular?: boolean }) => (
   <div className="flex items-baseline justify-between py-3 border-b border-divider/40 last:border-none min-h-[44px]">
-    <span className="text-[12px] font-normal text-text-secondary shrink-0">{label}</span>
-    <div className="text-[14px] font-semibold text-text-primary text-right truncate ml-4">
-      {value}
+    {/* V1.4: Label = T6 Caption */}
+    <VFText variant="t6" color="secondary" className="shrink-0">{label}</VFText>
+    <div className="text-right truncate ml-4 min-w-0">
+      {/* V1.4: Value = T5 Strong */}
+      <VFText variant="t5-strong" color="primary" tabularNums={tabular} truncate>
+        {value}
+      </VFText>
     </div>
   </div>
 );
@@ -34,12 +38,14 @@ const CapabilityCard = ({ label, enabled, desc }: { label: string, enabled: bool
       {enabled ? <CheckCircle2 size={16} strokeWidth={3} /> : <XCircle size={16} />}
     </div>
     <div className="flex flex-col gap-1 min-w-0">
-      <span className={`text-[14px] font-semibold leading-tight ${enabled ? 'text-text-primary' : 'text-text-tertiary'}`}>
+      {/* V1.4: Title = T5 Strong */}
+      <VFText variant="t5-strong" color={enabled ? 'primary' : 'tertiary'} className="leading-tight">
         {label}
-      </span>
-      <span className="text-[12px] font-normal text-text-tertiary leading-relaxed line-clamp-2">
+      </VFText>
+      {/* V1.4: Desc = T6 */}
+      <VFText variant="t6" color="tertiary" className="leading-relaxed">
         {desc}
-      </span>
+      </VFText>
     </div>
   </div>
 );
@@ -50,27 +56,15 @@ export const EntitlementDrawer: React.FC<Props> = ({ purchase, open, onClose }) 
   
   if (!purchase) return null;
 
-  const isReady = purchase.status === 'READY';
-  const isPending = purchase.status === 'PENDING';
-  const isExpired = purchase.status === 'EXPIRED';
-  const isFailed = purchase.status === 'FAILED';
-
-  const canStudio = isReady && purchase.entitlements.can_use;
-  const canDeploy = isReady && purchase.entitlements.can_self_host;
-
-  // Localized date string based on common.dateFormat token
-  const formatStr = t('common.dateFormat');
-  const purchasedDate = dayjs(purchase.purchasedAt).format(formatStr);
-  const expiryDate = purchase.expiryAt ? dayjs(purchase.expiryAt).format(formatStr) : t('marketplace.purchase.label.lifetime');
-
   return (
     <Drawer
       title={
         <div className="flex items-center gap-3">
           <Package size={20} className="text-brand" strokeWidth={2.5} />
-          <span className="font-semibold text-[20px] tracking-tight text-text-primary">
+          {/* V1.4: Title = T2 (24px) */}
+          <VFText variant="t2" color="primary" className="tracking-tight">
             {t('marketplace.entitlement.drawer.title')}
-          </span>
+          </VFText>
         </div>
       }
       placement="right"
@@ -78,155 +72,64 @@ export const EntitlementDrawer: React.FC<Props> = ({ purchase, open, onClose }) 
       onClose={onClose}
       open={open}
       closable={false}
-      extra={
-        <Button 
-          type="text" 
-          icon={<X size={20} />} 
-          onClick={onClose} 
-          className="hover:bg-action-hover rounded-full w-11 h-11 flex items-center justify-center transition-colors" 
-        />
-      }
+      extra={<Button type="text" icon={<X size={20} />} onClick={onClose} className="rounded-full w-10 h-10 flex items-center justify-center" />}
       className="vf-drawer-standard"
-      styles={{ 
-        body: { padding: 0, backgroundColor: 'rgba(var(--vf-bg-card), 1)' },
-        header: { padding: '16px 24px', borderBottom: '1px solid rgba(var(--vf-divider), var(--vf-divider-alpha))' },
-        footer: { padding: '16px 24px', borderTop: '1px solid rgba(var(--vf-divider), 0.5)', backgroundColor: 'white' }
-      }}
       footer={
-        <div className="flex flex-col gap-6">
-          <div className={`flex items-center justify-end gap-3 ${isMobile ? 'flex-col-reverse' : ''}`}>
-            <Button 
-              block={isMobile}
-              disabled={!canDeploy}
-              icon={<ArrowUpRight size={16} />}
-              className="h-10 px-5 font-semibold rounded-control border-border text-text-secondary hover:text-brand transition-all"
-              onClick={() => window.location.hash = '#/sh-devices'}
-            >
-              {t('marketplace.purchase.label.deploy')}
-            </Button>
-
-            <Button 
-              block={isMobile}
-              type="primary" 
-              disabled={!canStudio}
-              icon={<Zap size={16} />}
-              className="h-10 px-6 font-semibold rounded-control shadow-md"
-              onClick={() => window.location.hash = '#/workflows'}
-            >
-              {t('marketplace.detail.cta.openStudio')}
-            </Button>
-          </div>
-          <div className="flex justify-center">
-            <button className="text-text-secondary hover:text-text-primary font-medium text-[12px] h-auto p-0 flex items-center gap-1.5 transition-colors bg-transparent border-none cursor-pointer">
-              <HelpCircle size={14} /> {t('marketplace.entitlement.drawer.support')}
-            </button>
-          </div>
+        <div className="flex items-center justify-end gap-3 px-2">
+          <Button icon={<ArrowUpRight size={16} />} className="font-bold h-10 px-5 rounded-control">
+            {t('marketplace.purchase.label.deploy')}
+          </Button>
+          <Button type="primary" icon={<Zap size={16} />} className="font-bold h-10 px-6 rounded-control shadow-md">
+            {t('marketplace.detail.cta.openStudio')}
+          </Button>
         </div>
       }
     >
-      <div className={`flex flex-col gap-8 overflow-y-auto custom-scrollbar h-full ${isMobile ? 'p-5' : 'p-8'}`}>
-        
-        {/* 1. Identity Block */}
+      <div className={`flex flex-col gap-8 h-full ${isMobile ? 'p-5' : 'p-8'}`}>
+        {/* 1. Identity */}
         <section className="flex flex-col gap-2">
            <div className="flex items-center gap-2">
-              <VFTag variant="neutral" filled={false} className="font-bold uppercase tracking-tight text-[10px] h-5 opacity-60">
-                {purchase.type}
-              </VFTag>
-              <span className="text-[12px] font-normal text-text-secondary">
-                {t('marketplace.entitlement.drawer.purchasedAt', { date: purchasedDate })}
-              </span>
+              <VFTag variant="neutral" filled={false} className="font-bold text-[10px] h-5 opacity-60 uppercase">{purchase.type}</VFTag>
+              <VFText variant="t6" color="tertiary">
+                {t('marketplace.entitlement.drawer.purchasedAt', { date: dayjs(purchase.purchasedAt).format(t('common.dateFormat')) })}
+              </VFText>
            </div>
-           <Tooltip title={purchase.listingName}>
-              <h3 className="m-0 text-[18px] font-semibold text-text-primary leading-[1.3] line-clamp-2 tracking-tight">
-                {purchase.listingName}
-              </h3>
-           </Tooltip>
-           <span className="text-[14px] font-semibold text-brand uppercase tracking-wide">
+           <VFText variant="t3" color="primary" className="leading-tight tracking-tight">
+             {purchase.listingName}
+           </VFText>
+           <VFText variant="t5-strong" color="brand" className="uppercase tracking-wide">
              {purchase.planName || t('marketplace.purchase.label.fullAccess')}
-           </span>
+           </VFText>
         </section>
 
-        {/* 2. Access & Quota */}
+        {/* 2. Access Section */}
         <section className="flex flex-col gap-4">
-           <h4 className="text-[14px] font-semibold text-text-secondary m-0 flex items-center gap-2">
+           {/* V1.4: Section Title = T4 */}
+           <VFText variant="t4" color="secondary" className="flex items-center gap-2 font-bold">
              <Activity size={16} className="text-text-tertiary" /> {t('marketplace.entitlement.sections.access')}
-           </h4>
-           <div className="bg-transparent rounded-card border border-border p-5 flex flex-col shadow-none">
-              <InfoRow 
-                label={t('marketplace.entitlement.labels.expiry')} 
-                value={expiryDate} 
-              />
-              <InfoRow 
-                label={t('marketplace.entitlement.labels.quota')} 
-                value={purchase.entitlements.seats ? t('marketplace.entitlement.labels.activeStreams', { count: purchase.entitlements.seats }) : t('marketplace.entitlement.labels.unlimited')} 
-              />
-              <InfoRow 
-                label={t('marketplace.entitlement.labels.status')} 
-                value={
-                  isPending ? (
-                    <div className="flex items-center gap-2 text-info">
-                       <Loader2 size={12} className="animate-spin" />
-                       <span className="uppercase text-[10px] font-bold tracking-tight">{t('marketplace.purchase.status.syncing')}</span>
-                    </div>
-                  ) : (
-                    <VFTag variant={isReady ? 'success' : isExpired || isFailed ? 'error' : 'warning'} className="h-5 px-1.5 font-bold text-[10px] uppercase">
-                      {t(`marketplace.purchase.status.${purchase.status.toLowerCase()}` as any)}
-                    </VFTag>
-                  )
-                } 
-              />
+           </VFText>
+           <div className="bg-bg-page/20 rounded-card border border-border p-5 flex flex-col">
+              <InfoRow label={t('marketplace.entitlement.labels.expiry')} value={purchase.expiryAt ? dayjs(purchase.expiryAt).format(t('common.dateFormat')) : t('marketplace.purchase.label.lifetime')} tabular />
+              <InfoRow label={t('marketplace.entitlement.labels.quota')} value={purchase.entitlements.seats ? t('marketplace.entitlement.labels.activeStreams', { count: purchase.entitlements.seats }) : t('marketplace.entitlement.labels.unlimited')} tabular />
+              <InfoRow label={t('marketplace.entitlement.labels.status')} value={
+                <VFTag variant={purchase.status === 'READY' ? 'success' : 'warning'} filled className="h-5 px-2 font-bold uppercase text-[10px]">
+                  {purchase.status}
+                </VFTag>
+              } />
            </div>
         </section>
 
         {/* 3. Capabilities */}
         <section className="flex flex-col gap-4">
-           <h4 className="text-[14px] font-semibold text-text-secondary m-0 flex items-center gap-2">
+           <VFText variant="t4" color="secondary" className="flex items-center gap-2 font-bold">
              <ShieldCheck size={16} className="text-text-tertiary" /> {t('marketplace.entitlement.sections.capabilities')}
-           </h4>
+           </VFText>
            <div className="flex flex-col">
-              <CapabilityCard 
-                label={t('marketplace.entitlement.capabilities.commercial.title')} 
-                enabled={purchase.entitlements.can_use} 
-                desc={purchase.entitlements.can_use ? t('marketplace.entitlement.capabilities.commercial.enabled') : t('marketplace.entitlement.capabilities.commercial.disabled')}
-              />
-              <CapabilityCard 
-                label={t('marketplace.entitlement.capabilities.cloud.title')} 
-                enabled={purchase.entitlements.can_cloud_test} 
-                desc={purchase.entitlements.can_cloud_test ? t('marketplace.entitlement.capabilities.cloud.enabled') : t('marketplace.entitlement.capabilities.cloud.disabled')}
-              />
-              <CapabilityCard 
-                label={t('marketplace.entitlement.capabilities.edge.title')} 
-                enabled={purchase.entitlements.can_self_host} 
-                desc={purchase.entitlements.can_self_host ? t('marketplace.entitlement.capabilities.edge.enabled') : t('marketplace.entitlement.capabilities.edge.disabled')}
-              />
+              <CapabilityCard label={t('marketplace.entitlement.capabilities.commercial.title')} enabled={purchase.entitlements.can_use} desc={purchase.entitlements.can_use ? t('marketplace.entitlement.capabilities.commercial.enabled') : t('marketplace.entitlement.capabilities.commercial.disabled')} />
+              <CapabilityCard label={t('marketplace.entitlement.capabilities.edge.title')} enabled={purchase.entitlements.can_self_host} desc={purchase.entitlements.can_self_host ? t('marketplace.entitlement.capabilities.edge.enabled') : t('marketplace.entitlement.capabilities.edge.disabled')} />
            </div>
         </section>
-
-        {/* 4. Details Collapsible */}
-        <section className="mt-2">
-           <Collapse 
-             ghost 
-             expandIcon={({ isActive }) => <ChevronDown size={14} className={`text-text-tertiary transition-transform ${isActive ? 'rotate-180' : ''}`} />}
-             items={[{
-                key: 'details',
-                label: <span className="text-[11px] font-bold text-text-tertiary uppercase tracking-widest">{t('marketplace.entitlement.sections.metadata')}</span>,
-                children: (
-                  <div className="bg-bg-page/30 rounded-card border border-divider/60 p-4 flex flex-col gap-0.5">
-                    <InfoRow label={t('marketplace.entitlement.labels.id')} value={<span className="font-mono text-[11px] font-normal lowercase opacity-70">{purchase.id}</span>} />
-                    <InfoRow label={t('marketplace.entitlement.labels.listingId')} value={<span className="font-mono text-[11px] font-normal lowercase opacity-70">{purchase.listingId}</span>} />
-                    <InfoRow label={t('marketplace.entitlement.labels.billing')} value={<span className="font-normal">{t('marketplace.entitlement.labels.oneTime')}</span>} />
-                  </div>
-                )
-             }]}
-           />
-        </section>
       </div>
-
-      <style>{`
-        .vf-drawer-standard .ant-drawer-content-holder { box-shadow: var(--vf-shadow-overlay) !important; }
-        .vf-drawer-standard .ant-collapse-header { padding: 0 !important; }
-        .vf-drawer-standard .ant-collapse-content-box { padding: 12px 0 0 0 !important; }
-      `}</style>
     </Drawer>
   );
 };

@@ -3,6 +3,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { List as ListIcon, FileCheck, Activity, ArrowUpRight } from 'lucide-react';
 import { VFCard } from '../../../../../shared/ui/VFCard';
+import { VFText } from '../../../../../ui/VFText';
 
 // Sub-component: Shortcut Action (Spec B.1, B.2, B.3)
 // Enforces: Icon Top-Left, Title Bottom-Left, Hover Effects
@@ -45,11 +46,11 @@ const ShortcutAction: React.FC<{
       />
     </div>
 
-    {/* Bottom Row: Label */}
+    {/* Bottom Row: Label - Refined to V1.4 T5 Strong */}
     <div className="mt-auto">
-      <span className="text-sm font-semibold text-text-primary group-hover:text-brand transition-colors leading-tight block">
+      <VFText variant="t5-strong" color="primary" className="group-hover:text-brand transition-colors leading-tight block">
         {label}
-      </span>
+      </VFText>
     </div>
   </div>
 );

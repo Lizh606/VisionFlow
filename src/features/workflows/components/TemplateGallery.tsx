@@ -2,6 +2,7 @@
 import React, { useMemo } from 'react';
 import { FilePlus, Zap, Maximize, Box, ArrowDownWideNarrow, Type, Shield, Users, LucideIcon } from 'lucide-react';
 import { Template } from './WorkflowTemplateModal';
+import { VFText } from '../../../ui/VFText';
 
 const iconMap: Record<string, LucideIcon> = {
   FilePlus, Zap, Maximize, Box, ArrowDownWideNarrow, Type, Shield, Users
@@ -29,16 +30,14 @@ export const TemplateGallery: React.FC<Props> = ({ templates, selectedId, onSele
       <div className="flex-1 overflow-y-auto px-6 pb-6 custom-scrollbar">
         {Object.entries(groupedTemplates).map(([category, items]) => (
           <div key={category} className="flex flex-col mb-8 last:mb-0">
-            {/* Category Header */}
-            <div className="sticky top-0 z-10 bg-bg-card py-5 border-b border-divider/0">
-              <h3 className="m-0 text-[11px] font-bold text-text-tertiary uppercase tracking-[0.12em] opacity-60">
+            <div className="sticky top-0 z-10 bg-bg-card py-5">
+              {/* V1.4: Section Meta = T6 Caption Strong */}
+              <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-[0.12em] opacity-60">
                 {category}
-              </h3>
+              </VFText>
             </div>
             
-            {/* Template Grid */}
             <div className="grid grid-cols-2 gap-4 mt-1">
-              {/* Fix: Explicitly cast items to Template[] as Object.entries value inference can result in 'unknown' type */}
               {(items as Template[]).map(tpl => {
                 const Icon = iconMap[tpl.icon] || FilePlus;
                 const isSelected = selectedId === tpl.id;
@@ -54,7 +53,6 @@ export const TemplateGallery: React.FC<Props> = ({ templates, selectedId, onSele
                         : 'border-border bg-bg-card hover:border-border-strong hover:bg-bg-page/50'}
                     `}
                   >
-                    {/* Visual Area (Icon Block) */}
                     <div className={`
                       relative h-24 w-full flex items-center justify-center transition-colors
                       ${isSelected ? 'bg-brand/10 text-brand' : 'bg-bg-page/60 text-text-tertiary/70'}
@@ -70,11 +68,15 @@ export const TemplateGallery: React.FC<Props> = ({ templates, selectedId, onSele
                       )}
                     </div>
                     
-                    {/* Name Area (Bottom) */}
                     <div className="px-3.5 py-3.5 bg-bg-card flex-1 flex items-start border-t border-divider/40">
-                      <span className={`text-[12px] font-bold leading-[1.4] line-clamp-2 ${isSelected ? 'text-brand' : 'text-text-primary'}`}>
+                      {/* V1.4: Compact Item Title = T6 Body Strong */}
+                      <VFText 
+                        variant="t6" 
+                        color={isSelected ? 'brand' : 'primary'} 
+                        className="font-bold leading-[1.4] line-clamp-2"
+                      >
                         {tpl.name}
-                      </span>
+                      </VFText>
                     </div>
                   </div>
                 );

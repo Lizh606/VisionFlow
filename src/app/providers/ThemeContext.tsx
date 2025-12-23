@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import type { VFMode } from '../../design-system/tokens';
 
@@ -13,10 +14,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     // 1. Check local storage
     const saved = localStorage.getItem('vf-theme');
     if (saved === 'light' || saved === 'dark') return saved as VFMode;
-    // 2. Check system preference
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
+    // 2. Default to light (V1.4 Baseline & User Request)
     return 'light';
   });
 

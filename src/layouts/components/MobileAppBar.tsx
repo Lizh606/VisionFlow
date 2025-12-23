@@ -18,7 +18,7 @@ export const MobileAppBar: React.FC<MobileAppBarProps> = ({ onOpenMenu, onBrandC
         className="flex items-center gap-2.5 cursor-pointer active:opacity-70 transition-opacity flex-1 min-w-0 overflow-hidden mr-4"
         onClick={onBrandClick}
       >
-        <div className="w-9 h-9 flex-shrink-0 flex items-center justify-center overflow-hidden rounded-md">
+        <div className="w-9 h-9 flex-shrink-0 flex items-center justify-center overflow-hidden">
           <img 
             src="https://p.ipic.vip/vjblew.jpg" 
             alt="VisionFlow" 

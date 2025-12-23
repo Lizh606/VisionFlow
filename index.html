@@ -5,8 +5,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>VisionFlow</title>
-    <!-- System Favicon - Updated to the latest brand logo -->
     <link rel="icon" type="image/jpeg" href="https://p.ipic.vip/vjblew.jpg" />
+    <!-- Global Typography Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <script>
       window.global = window;
       window.process = { env: { NODE_ENV: 'development' } };
@@ -77,6 +81,24 @@
               },
               mask: "rgba(var(--vf-mask), var(--vf-mask-alpha))",
             },
+            fontSize: {
+              'vf-t1': ['var(--vf-font-size-t1)', 'var(--vf-lh-t1)'],
+              'vf-t2': ['var(--vf-font-size-t2)', 'var(--vf-lh-t2)'],
+              'vf-t3': ['var(--vf-font-size-t3)', 'var(--vf-lh-t3)'],
+              'vf-t4': ['var(--vf-font-size-t4)', 'var(--vf-lh-t4)'],
+              'vf-t5': ['var(--vf-font-size-t5)', 'var(--vf-lh-t5)'],
+              'vf-t6': ['var(--vf-font-size-t6)', 'var(--vf-lh-t6)'],
+              'vf-t7': ['var(--vf-font-size-t7)', 'var(--vf-lh-t7)'],
+            },
+            fontWeight: {
+              'vf-regular': 'var(--vf-font-weight-regular)',
+              'vf-medium': 'var(--vf-font-weight-medium)',
+              'vf-semibold': 'var(--vf-font-weight-semibold)',
+            },
+            fontFamily: {
+              sans: ['var(--vf-font-sans)'],
+              mono: ['var(--vf-font-mono)'],
+            },
             ringColor: {
               focus: "rgba(var(--vf-focus), var(--vf-focus-alpha))",
             },
@@ -103,7 +125,7 @@
             }
           }
         }
-      }
+      };
     </script>
   </head>
   <body>

@@ -2,8 +2,7 @@
 import React from 'react';
 import { 
   Edit2, Eye, Send, ExternalLink, 
-  ShieldCheck, Info, Ban, Archive, 
-  MessageSquare, FileText
+  ShieldCheck, Info, Ban, Archive
 } from 'lucide-react';
 import { Listing, ListingStatus } from '../../types';
 
@@ -52,7 +51,7 @@ export const getStatusConfig = (listing: Listing, t: any): StatusConfigDef => {
     },
     PUBLISHED: {
       tag: { variant: 'success', label: t('marketplace.seller.status.published') },
-      info: { text: t('marketplace.seller.notices.live'), icon: React.createElement(ShieldCheck, { size: 12, className: "text-success" }), type: 'default' },
+      info: { text: t('marketplace.seller.notices.live'), icon: React.createElement(ShieldCheck, { size: 12, className: 'text-success' }), type: 'default' },
       primary: { label: t('marketplace.seller.actions.liveStore'), icon: React.createElement(ExternalLink, { size: 14 }), action: 'live' },
       secondaryLeft: { label: t('marketplace.seller.wizard.launchPreview'), action: 'preview' },
       secondaryRight: { label: t('common.edit'), action: 'edit' }

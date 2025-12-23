@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { VFCard } from '../../../../shared/ui/VFCard';
+import { VFText } from '../../../../ui/VFText';
 
 interface Props {
   cover: React.ReactNode;
@@ -41,14 +42,14 @@ export const VFListingCardBase: React.FC<Props> = ({
 
       {/* 2. Content Section */}
       <div className="p-4 flex flex-col flex-1 min-h-0 gap-3">
-        {/* Header Row: Title */}
+        {/* Header Row: Title - Refined to V1.4 T5 Strong */}
         <div className="flex flex-col gap-1">
-          <h3 className="text-[15px] font-semibold text-text-primary m-0 line-clamp-2 leading-tight tracking-tight min-h-[36px]">
+          <VFText variant="t5-strong" as="h3" color="primary" className="m-0 line-clamp-2 leading-tight tracking-tight min-h-[36px]">
             {title}
-          </h3>
-          <div className="text-[12px] text-text-tertiary font-medium truncate opacity-70">
+          </VFText>
+          <VFText variant="t6" color="tertiary" className="font-medium truncate opacity-70">
             {meta}
-          </div>
+          </VFText>
         </div>
 
         {/* Key Info Callout (Optional) */}

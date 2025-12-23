@@ -12,6 +12,7 @@ import { DeploymentModeTag } from '../../../components/DeploymentModeTag';
 import { LicenseSelectModal } from '../../../components/LicenseSelectModal';
 import { VFTag } from '../../../../../shared/ui/VFTag';
 import { useResponsive } from '../../../../../shared/hooks/useResponsive';
+import { VFText } from '../../../../../ui/VFText';
 
 interface Props {
   device: Device;
@@ -32,13 +33,22 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
     message.success(t('common.copy'));
   };
 
-  const InfoRow = ({ label, value, copyable, empty }: { label: string, value: string | React.ReactNode, copyable?: string, empty?: boolean }) => (
+  const InfoRow = ({ label, value, copyable, empty, isId }: { label: string, value: string | React.ReactNode, copyable?: string, empty?: boolean, isId?: boolean }) => (
     <div className={`flex items-center justify-between py-2 border-b border-divider last:border-b-0 min-h-[44px] ${empty ? 'opacity-40' : ''}`}>
-      <span className="text-xs leading-[18px] font-normal text-text-tertiary">{label}</span>
-      <div className="flex items-center gap-2 overflow-hidden">
-        <div className={`text-sm font-medium text-text-primary leading-[22px] truncate max-w-[140px] sm:max-w-[160px] ${empty ? 'font-normal italic' : ''}`}>
+      {/* V1.4: Form Label = T5 Body Strong */}
+      <VFText variant="t5-strong" color="secondary" className="shrink-0">{label}</VFText>
+      
+      <div className="flex items-center gap-2 overflow-hidden ml-4">
+        {/* V1.4: ID/Hash = T7 Mono, Other Value = T5 Body */}
+        <VFText 
+          variant={isId ? "t7" : "t5"} 
+          color={empty ? "disabled" : "primary"} 
+          truncate 
+          className={`max-w-[140px] sm:max-w-[160px] ${empty ? 'italic' : ''}`}
+        >
           {empty ? '---' : value}
-        </div>
+        </VFText>
+        
         {copyable && !empty && (
           <Button 
             type="text" 
@@ -65,10 +75,10 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
           isAdmin ? (
             <Dropdown menu={{ items: modeMenuItems }} trigger={['click']} placement="bottomRight">
               <Button 
-                className="h-9 sm:h-8 flex items-center gap-1.5 px-3 text-sm font-medium border-border text-text-secondary rounded-control bg-bg-page/40"
+                className="h-9 flex items-center gap-1.5 px-3 text-sm font-medium border-border text-text-secondary rounded-control bg-bg-page/40"
               >
                 {device.deployment_mode === 'EDGE' ? <Server size={14} /> : <Cloud size={14} />}
-                {device.deployment_mode}
+                <span className="font-bold">{device.deployment_mode}</span>
                 <ChevronDown size={14} className="opacity-40" />
               </Button>
             </Dropdown>
@@ -82,13 +92,13 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
             <DeviceStatusTag status={device.status} />
           </div>
           <div className="flex flex-col">
-            <InfoRow label={t('selfhosted.deviceDetail.summary.deviceId')} value={device.device_id} copyable={device.device_id} />
-            <InfoRow label={t('selfhosted.deviceDetail.summary.runtimeId')} value={device.runtime_id} copyable={device.runtime_id} />
+            <InfoRow label={t('selfhosted.deviceDetail.summary.deviceId')} value={device.device_id} copyable={device.device_id} isId />
+            <InfoRow label={t('selfhosted.deviceDetail.summary.runtimeId')} value={device.runtime_id} copyable={device.runtime_id} isId />
             <InfoRow 
               label={t('selfhosted.deviceDetail.summary.lastSeen')} 
               value={
                 <Tooltip title={dayjs(device.last_seen_at).format('YYYY-MM-DD HH:mm:ss')}>
-                  <span className="text-text-secondary">{dayjs(device.last_seen_at).fromNow()}</span>
+                  <span>{dayjs(device.last_seen_at).fromNow()}</span>
                 </Tooltip>
               } 
             />
@@ -102,7 +112,7 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
           isAdmin && (
             <Button 
               type={isUnbound ? 'primary' : 'default'}
-              className={`h-9 sm:h-8 flex items-center gap-1.5 px-3 text-sm font-bold rounded-control ${!isUnbound ? 'text-brand border-brand hover:bg-brand/5' : 'bg-brand'}`}
+              className={`h-9 flex items-center gap-1.5 px-3 text-sm font-bold rounded-control ${!isUnbound ? 'text-brand border-brand hover:bg-brand/5' : 'bg-brand'}`}
               onClick={() => setLicModalOpen(true)}
             >
               <ExternalLink size={14} />
@@ -116,12 +126,12 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
              {isUnbound ? (
                <div className="flex items-center gap-2 text-warning animate-pulse">
                  <ShieldAlert size={18} />
-                 <span className="text-sm font-bold tracking-tight">{t('selfhosted.deviceDetail.summary.awaitingLicense')}</span>
+                 <VFText variant="t5-strong" color="inherit" className="tracking-tight">{t('selfhosted.deviceDetail.summary.awaitingLicense')}</VFText>
                </div>
              ) : (
-               <div className="text-base font-bold text-text-primary flex items-center gap-1.5 cursor-pointer hover:text-brand transition-colors">
-                  {device.license_name || 'N/A'} 
-                  <ExternalLink size={16} className="text-text-tertiary" />
+               <div className="flex items-center gap-1.5 cursor-pointer group">
+                  <VFText variant="t4" color="primary" className="group-hover:text-brand transition-colors">{device.license_name || 'N/A'}</VFText>
+                  <ExternalLink size={16} className="text-text-tertiary group-hover:text-brand transition-colors" />
                </div>
              )}
           </div>
@@ -139,7 +149,7 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
           !isUnbound && (
             <Button 
               type="text" 
-              className="h-9 sm:h-8 flex items-center gap-1.5 px-2.5 text-sm font-semibold text-text-secondary hover:text-brand hover:bg-action-hover rounded-control"
+              className="h-9 flex items-center gap-1.5 px-2.5 text-sm font-semibold text-text-secondary hover:text-brand hover:bg-action-hover rounded-control"
               icon={<History size={16} />}
             >
               {isMobile ? '' : t('selfhosted.deviceDetail.summary.viewHistory')}
@@ -152,12 +162,12 @@ export const DeviceSummaryCards: React.FC<Props> = ({ device, isAdmin, onModeCha
              {isUnbound ? (
                <div className="flex items-center gap-2 text-text-tertiary opacity-60">
                  <FileX size={18} />
-                 <span className="text-sm font-medium italic">{t('selfhosted.deviceDetail.summary.noConfigFound')}</span>
+                 <VFText variant="t5" color="inherit" className="italic">{t('selfhosted.deviceDetail.summary.noConfigFound')}</VFText>
                </div>
              ) : (
-               <div className="text-base font-bold text-text-primary flex items-center gap-2">
-                  {device.config_version}
-                  <VFTag variant="neutral" className="h-5 text-xs px-1.5 font-bold" filled={false}>
+               <div className="flex items-center gap-2">
+                  <VFText variant="t4" color="primary" className="font-mono">{device.config_version}</VFText>
+                  <VFTag variant="neutral" className="h-5 text-[10px] px-1.5 font-bold" filled={false}>
                     {t('selfhosted.workflowDeployment.latest')}
                   </VFTag>
                </div>

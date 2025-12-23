@@ -19,16 +19,15 @@ export const VFBrand: React.FC<VFBrandProps> = ({ collapsed, onClick, className 
     >
       <div className={`
         relative shrink-0 flex items-center justify-center 
-        overflow-hidden rounded-control
         transition-all duration-300 group-hover:scale-105
         ${collapsed ? 'w-10 h-10' : 'w-8 h-8'}
       `}>
         <img 
           src="https://p.ipic.vip/vjblew.jpg" 
           alt="VisionFlow Logo" 
-          className="w-full h-full object-cover" 
+          className="w-full h-full object-contain" 
         />
-        <div className="absolute inset-0 bg-brand/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+        {/* 确保没有任何遮罩或背景层干扰 Logo 纯净度 */}
       </div>
 
       {!collapsed && (

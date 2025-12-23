@@ -4,6 +4,7 @@ import { Button, Dropdown } from 'antd';
 import { Folder as FolderIcon, MoreVertical, Edit2, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Folder } from '../model/types';
+import { VFText } from '../../../ui/VFText';
 
 interface Props {
   folder: Folder;
@@ -17,7 +18,7 @@ export const FolderCard: React.FC<Props> = ({ folder, onClick }) => {
     <div 
       onClick={() => onClick(folder.id)}
       className="
-        group flex items-center justify-between h-[64px] md:h-[68px] px-3 md:px-4 
+        group flex items-center justify-between h-[64px] md:h-[68px] px-4 
         bg-bg-card border border-border rounded-card 
         hover:border-brand/40 hover:bg-action-hover 
         transition-all duration-200 cursor-pointer select-none
@@ -29,12 +30,14 @@ export const FolderCard: React.FC<Props> = ({ folder, onClick }) => {
         </div>
         
         <div className="flex flex-col min-w-0">
-          <span className="text-[13px] md:text-[14px] font-bold text-text-primary leading-tight truncate group-hover:text-brand transition-colors">
+          {/* V1.4: Card Title = T4 */}
+          <VFText variant="t4" color="primary" truncate className="group-hover:text-brand transition-colors">
             {folder.name}
-          </span>
-          <span className="text-[11px] md:text-[12px] text-text-secondary mt-1 font-medium opacity-70">
+          </VFText>
+          {/* V1.4: Meta = T6 */}
+          <VFText variant="t6" color="secondary" className="opacity-70">
             {t('workflows.folders.count', { count: folder.workflowCount })}
-          </span>
+          </VFText>
         </div>
       </div>
 

@@ -9,22 +9,18 @@ const vfColors = {
     brandHover: '#7F3DFF',
     brandActive: '#5B21B6',
     brandSoft: 'rgba(109, 41, 217, 0.06)', 
-    
     info: '#818CF8',
     success: '#0F9D58',  
     warning: '#FBBC04',  
     error: '#EA4335',    
-    
-    bgPage: '#F8FAFC',   /* V1.4 基准色 */
-    bgCard: '#FFFFFF',   /* V1.4 基准色 */
+    bgPage: '#F8FAFC',
+    bgCard: '#FFFFFF',
     bgOverlay: '#FFFFFF',
-    
     textPrimary: '#0F172A',   
     textSecondary: '#475569', 
     textTertiary: '#64748B',  
     textDisabled: '#94A3B8',  
-    
-    border: '#E2E8F0',    /* Slate-200 */
+    border: '#E2E8F0',
     divider: '#E2E8F0',
   },
   dark: {
@@ -32,21 +28,17 @@ const vfColors = {
     brandHover: '#B98CFF',
     brandActive: '#7F3DFF',
     brandSoft: 'rgba(155, 99, 255, 0.15)',
-
     info: '#A5B4FC',
     success: '#0F9D58',
     warning: '#FBBC04',
     error: '#EA4335',
-    
     bgPage: '#0B0F1A',   
     bgCard: '#111522',   
     bgOverlay: '#1E2330',
-    
     textPrimary: 'rgba(255, 255, 255, 1)',
     textSecondary: 'rgba(255, 255, 255, 0.85)',
     textTertiary: 'rgba(255, 255, 255, 0.65)',
     textDisabled: 'rgba(255, 255, 255, 0.35)',
-    
     border: 'rgba(255, 255, 255, 0.16)',
     divider: 'rgba(255, 255, 255, 0.12)',
   }
@@ -62,32 +54,36 @@ export function getAntdTheme(mode: VFMode): ThemeConfig {
       colorPrimary: colors.brand,
       colorPrimaryHover: colors.brandHover,
       colorPrimaryActive: colors.brandActive,
-      
       colorInfo: colors.info,
       colorSuccess: colors.success,
       colorWarning: colors.warning,
       colorError: colors.error,
-
       colorBgLayout: colors.bgPage,
       colorBgContainer: colors.bgCard,
       colorBgElevated: colors.bgOverlay,
-      
       colorText: colors.textPrimary,
       colorTextSecondary: colors.textSecondary,
       colorTextTertiary: colors.textTertiary,
       colorTextDisabled: colors.textDisabled,
-
       colorBorder: colors.border,
       colorSplit: colors.divider,
-
       borderRadius: 8,
       controlHeight: 40,
+      fontFamily: `var(--vf-font-sans)`,
+      fontSize: 14,
+      lineHeight: 1.5,
+      fontWeightStrong: 600,
     },
 
     components: {
+      Typography: {
+        fontWeightStrong: 600,
+        colorTextHeading: colors.textPrimary,
+      },
       Button: {
         borderRadius: 8,
         primaryShadow: 'none',
+        fontWeight: 500,
       },
       Card: {
         borderRadiusLG: 12,
@@ -102,17 +98,23 @@ export function getAntdTheme(mode: VFMode): ThemeConfig {
       Menu: {
         itemBg: 'transparent',
         subMenuItemBg: 'transparent',
-        itemSelectedBg: colors.brandSoft,
+        itemSelectedBg: isDark ? 'rgba(var(--vf-brand), 0.15)' : 'rgba(var(--vf-brand), 0.06)',
         itemSelectedColor: colors.brand,
+        itemHoverBg: 'rgba(var(--vf-hover), var(--vf-hover-alpha))',
+        itemActiveBg: 'rgba(var(--vf-brand), 0.1)',
+        itemColor: colors.textSecondary,
         itemBorderRadius: 8,
         itemMarginInline: 8, 
         iconMarginInlineEnd: 12,
+        itemHeight: 44, // 增加点击面积
+        fontSize: 14,
       },
       Table: {
-        headerBg: 'rgba(var(--vf-bg-page), 1)',
+        headerBg: colors.bgPage,
         headerColor: colors.textSecondary,
         headerSplitColor: colors.divider,
         borderColor: colors.border,
+        fontSize: 14,
       }
     },
   };

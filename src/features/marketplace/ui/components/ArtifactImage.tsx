@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Skeleton } from 'antd';
 import { Image as ImageIcon, RefreshCw, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { VFText } from '../../../../ui/VFText';
 
 interface Props {
   alt: string;
@@ -41,16 +42,16 @@ export const ArtifactImage: React.FC<Props> = ({ alt, className = "", forceFail 
       {status === 'error' && (
         <div className="flex flex-col items-center gap-2 px-4 text-center animate-in fade-in duration-300">
           <AlertCircle size={24} className="text-error opacity-60" />
-          <span className="text-[11px] font-bold text-text-tertiary uppercase tracking-tight">
+          <VFText variant="t6" color="tertiary" className="font-bold uppercase tracking-tight block">
             {t('common.retry', { defaultValue: 'Load Failed' })}
-          </span>
+          </VFText>
           <Button 
             size="small" 
             icon={<RefreshCw size={12} />} 
-            className="h-7 text-[10px] font-bold rounded-control"
+            className="h-7 rounded-control"
             onClick={handleRetry}
           >
-            {t('common.retry')}
+            <VFText variant="t6" color="inherit" className="font-bold">{t('common.retry')}</VFText>
           </Button>
         </div>
       )}
@@ -58,7 +59,7 @@ export const ArtifactImage: React.FC<Props> = ({ alt, className = "", forceFail 
       {status === 'success' && (
         <div className="flex flex-col items-center opacity-30 group-hover:scale-110 group-hover:opacity-50 transition-all duration-500">
           <ImageIcon size={48} strokeWidth={1} className="text-text-tertiary" />
-          <span className="text-[10px] font-bold mt-2 uppercase tracking-widest">{alt}</span>
+          <VFText variant="t6" color="tertiary" className="font-bold mt-2 uppercase tracking-widest block">{alt}</VFText>
         </div>
       )}
 

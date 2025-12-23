@@ -1,9 +1,8 @@
 
 import React, { useState, useMemo } from 'react';
-import { Button, Input, Select, Tooltip, Dropdown } from 'antd';
+import { Button, Select, Tooltip, Dropdown } from 'antd';
 import { 
-  Search, RefreshCw, Download, 
-  MoreVertical, AlertTriangle, Link, XCircle 
+  Download, MoreVertical, Link, XCircle, Plus
 } from 'lucide-react';
 import { useTranslation, Trans } from 'react-i18next';
 import dayjs from '../../../../config/dayjsConfig';
@@ -14,6 +13,7 @@ import { DeploymentModeTag } from '../../components/DeploymentModeTag';
 import { VFTable } from '../../../../shared/ui/VFTable';
 import { VFCard } from '../../../../shared/ui/VFCard';
 import { VFEmptyState } from '../../../../shared/ui/VFEmptyState';
+import { VFTableToolbar } from '../../../../ui/VFTableToolbar';
 import { useResponsive } from '../../../../shared/hooks/useResponsive';
 import { mockDevices } from '../../common/mockData';
 import { Device, DeviceStatus } from '../../common/types';
@@ -102,24 +102,12 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
       key: 'license',
       render: (_: any, r: Device) => (
         r.license_name ? (
-          <span className="text-text-secondary text-sm">{r.license_name}</span>
+          <span className="text-text-secondary text-sm font-medium">{r.license_name}</span>
         ) : (
           <span className="text-error text-xs font-bold bg-error/5 px-1.5 py-0.5 rounded border border-error/10">
             {t('selfhosted.devices.unbound')}
           </span>
         )
-      )
-    },
-    {
-      title: t('selfhosted.devices.cols.lastSeen'),
-      dataIndex: 'last_seen_at',
-      key: 'last_seen',
-      align: 'left' as const,
-      responsive: ['md'] as any,
-      render: (date: string) => (
-        <Tooltip title={dayjs(date).format('YYYY-MM-DD HH:mm:ss')}>
-          <span className="text-xs text-text-tertiary">{dayjs(date).fromNow()}</span>
-        </Tooltip>
       )
     },
     {
@@ -153,21 +141,15 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
       <PageHeader 
         title={t('selfhosted.devices.title')}
         actions={
-          <div className="flex gap-3">
-             <Button icon={<RefreshCw size={16} />} onClick={handleRefresh} className="h-10 rounded-control">
-               {t('common.refresh')}
-             </Button>
-             <Button icon={<Download size={16} />} className="h-10 rounded-control">
-               {t('common.export')}
-             </Button>
-          </div>
+          <Button type="primary" icon={<Plus size={16} />} className="h-10 rounded-control font-bold shadow-md">
+            Register Device
+          </Button>
         }
       />
 
       {pendingCount > 0 && (
         <div className="flex items-center justify-between px-4 py-3 bg-warning/5 border border-warning/20 rounded-card shadow-sm">
            <div className="flex items-center gap-3">
-              <AlertTriangle className="text-warning" size={20} />
               <span className="text-sm text-text-primary font-medium">
                 <Trans 
                   i18nKey="selfhosted.devices.alert.pendingMessage" 
@@ -180,57 +162,60 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
              type="link" 
              size="small" 
              className="!text-warning hover:opacity-75 font-bold p-0 transition-all underline underline-offset-4 text-xs"
-             onClick={() => {
-                setStatusFilter('PENDING_LICENSE');
-                setModeFilter('ALL');
-             }}
+             onClick={() => { setStatusFilter('PENDING_LICENSE'); setModeFilter('ALL'); }}
            >
              {t('selfhosted.devices.alert.filterAction')}
            </Button>
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row gap-4 justify-between bg-bg-card p-4 rounded-card border border-border shadow-sm">
-        <div className="flex flex-col sm:flex-row gap-3 flex-1">
-          <Input 
-            prefix={<Search size={16} className="text-text-tertiary" />}
-            placeholder={t('selfhosted.devices.searchPlaceholder')}
-            value={searchText}
-            onChange={e => setSearchText(e.target.value)}
-            className="w-full sm:w-64 h-10 rounded-control border-border"
-            allowClear
-          />
-          <Select 
-            placeholder={t('common.status')}
-            value={statusFilter} 
-            onChange={setStatusFilter}
-            options={[
-              { value: 'ALL', label: t('common.allStatus') },
-              { value: 'ONLINE', label: t('selfhosted.status.online') },
-              { value: 'OFFLINE', label: t('selfhosted.status.offline') },
-              { value: 'PENDING_LICENSE', label: t('selfhosted.status.pending') },
-              { value: 'DRAINING', label: t('selfhosted.status.maintenance') },
-            ]}
-            className="w-full sm:w-40 h-10"
-          />
-          <Select 
-            placeholder={t('selfhosted.deviceDetail.summary.mode')}
-            value={modeFilter} 
-            onChange={setModeFilter}
-            options={[
-              { value: 'ALL', label: t('common.allModes') },
-              { value: 'EDGE', label: 'EDGE' },
-              { value: 'CLOUD', label: 'CLOUD' },
-            ]}
-            className="w-full sm:w-40 h-10"
-          />
-        </div>
-      </div>
+      {/* 使用标准化的 VFTableToolbar */}
+      <VFTableToolbar
+        search={{
+          value: searchText,
+          onChange: setSearchText,
+          placeholder: t('selfhosted.devices.searchPlaceholder')
+        }}
+        filters={
+          <>
+            <Select 
+              placeholder={t('common.status')}
+              value={statusFilter} 
+              onChange={setStatusFilter}
+              options={[
+                { value: 'ALL', label: t('common.allStatus') },
+                { value: 'ONLINE', label: t('selfhosted.status.online') },
+                { value: 'OFFLINE', label: t('selfhosted.status.offline') },
+                { value: 'PENDING_LICENSE', label: t('selfhosted.status.pending') },
+              ]}
+              className="w-32 h-10"
+            />
+            <Select 
+              placeholder="Mode"
+              value={modeFilter} 
+              onChange={setModeFilter}
+              options={[
+                { value: 'ALL', label: 'All Modes' },
+                { value: 'EDGE', label: 'EDGE' },
+                { value: 'CLOUD', label: 'CLOUD' },
+              ]}
+              className="w-32 h-10"
+            />
+          </>
+        }
+        onRefresh={handleRefresh}
+        refreshing={loading}
+        actions={
+          <Button icon={<Download size={16} />} className="h-10 rounded-control font-semibold">
+            {t('common.export')}
+          </Button>
+        }
+      />
 
       <div className="min-h-[400px]">
         {loading ? (
-          <div className="bg-bg-card rounded-card border border-border h-64 flex items-center justify-center font-bold text-text-tertiary tracking-widest shadow-sm">
-            {t('common.loading')}
+          <div className="grid grid-cols-1 gap-4">
+            {[1, 2, 3].map(i => <div key={i} className="h-20 bg-bg-card rounded-card border border-divider animate-pulse" />)}
           </div>
         ) : isMobile ? (
           <div className="flex flex-col gap-4">
@@ -248,11 +233,6 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
                 </div>
               </VFCard>
             ))}
-            {filteredData.length === 0 && (
-              <div className="bg-bg-card rounded-card border border-border p-12 shadow-sm">
-                <VFEmptyState description={t('selfhosted.devices.noData')} />
-              </div>
-            )}
           </div>
         ) : (
           <VFTable 
@@ -260,9 +240,7 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
             columns={columns} 
             rowKey="id"
             pagination={{ pageSize: 10 }}
-            locale={{ emptyText: (
-              <div className="py-12"><VFEmptyState description={t('selfhosted.devices.noData')} /></div>
-            )}}
+            locale={{ emptyText: <div className="py-12"><VFEmptyState description={t('selfhosted.devices.noData')} /></div> }}
             onRow={(record) => ({
               className: 'cursor-pointer group',
               onClick: () => onDeviceClick?.(record.id)
@@ -271,27 +249,7 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
         )}
       </div>
 
-      <LicenseSelectModal 
-        open={bindModalOpen} 
-        onCancel={() => setBindModalOpen(false)}
-        onSelect={(lic) => {
-          setBindModalOpen(false);
-        }}
-      />
-      
-      <style>{`
-        .ant-table-thead > tr > th {
-          color: rgba(var(--vf-text-secondary), 1) !important;
-          font-weight: 500 !important;
-        }
-        .ant-table-tbody > tr > td {
-          font-weight: 400 !important;
-          color: rgba(var(--vf-text-primary), 1) !important;
-        }
-        .ant-table-tbody > tr > td:first-child {
-          font-weight: 500 !important;
-        }
-      `}</style>
+      <LicenseSelectModal open={bindModalOpen} onCancel={() => setBindModalOpen(false)} onSelect={() => setBindModalOpen(false)} />
     </div>
   );
 };

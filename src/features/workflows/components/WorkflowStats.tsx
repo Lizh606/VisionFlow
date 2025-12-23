@@ -1,28 +1,32 @@
+
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { VFStatCard } from '../../../shared/ui/VFStatCard';
 
 export const WorkflowStats: React.FC = () => {
+  const { t } = useTranslation();
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <VFStatCard 
-        title="Total Runs" 
+        title={t('workflows.stats.totalRuns')} 
         value="1,234" 
         trend="+12%" 
         trendStatus="success" 
-        footer="Compared to last week"
+        footer={t('workflows.stats.compareLastWeek')}
       />
       <VFStatCard 
-        title="System Status" 
-        value="Operational" 
+        title={t('workflows.stats.systemStatus')} 
+        value={t('workflows.stats.operational')} 
         trendStatus="success"
-        footer="All systems normal"
+        footer={t('workflows.stats.systemNormal')}
       />
       <VFStatCard 
-        title="Pending Tasks" 
+        title={t('workflows.stats.pendingTasks')} 
         value="5" 
-        trend="High Load" 
+        trend={t('workflows.stats.highLoad')} 
         trendStatus="warning"
-        footer="Estimated wait: 2m"
+        footer={t('workflows.stats.estWait', { min: 2 })}
       />
     </div>
   );

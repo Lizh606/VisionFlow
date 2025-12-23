@@ -3,7 +3,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Button, Row, Col, Divider, App, Tabs, Skeleton, Tooltip } from 'antd';
 import { 
   User, Calendar, Zap, Package, AlertCircle, RefreshCw, ShoppingCart, Layout,
-  CheckCircle2, Play, ArrowUpRight, ImageIcon
+  CheckCircle2, Play, ArrowUpRight, Image as ImageIcon
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
@@ -16,6 +16,7 @@ import { AuthModal } from './components/AuthModal';
 import { FavoriteButton } from './components/FavoriteButton';
 import { CloudTestModal } from './components/CloudTestModal';
 import { useResponsive } from '../../../shared/hooks/useResponsive';
+import { VFText } from '../../../ui/VFText';
 
 // Tabs
 import { OverviewPanel } from './tabs/OverviewPanel';
@@ -95,23 +96,32 @@ export const MarketplaceListingDetail: React.FC<{ listingId: string; onNavigate:
       <VFCard className="border-border shadow-none">
          <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-1">
-              <span className="text-[11px] font-bold text-text-tertiary uppercase tracking-wider">
-                {listing.purchased ? t('marketplace.purchase.status.ready') : t('marketplace.search.selection', { defaultValue: 'Selection' })}
-              </span>
+              {/* V1.4: Sub Section Header = T6 Caption Strong */}
+              <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-wider">
+                {listing.purchased ? t('marketplace.purchase.status.ready') : t('marketplace.search.selection')}
+              </VFText>
+              
               {listing.purchased ? (
                 <div className="flex items-center gap-2 text-success mt-1">
                   <CheckCircle2 size={20} />
-                  <span className="text-base font-bold uppercase tracking-tight">{t('marketplace.purchase.status.active')}</span>
+                  <VFText variant="t4" color="inherit" className="uppercase tracking-tight">
+                    {t('marketplace.purchase.status.active')}
+                  </VFText>
                 </div>
               ) : (
                 <div className="flex flex-col gap-0.5">
                   <div className="flex items-baseline gap-2">
-                     <span className="text-3xl font-bold text-text-primary tabular-nums">
+                     {/* V1.4: Price = T1 Display */}
+                     <VFText variant="t1" color="primary" tabularNums>
                        {activePlan ? (activePlan.price === 0 ? t('common.free') : `$${activePlan.price.toFixed(2)}`) : '---'}
-                     </span>
-                     {activePlan && activePlan.price > 0 && <span className="text-sm text-text-tertiary font-bold opacity-60">/ {activePlan.interval}</span>}
+                     </VFText>
+                     {activePlan && activePlan.price > 0 && (
+                       <VFText variant="t6" color="tertiary" className="font-bold opacity-60">/ {activePlan.interval}</VFText>
+                     )}
                   </div>
-                  {activePlan && <span className="text-xs text-brand font-bold">{activePlan.name}</span>}
+                  {activePlan && (
+                    <VFText variant="t6" color="brand" className="font-bold">{activePlan.name}</VFText>
+                  )}
                 </div>
               )}
             </div>
@@ -156,40 +166,49 @@ export const MarketplaceListingDetail: React.FC<{ listingId: string; onNavigate:
             </div>
 
             <div className="pt-5 border-t border-divider flex flex-col gap-3">
-               <div className="flex items-center justify-between text-xs font-bold">
-                  <span className="text-text-tertiary uppercase tracking-tight">{t('marketplace.installs', { defaultValue: 'Total Installs' })}</span>
-                  <span className="text-text-primary tabular-nums">{listing.installCount?.toLocaleString()}</span>
+               <div className="flex items-center justify-between">
+                  <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-tight">{t('marketplace.installs')}</VFText>
+                  <VFText variant="t6" color="primary" tabularNums className="font-bold">{listing.installCount?.toLocaleString()}</VFText>
                </div>
-               <div className="flex items-center justify-between text-xs font-bold">
-                  <span className="text-text-tertiary uppercase tracking-tight">{t('marketplace.rating', { defaultValue: 'Rating' })}</span>
+               <div className="flex items-center justify-between">
+                  <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-tight">{t('marketplace.rating')}</VFText>
                   <div className="flex items-center gap-1">
                     <CheckCircle2 size={14} className="text-success" />
-                    <span className="text-text-primary tabular-nums">{(listing.rating || 0).toFixed(1)}</span>
+                    <VFText variant="t6" color="primary" tabularNums className="font-bold">{(listing.rating || 0).toFixed(1)}</VFText>
                   </div>
                </div>
             </div>
          </div>
       </VFCard>
 
-      <VFCard title={t('marketplace.detail.sections.details', { defaultValue: 'Details' })} className="border-border shadow-none">
+      <VFCard title={t('marketplace.detail.sections.details')} className="border-border shadow-none">
          <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-text-tertiary flex items-center gap-2 font-bold"><User size={14} /> {t('marketplace.detail.author')}</span>
-              <span className="text-xs font-bold text-text-primary">{listing.author.name}</span>
+              {/* V1.4: Detail Row Label = T6 Strong */}
+              <VFText variant="t6" color="tertiary" className="flex items-center gap-2 font-bold uppercase tracking-tight">
+                <User size={14} /> {t('marketplace.detail.author')}
+              </VFText>
+              <VFText variant="t6" color="primary" className="font-bold">{listing.author.name}</VFText>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-xs text-text-tertiary flex items-center gap-2 font-bold"><Layout size={14} /> {t('marketplace.detail.category', { defaultValue: 'Category' })}</span>
+              <VFText variant="t6" color="tertiary" className="flex items-center gap-2 font-bold uppercase tracking-tight">
+                <Layout size={14} /> {t('marketplace.detail.category')}
+              </VFText>
               <VFTag variant="neutral" className="scale-90 origin-right font-bold">{t(`marketplace.type.${listing.type.toLowerCase()}` as any)}</VFTag>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-xs text-text-tertiary flex items-center gap-2 font-bold"><Calendar size={14} /> {t('marketplace.detail.published', { defaultValue: 'Published' })}</span>
-              <span className="text-xs font-bold text-text-secondary">{dayjs('2025-11-20').format(t('common.dateFormat'))}</span>
+              <VFText variant="t6" color="tertiary" className="flex items-center gap-2 font-bold uppercase tracking-tight">
+                <Calendar size={14} /> {t('marketplace.detail.published')}
+              </VFText>
+              <VFText variant="t6" color="secondary" className="font-bold">{dayjs('2025-11-20').format(t('common.dateFormat'))}</VFText>
             </div>
             <Divider className="m-0 opacity-40" />
             <div className="flex flex-col gap-3">
-              <span className="text-[11px] font-bold text-text-tertiary uppercase tracking-wider">{t('marketplace.detail.supportedDevices')}</span>
+              <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-wider">{t('marketplace.detail.supportedDevices')}</VFText>
               <div className="flex flex-wrap gap-2">
-                 {listing.supportedDevices.map(d => <VFTag key={d} variant="neutral" className="text-[10px] h-5 px-2 opacity-80" filled={false}>{d}</VFTag>)}
+                 {listing.supportedDevices.map(d => (
+                   <VFTag key={d} variant="neutral" className="text-[10px] h-5 px-2 opacity-80" filled={false}>{d}</VFTag>
+                 ))}
               </div>
             </div>
          </div>
@@ -215,7 +234,6 @@ export const MarketplaceListingDetail: React.FC<{ listingId: string; onNavigate:
                <ImageIcon size={isMobile ? 60 : 100} strokeWidth={1} />
             </div>
 
-            {/* Mobile: Selection Card appears here */}
             {isMobile && <div className="mt-2">{RightSidebar}</div>}
 
             <VFCard noPadding className="border-border shadow-none overflow-hidden">
@@ -237,9 +255,19 @@ export const MarketplaceListingDetail: React.FC<{ listingId: string; onNavigate:
 
       <style>{`
         .vf-detail-tabs .ant-tabs-nav::before { border: none !important; }
-        .vf-detail-tabs .ant-tabs-tab { padding: 14px 0 !important; margin: 0 24px 0 0 !important; }
+        .vf-detail-tabs .ant-tabs-tab { padding: 14px 0 !important; margin-right: 32px !important; }
         .vf-detail-tabs .ant-tabs-tab-btn { font-weight: 600 !important; font-size: 14px !important; }
-        .vf-detail-tabs .ant-tabs-content-holder { padding: ${isMobile ? '24px 16px' : '32px'} !important; }
+        .vf-detail-tabs .ant-tabs-ink-bar { height: 3px !important; border-radius: 3px 3px 0 0; }
+        
+        /* V1.4: 解决主内容贴边问题 */
+        .vf-detail-tabs .ant-tabs-content-holder { 
+          padding: 32px !important; 
+        }
+        @media (max-width: 767px) {
+          .vf-detail-tabs .ant-tabs-content-holder { 
+            padding: 20px !important; 
+          }
+        }
       `}</style>
     </div>
   );

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ArrowRight, MoreVertical, Clock } from 'lucide-react';
 import { List, Button, Dropdown } from 'antd';
@@ -5,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { VFTable } from '../../../shared/ui/VFTable';
 import { Workflow } from '../model/types';
 import { useResponsive } from '../../../shared/hooks/useResponsive';
+import { VFText } from '../../../ui/VFText';
 import dayjs from '../../../config/dayjsConfig';
 
 interface Props {
@@ -54,13 +56,17 @@ export const WorkflowsTable: React.FC<Props> = ({
               onClick={() => window.location.hash = `/workflows/${item.id}`}
             >
               <div className="flex items-center justify-between w-full gap-4">
-                <div className="flex flex-col gap-1.5 min-w-0 flex-1">
-                  <span className="font-semibold text-text-primary text-[16px] leading-tight truncate">
+                <div className="flex flex-col gap-1 min-w-0 flex-1">
+                  {/* Mobile Row Title: T4 */}
+                  <VFText variant="t4" color="primary" truncate>
                     {item.name}
-                  </span>
-                  <div className="flex items-center gap-1.5 text-text-secondary text-[12px]">
-                    <Clock size={14} className="opacity-60" />
-                    <span className="font-normal">{dayjs(item.updatedAt).fromNow()}</span>
+                  </VFText>
+                  <div className="flex items-center gap-1.5">
+                    <Clock size={12} className="text-text-tertiary" />
+                    {/* Mobile Meta: T6 */}
+                    <VFText variant="t6" color="secondary">
+                      {dayjs(item.updatedAt).fromNow()}
+                    </VFText>
                   </div>
                 </div>
 
@@ -77,7 +83,7 @@ export const WorkflowsTable: React.FC<Props> = ({
                   >
                     <Button 
                       type="text" 
-                      className="flex items-center justify-center w-11 h-11 text-text-tertiary hover:text-text-primary"
+                      className="flex items-center justify-center w-11 h-11 text-text-tertiary"
                       icon={<MoreVertical size={20} />} 
                     />
                   </Dropdown>
@@ -97,9 +103,10 @@ export const WorkflowsTable: React.FC<Props> = ({
       key: 'name',
       render: (text: string) => (
         <div className="flex items-center gap-2">
-          <span className="text-text-primary font-normal transition-colors group-hover:text-brand">
+          {/* V1.4: Cell Primary = T5 */}
+          <VFText variant="t5" color="primary" className="group-hover:text-brand transition-colors">
             {text}
-          </span>
+          </VFText>
           <ArrowRight 
             size={14} 
             className="text-brand opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 shrink-0" 
@@ -114,9 +121,10 @@ export const WorkflowsTable: React.FC<Props> = ({
       width: 200,
       align: 'left' as const,
       render: (date: string) => (
-        <span className="vf-td-timestamp">
+        /* V1.4: Meta = T6 (12px) */
+        <VFText variant="t6" color="tertiary" tabularNums>
           {dayjs(date).fromNow()}
-        </span>
+        </VFText>
       ),
     },
   ];
@@ -139,34 +147,6 @@ export const WorkflowsTable: React.FC<Props> = ({
           onClick: () => { window.location.hash = `/workflows/${record.id}`; }
         })}
       />
-      <style>{`
-        /* === V1.4 Typography & Hierarchy Refinement === */
-        
-        /* 1. Header: 500 weight, text-secondary (Slate-600) to act as a label */
-        .vf-workflows-table-container .ant-table-thead > tr > th {
-          color: rgba(var(--vf-text-secondary), 1) !important;
-          font-weight: 500 !important;
-          background: rgba(var(--vf-bg-card), 1) !important;
-        }
-
-        /* 2. Body: 400 weight, text-primary (Slate-900) to emphasize the data */
-        .vf-workflows-table-container .ant-table-tbody > tr > td {
-          font-weight: 400 !important;
-          color: rgba(var(--vf-text-primary), 1) !important;
-        }
-
-        /* 3. Ensure the first column doesn't override with bold */
-        .vf-workflows-table-container .ant-table-tbody > tr > td:first-child {
-          font-weight: 400 !important; 
-        }
-
-        /* 4. Timestamp styling */
-        .vf-workflows-table-container .vf-td-timestamp {
-          font-size: 12px !important;
-          line-height: 18px !important;
-          color: rgba(var(--vf-text-tertiary), 1);
-        }
-      `}</style>
     </div>
   );
 };

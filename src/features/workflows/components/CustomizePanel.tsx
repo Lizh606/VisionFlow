@@ -4,6 +4,7 @@ import { Tooltip, Button } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { Template } from './WorkflowTemplateModal';
 import { VFTag } from '../../../shared/ui/VFTag';
+import { VFText } from '../../../ui/VFText';
 
 interface Props {
   template: Template;
@@ -14,12 +15,12 @@ const VFModelRow: React.FC<{ modelName: string; isDefault?: boolean }> = ({ mode
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-col gap-1">
-        <h4 className="m-0 text-[13px] font-bold text-text-primary leading-tight">
-          Model
-        </h4>
-        <span className="text-[12px] text-text-tertiary font-medium opacity-70">
+        {/* V1.4: Field Label = T5 Body Strong */}
+        <VFText variant="t5-strong" color="primary">Model</VFText>
+        {/* V1.4: Meta Hint = T6 Caption */}
+        <VFText variant="t6" color="tertiary" className="opacity-70">
           {t('workflows.templates.pickModel')}
-        </span>
+        </VFText>
       </div>
 
       <div className="
@@ -29,9 +30,9 @@ const VFModelRow: React.FC<{ modelName: string; isDefault?: boolean }> = ({ mode
       ">
         <div className="flex items-center gap-2 min-w-0 flex-1">
           <Tooltip title={modelName}>
-            <span className="text-[13px] font-semibold text-text-primary truncate">
+            <VFText variant="t5-strong" color="primary" truncate>
               {modelName}
-            </span>
+            </VFText>
           </Tooltip>
           {isDefault && (
             <VFTag 
@@ -65,15 +66,16 @@ export const CustomizePanel: React.FC<Props> = ({ template }) => {
   return (
     <div className="flex flex-col h-full animate-in fade-in duration-500">
       <div className="mb-2">
-        <h3 className="m-0 text-[11px] font-bold text-text-tertiary uppercase tracking-[0.15em] opacity-60">
+        <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-[0.15em] opacity-60">
           {t('workflows.templates.customize')}
-        </h3>
+        </VFText>
       </div>
 
       <div className="mb-8">
-        <p className="m-0 text-[12px] text-text-secondary leading-[1.6] font-medium">
+        {/* V1.4: Main Description = T5 Body */}
+        <VFText variant="t5" color="secondary" className="leading-[1.6]">
           {t('workflows.templates.customizeDesc')}
-        </p>
+        </VFText>
       </div>
 
       <div className="flex flex-col gap-10">
@@ -82,16 +84,14 @@ export const CustomizePanel: React.FC<Props> = ({ template }) => {
         ) : (
           <div className="flex flex-col gap-3">
              <div className="flex flex-col gap-1">
-              <h4 className="m-0 text-[13px] font-bold text-text-primary leading-tight">
-                Model
-              </h4>
-              <span className="text-[12px] text-text-tertiary font-medium opacity-70">
+              <VFText variant="t5-strong" color="primary">Model</VFText>
+              <VFText variant="t6" color="tertiary" className="opacity-70">
                 {t('workflows.templates.noConfig')}
-              </span>
+              </VFText>
             </div>
-            <p className="m-0 text-[11px] text-text-tertiary italic leading-relaxed px-1">
+            <VFText variant="t6" color="tertiary" className="italic italic leading-relaxed px-1">
               {t('workflows.templates.noConfigDesc')}
-            </p>
+            </VFText>
           </div>
         )}
       </div>

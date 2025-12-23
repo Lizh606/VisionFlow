@@ -2,23 +2,27 @@
 import { useEffect, useState } from 'react';
 import { useTheme } from '../../app/providers/ThemeContext';
 
-// Helper to get RGB string from CSS variable
+// 严格对齐 V1.4 规范的色盘（数据色与状态色分离）
+const PALETTE = [
+  '#6D29D9', // Brand Primary
+  '#22C1C3', // Teal
+  '#818CF8', // Indigo
+  '#EC4899', // Pink
+  '#0EA5E9', // Sky
+  '#F59E0B', // Amber (Non-warning usage)
+];
+
 const getCssVar = (name: string) => {
   if (typeof window === 'undefined') return '';
-  const style = getComputedStyle(document.body);
-  const val = style.getPropertyValue(name).trim();
-  if (!val) return '';
-  const normalized = val.includes(',') ? val : val.split(' ').join(',');
-  return `rgb(${normalized})`;
+  const val = getComputedStyle(document.body).getPropertyValue(name).trim();
+  return val.includes(',') ? `rgb(${val})` : val;
 };
 
-const getCssVarWithAlpha = (name: string, alpha: number) => {
+const getCssVarRGBA = (name: string, alpha: number) => {
   if (typeof window === 'undefined') return '';
-  const style = getComputedStyle(document.body);
-  const val = style.getPropertyValue(name).trim();
-  if (!val) return '';
-  const normalized = val.includes(',') ? val : val.split(' ').join(',');
-  return `rgba(${normalized}, ${alpha})`;
+  const val = getComputedStyle(document.body).getPropertyValue(name).trim();
+  const clean = val.split(',').join(' ');
+  return `rgba(${clean}, ${alpha})`;
 };
 
 export const useChartTheme = () => {
@@ -26,100 +30,77 @@ export const useChartTheme = () => {
   const [themeConfig, setThemeConfig] = useState<any>(null);
 
   useEffect(() => {
+    // 延迟确保 CSS Variables 已注入 DOM
     const timer = setTimeout(() => {
       const isDark = mode === 'dark';
-      const textColor = getCssVar('--vf-text-secondary');
-      const subTextColor = getCssVar('--vf-text-tertiary');
-      const tooltipBg = getCssVar('--vf-bg-overlay');
-      const tooltipText = getCssVar('--vf-text-primary');
       
-      const axisLineColor = getCssVarWithAlpha('--vf-divider', isDark ? 0.15 : 1);
-      const splitLineColor = getCssVarWithAlpha('--vf-divider', isDark ? 0.12 : 1);
-      
-      const palette = [
-        '#22C1C3', 
-        isDark ? '#A5B4FC' : '#818CF8',
-        '#6D29D9',
-        '#FBBC04',
-        '#EA4335',
-        '#EC4899',
-      ];
+      const textSecondary = getCssVar('--vf-text-secondary');
+      const textTertiary = getCssVar('--vf-text-tertiary');
+      const dividerColor = getCssVarRGBA('--vf-divider', isDark ? 0.15 : 0.8);
+      const bgCard = getCssVar('--vf-bg-card');
 
       setThemeConfig({
-        color: palette,
+        color: PALETTE,
         backgroundColor: 'transparent',
         textStyle: {
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-        },
-        legend: {
-          textStyle: {
-            color: textColor,
-            fontSize: 12
-          }
+          fontFamily: 'var(--vf-font-sans)',
+          fontSize: 12,
         },
         tooltip: {
-          show: true,
           trigger: 'axis',
-          backgroundColor: tooltipBg,
-          borderColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)',
+          backgroundColor: isDark ? '#1E293B' : '#FFFFFF',
+          borderColor: dividerColor,
           borderWidth: 1,
-          textStyle: { color: tooltipText, fontSize: 12 },
-          padding: [8, 12],
+          padding: [10, 14],
           borderRadius: 8,
+          shadowColor: 'rgba(0,0,0,0.1)',
+          shadowBlur: 10,
+          textStyle: { color: getCssVar('--vf-text-primary'), fontSize: 13 },
+          axisPointer: {
+            lineStyle: { color: getCssVar('--vf-brand'), width: 1, type: 'dashed' }
+          }
+        },
+        legend: {
+          bottom: 0,
+          itemWidth: 8,
+          itemHeight: 8,
+          icon: 'circle',
+          textStyle: { color: textSecondary, fontWeight: 500 }
         },
         grid: {
           top: 40,
-          bottom: 10,
+          bottom: 48, // 预留给 Legend
           left: 10,
           right: 10,
           containLabel: true,
         },
         categoryAxis: {
-          axisLine: { 
-            show: true, 
-            lineStyle: { color: axisLineColor }
-          },
+          axisLine: { lineStyle: { color: dividerColor } },
           axisTick: { show: false },
-          axisLabel: { color: textColor, fontSize: 11, margin: 12 },
-          splitLine: { show: false },
-          nameTextStyle: {
-            color: subTextColor,
-            fontSize: 11
-          }
+          axisLabel: { color: textTertiary, margin: 12 },
+          splitLine: { show: false }
         },
         valueAxis: {
-          axisLine: { 
-            show: true, 
-            lineStyle: { color: axisLineColor }
-          },
+          axisLine: { show: false },
           axisTick: { show: false },
-          axisLabel: { color: textColor, fontSize: 11 },
+          axisLabel: { color: textTertiary },
           splitLine: { 
-            show: true,
-            lineStyle: { 
-              color: splitLineColor, 
-              type: 'dashed', 
-              width: 1 
-            }
-          },
-          nameTextStyle: {
-            color: subTextColor,
-            fontSize: 11
+            show: true, 
+            lineStyle: { color: dividerColor, type: 'dashed' } 
           }
         },
         line: {
           smooth: true,
           symbol: 'circle',
           symbolSize: 6,
-          lineStyle: { width: 2.5 }
+          lineStyle: { width: 3 }
         },
         bar: {
           itemStyle: { borderRadius: [4, 4, 0, 0] },
-          barMaxWidth: 32,
+          barMaxWidth: 24,
         }
       });
-    }, 100);
-
+    }, 150);
     return () => clearTimeout(timer);
   }, [mode]);
 

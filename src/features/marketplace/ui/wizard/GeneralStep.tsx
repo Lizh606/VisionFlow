@@ -4,18 +4,10 @@ import { Form, Input, Select, Row, Col } from 'antd';
 import { Monitor, Cloud, Cpu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { VFTag } from '../../../../shared/ui/VFTag';
+import { VFSection } from '../../../../ui/VFSection';
+import { VFText } from '../../../../ui/VFText';
 
 const { TextArea } = Input;
-
-const Section = ({ title, subtitle, children }: any) => (
-  <div className="flex flex-col gap-6 mb-10 animate-in fade-in slide-in-from-bottom-2 duration-300 last:mb-0">
-    <div className="flex flex-col gap-1 border-l-[3px] border-brand pl-4">
-      <h3 className="text-[18px] font-bold text-text-primary m-0 tracking-tight leading-tight">{title}</h3>
-      {subtitle && <p className="text-[11px] text-text-tertiary font-bold uppercase tracking-widest m-0 mt-1">{subtitle}</p>}
-    </div>
-    <div className="pt-1">{children}</div>
-  </div>
-);
 
 export const GeneralStep: React.FC = () => {
   const { t } = useTranslation();
@@ -37,44 +29,60 @@ export const GeneralStep: React.FC = () => {
     );
   };
 
+  // Fix: Made children optional to resolve TS error "Property 'children' is missing in type '{}' but required in type '{ children: React.ReactNode; }'" at usage sites.
+  const FieldLabel = ({ children }: { children?: React.ReactNode }) => (
+    /* V1.4: Label = T5 Body Strong */
+    <VFText variant="t5-strong" color="secondary" className="uppercase tracking-wider mb-1.5 block">
+      {children}
+    </VFText>
+  );
+
   return (
     <div className="animate-in fade-in">
-      <Section title={t('marketplace.seller.wizard.general.basicTitle')} subtitle={t('marketplace.seller.wizard.general.basicSubtitle')}>
+      <VFSection 
+        title={t('marketplace.seller.wizard.general.basicTitle')} 
+        description={t('marketplace.seller.wizard.general.basicSubtitle')}
+        level={3}
+      >
         <Form.Item 
-          label={<span className="text-[13px] font-bold text-text-secondary uppercase tracking-tight">{t('marketplace.seller.wizard.general.nameLabel')}</span>} 
+          label={<FieldLabel>{t('marketplace.seller.wizard.general.nameLabel')}</FieldLabel>} 
           name="name" 
           rules={[{ required: true, message: t('marketplace.seller.wizard.general.nameRequired') }]}
         >
-          <Input className="h-10 text-[14px] font-medium" placeholder={t('marketplace.seller.wizard.general.namePlaceholder')} />
+          <Input className="h-11 font-medium" placeholder={t('marketplace.seller.wizard.general.namePlaceholder')} />
         </Form.Item>
         <Form.Item 
-          label={<span className="text-[13px] font-bold text-text-secondary uppercase tracking-tight">{t('marketplace.seller.wizard.general.descLabel')}</span>} 
+          label={<FieldLabel>{t('marketplace.seller.wizard.general.descLabel')}</FieldLabel>} 
           name="shortDescription" 
           rules={[{ required: true, message: t('marketplace.seller.wizard.general.descRequired') }]}
         >
-          <TextArea rows={3} className="text-[14px] leading-relaxed font-normal" placeholder={t('marketplace.seller.wizard.general.descPlaceholder')} showCount maxLength={120} />
+          <TextArea rows={3} className="leading-relaxed font-normal p-3" placeholder={t('marketplace.seller.wizard.general.descPlaceholder')} showCount maxLength={120} />
         </Form.Item>
-      </Section>
+      </VFSection>
 
-      <Section title={t('marketplace.seller.wizard.general.classTitle')} subtitle={t('marketplace.seller.wizard.general.classSubtitle')}>
+      <VFSection 
+        title={t('marketplace.seller.wizard.general.classTitle')} 
+        description={t('marketplace.seller.wizard.general.classSubtitle')}
+        level={3}
+      >
         <Row gutter={[24, 20]}>
           <Col xs={24} md={12}>
-            <Form.Item label={<span className="text-[13px] font-bold text-text-secondary uppercase tracking-tight">{t('marketplace.seller.wizard.general.tagsLabel')}</span>} name="tags" rules={[{ required: true }]}>
-              <Select mode="tags" className="w-full min-h-[40px]" placeholder="e.g. Traffic, Safety" options={[{ value: 'Traffic' }, { value: 'Safety' }, { value: 'Industrial' }]} />
+            <Form.Item label={<FieldLabel>{t('marketplace.seller.wizard.general.tagsLabel')}</FieldLabel>} name="tags" rules={[{ required: true }]}>
+              <Select mode="tags" className="w-full min-h-[44px]" placeholder="e.g. Traffic, Safety" options={[{ value: 'Traffic' }, { value: 'Safety' }, { value: 'Industrial' }]} />
             </Form.Item>
           </Col>
           <Col xs={24} md={12}>
-            <Form.Item label={<span className="text-[13px] font-bold text-text-secondary uppercase tracking-tight">{t('marketplace.seller.wizard.general.taskLabel')}</span>} name="taskType" rules={[{ required: true }]}>
-              <Select className="h-10 text-[14px]" placeholder="Select task type" options={[{ label: 'Object Detection', value: 'det' }, { label: 'OCR', value: 'ocr' }]} />
+            <Form.Item label={<FieldLabel>{t('marketplace.seller.wizard.general.taskLabel')}</FieldLabel>} name="taskType" rules={[{ required: true }]}>
+              <Select className="h-11" placeholder="Select task type" options={[{ label: 'Object Detection', value: 'det' }, { label: 'OCR', value: 'ocr' }]} />
             </Form.Item>
           </Col>
           <Col xs={24} md={24}>
-            <Form.Item label={<span className="text-[13px] font-bold text-text-secondary uppercase tracking-tight">{t('marketplace.seller.wizard.general.devicesLabel')}</span>} name="supportedDevices" rules={[{ required: true }]}>
-              <Select mode="tags" className="w-full min-h-[40px]" tagRender={deviceTagRender} placeholder={t('marketplace.seller.wizard.general.devicesPlaceholder')} options={[{ value: 'VisionFlow Cloud' }, { value: 'NVIDIA Jetson Nano' }, { value: 'Standard x86 PC' }]} />
+            <Form.Item label={<FieldLabel>{t('marketplace.seller.wizard.general.devicesLabel')}</FieldLabel>} name="supportedDevices" rules={[{ required: true }]}>
+              <Select mode="tags" className="w-full min-h-[44px]" tagRender={deviceTagRender} placeholder={t('marketplace.seller.wizard.general.devicesPlaceholder')} options={[{ value: 'VisionFlow Cloud' }, { value: 'NVIDIA Jetson Nano' }, { value: 'Standard x86 PC' }]} />
             </Form.Item>
           </Col>
         </Row>
-      </Section>
+      </VFSection>
     </div>
   );
 };

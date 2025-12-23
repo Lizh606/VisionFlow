@@ -59,7 +59,10 @@ export const selfhosted = {
     "maintenance": "Draining",
     "error": "Error",
     "pending": "License Required",
-    "decommissioned": "Decommissioned"
+    "decommissioned": "Decommissioned",
+    "running": "Running",
+    "paused": "Paused",
+    "disabled": "Disabled"
   },
   "mode": {
     "edgeDesc": "Local edge processing.",
@@ -70,7 +73,11 @@ export const selfhosted = {
   "actions": {
     "bind": "Bind License",
     "drain": "Drain",
-    "view": "View Details"
+    "view": "View Details",
+    "edit": "Edit",
+    "delete": "Delete",
+    "start": "Start",
+    "pause": "Pause"
   },
   "devices": {
     "title": "Device Fleet",
@@ -192,7 +199,20 @@ export const selfhosted = {
     "rollbackDesc": "This will revert the device configuration to version {{version}}.",
     "rollbackConfirm": "Yes, Rollback",
     "noSnapshot": "No configuration details in this version",
-    "loadingDiff": "Calculating configuration diff..."
+    "loadingDiff": "Calculating configuration diff...",
+    "historyType": {
+      "initial": "INITIAL",
+      "update": "UPDATE",
+      "rollback": "ROLLBACK"
+    },
+    "telemetryLevel": {
+      "heartbeat": "Heartbeat Only",
+      "heartbeatDesc": "Online check with minimal overhead.",
+      "metrics": "Standard Metrics",
+      "metricsDesc": "Throughput, FPS and Error rates.",
+      "diagnostic": "Diagnostic Traces",
+      "diagnosticDesc": "Full pipeline trace for debugging."
+    }
   },
   "usage": {
     "dim": "Dimension",

@@ -12,25 +12,41 @@
   --vf-error: 234, 67, 53;
   --vf-teal: 34, 193, 195;
 
+  /* --- Typography (V1.4 Spec) --- */
+  /* Font Family */
+  --vf-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --vf-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Font Weights */
+  --vf-font-weight-regular: 400;
+  --vf-font-weight-medium: 500;
+  --vf-font-weight-semibold: 600;
+
+  /* Font Sizes & Line Heights */
+  --vf-font-size-t1: 28px; --vf-lh-t1: 36px;
+  --vf-font-size-t2: 24px; --vf-lh-t2: 32px; /* Default T2 */
+  --vf-font-size-t3: 20px; --vf-lh-t3: 28px;
+  --vf-font-size-t4: 16px; --vf-lh-t4: 24px;
+  --vf-font-size-t5: 14px; --vf-lh-t5: 22px;
+  --vf-font-size-t6: 12px; --vf-lh-t6: 18px;
+  --vf-font-size-t7: 13px; --vf-lh-t7: 20px;
+
   /* --- Surface (V1.4 Spec) --- */
-  /* Content 画布背景: #F8FAFC */
   --vf-bg-page: 248, 250, 252; 
-  /* Sidebar/Card 背景: #FFFFFF */
   --vf-bg-card: 255, 255, 255;
   --vf-bg-raised: 255, 255, 255;
   --vf-bg-overlay: 255, 255, 255;
   --vf-bg-input: 255, 255, 255;
   --vf-bg-input-alpha: 1;
 
-  /* --- Text --- */
-  --vf-text-primary: 15, 23, 42; /* Slate-900 */
-  --vf-text-secondary: 71, 85, 105; /* Slate-600 */
-  --vf-text-tertiary: 100, 116, 139; /* Slate-500 */
-  --vf-text-disabled: 148, 163, 184; /* Slate-400 */
+  /* --- Text Colors --- */
+  --vf-text-primary: 15, 23, 42;
+  --vf-text-secondary: 71, 85, 105;
+  --vf-text-tertiary: 100, 116, 139;
+  --vf-text-disabled: 148, 163, 184;
   --vf-text-inverse: 255, 255, 255;
 
-  /* --- Border + Divider (Crucial for V1.4 Hierarchy) --- */
-  /* 使用 Slate-200 确保在 #F8FAFC 上清晰可见 */
+  /* --- Border + Divider --- */
   --vf-border: 226, 232, 240; 
   --vf-border-strong: 203, 213, 225;
   --vf-divider: 226, 232, 240;
@@ -38,13 +54,13 @@
   --vf-border-strong-alpha: 1;
   --vf-divider-alpha: 1;
 
-  /* --- Action bg --- */
+  /* --- Action --- */
   --vf-hover: 15, 23, 42;
   --vf-hover-alpha: 0.04;
   --vf-active: 15, 23, 42;
   --vf-active-alpha: 0.08;
 
-  /* --- Focus ring --- */
+  /* --- Focus --- */
   --vf-focus: 155, 99, 255;
   --vf-focus-alpha: 0.28;
 
@@ -53,9 +69,17 @@
   --vf-radius-control: 8px;
   --vf-radius-card: 12px;
 
-  /* --- Shadow (Restrained) --- */
+  /* --- Shadow --- */
   --vf-shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
   --vf-shadow-overlay: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Mobile T2 Downgrade Logic (V1.4 Spec Section 5.3) */
+@media (max-width: 767px) {
+  :root {
+    --vf-font-size-t2: 20px;
+    --vf-lh-t2: 28px;
+  }
 }
 
 [data-theme="dark"] {
@@ -90,11 +114,15 @@
   --vf-shadow-overlay: 0 10px 28px rgba(0,0,0,0.4);
 }
 
-.border-divider {
-  border-color: rgba(var(--vf-divider), var(--vf-divider-alpha)) !important;
-}
-
 body {
   background-color: rgba(var(--vf-bg-page), 1);
   color: rgba(var(--vf-text-primary), 1);
+  font-family: var(--vf-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tabular numbers for consistency */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }

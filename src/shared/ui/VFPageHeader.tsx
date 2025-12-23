@@ -4,6 +4,7 @@ import { Button } from 'antd';
 import { ChevronLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useResponsive } from '../../shared/hooks/useResponsive';
+import { VFText } from '../../ui/VFText';
 
 interface VFPageHeaderProps {
   title: React.ReactNode;
@@ -23,17 +24,11 @@ export const VFPageHeader: React.FC<VFPageHeaderProps> = ({
   className = ''
 }) => {
   const { isMobile } = useResponsive();
-  const { t } = useTranslation();
 
   return (
-    <div className={`
-      flex flex-col gap-4 
-      ${showDivider ? 'pb-4 border-b border-divider' : ''} 
-      ${className}
-    `}>
+    <div className={`flex flex-col gap-4 ${showDivider ? 'pb-4 border-b border-divider' : ''} ${className}`}>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="flex items-start gap-4 flex-1 min-w-0">
-          {/* Back Button (Desktop style) */}
           {onBack && !isMobile && (
             <Button 
               type="text" 
@@ -44,8 +39,8 @@ export const VFPageHeader: React.FC<VFPageHeaderProps> = ({
           )}
 
           <div className="flex flex-col gap-1 min-w-0 overflow-hidden">
-            {/* T2 Page Title (24px, 600 weight) */}
-            <h1 className="text-2xl font-semibold text-text-primary m-0 tracking-tight leading-tight flex items-center gap-3 truncate">
+            {/* T2 Page Title (24px/32px, 600 weight) */}
+            <VFText variant="t2" as="h1" className="m-0 flex items-center gap-3">
               {onBack && isMobile && (
                  <ChevronLeft 
                    size={20} 
@@ -54,12 +49,13 @@ export const VFPageHeader: React.FC<VFPageHeaderProps> = ({
                  />
               )}
               <span className="truncate">{title}</span>
-            </h1>
-            {/* T5 Body Secondary (14px, 400 weight) */}
+            </VFText>
+            
+            {/* T5 Body Secondary (14px/22px, 400 weight) */}
             {description && (
-              <p className="text-text-secondary m-0 text-sm max-w-2xl leading-relaxed">
+              <VFText variant="t5" color="secondary" className="max-w-2xl">
                 {description}
-              </p>
+              </VFText>
             )}
           </div>
         </div>

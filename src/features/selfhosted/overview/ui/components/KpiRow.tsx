@@ -2,7 +2,7 @@
 import React from 'react';
 import { Progress, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { Info, Ticket, AlertCircle, Layers } from 'lucide-react';
+import { Info, Ticket, AlertCircle, Layers, ArrowRight } from 'lucide-react';
 import { VFCard } from '../../../../../shared/ui/VFCard';
 import { LicenseKPI } from '../../model/types';
 
@@ -94,8 +94,8 @@ export const KpiRow: React.FC<KpiRowProps> = ({ data }) => {
            <div className="text-3xl font-bold text-brand group-hover:scale-105 transition-transform origin-left">
              {data.pendingDevices}
            </div>
-           <div className="text-xs text-brand font-medium">
-             Click to assign licenses &rarr;
+           <div className="text-xs text-brand font-medium flex items-center gap-1">
+             Click to assign licenses <ArrowRight size={12} />
            </div>
          </div>
       </VFCard>

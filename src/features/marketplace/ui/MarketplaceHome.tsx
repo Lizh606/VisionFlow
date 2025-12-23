@@ -10,6 +10,7 @@ import { ListingCard } from './components/ListingCard';
 import { AuthModal } from './components/AuthModal';
 import { VFTag } from '../../../shared/ui/VFTag';
 import { useResponsive } from '../../../shared/hooks/useResponsive';
+import { VFText } from '../../../ui/VFText';
 
 export const MarketplaceHome: React.FC<{ onNavigate: (p: string) => void }> = ({ onNavigate }) => {
   const { t } = useTranslation();
@@ -50,7 +51,7 @@ export const MarketplaceHome: React.FC<{ onNavigate: (p: string) => void }> = ({
         }
       />
 
-      {/* Hero Section - V1.4 Refinement */}
+      {/* Hero Section */}
       <div className="bg-bg-card rounded-card border border-border p-6 md:p-10 relative overflow-hidden">
         <div className="absolute -top-10 -right-10 opacity-[0.03] pointer-events-none text-brand">
            <Zap size={isMobile ? 120 : 240} strokeWidth={1.5} />
@@ -58,12 +59,14 @@ export const MarketplaceHome: React.FC<{ onNavigate: (p: string) => void }> = ({
         
         <div className="max-w-2xl relative z-10 flex flex-col gap-6">
           <div className="flex flex-col gap-2">
-            <h2 className="text-2xl md:text-3xl font-semibold text-text-primary m-0 tracking-tight leading-tight">
+            {/* V1.4: Hero Title = T1 Display */}
+            <VFText variant="t1" color="primary" className="leading-tight">
               {t('marketplace.home.heroTitle')}
-            </h2>
-            <p className="text-text-secondary text-sm md:text-base leading-relaxed max-w-[500px]">
+            </VFText>
+            {/* V1.4: Description = T5 Body */}
+            <VFText variant="t5" color="secondary" className="max-w-[500px] leading-relaxed">
               {t('marketplace.home.heroDesc')}
-            </p>
+            </VFText>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 max-w-lg">
@@ -78,14 +81,15 @@ export const MarketplaceHome: React.FC<{ onNavigate: (p: string) => void }> = ({
               className="h-11 md:h-12 px-8 rounded-control font-bold"
               onClick={handleSearchClick}
             >
-              {t('common.search', { defaultValue: 'Search' })}
+              {t('common.search')}
             </Button>
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
-            <span className="text-[11px] font-bold text-text-tertiary uppercase tracking-wider">
-              {t('marketplace.search.trending', { defaultValue: 'Trending' })}:
-            </span>
+            {/* V1.4: Meta Label = T6 Caption Strong */}
+            <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-wider">
+              {t('marketplace.search.trending')}:
+            </VFText>
             {['YOLOv10', 'PPE Detection', 'OCR'].map(tag => (
               <VFTag 
                 key={tag} 
@@ -105,9 +109,10 @@ export const MarketplaceHome: React.FC<{ onNavigate: (p: string) => void }> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
              <TrendingUp size={18} className="text-brand" />
-             <h2 className="text-lg md:text-xl font-semibold text-text-primary m-0">
+             {/* V1.4: Section Title = T3 */}
+             <VFText variant="t3" color="primary">
                {t('marketplace.home.featuredTitle')}
-             </h2>
+             </VFText>
           </div>
           <Button 
             type="link" 

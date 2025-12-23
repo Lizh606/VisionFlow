@@ -1,9 +1,10 @@
 
 import React, { useMemo } from 'react';
 import { Form } from 'antd';
-import { Shield, ShieldCheck, Info, CheckCircle2 } from 'lucide-react';
+import { Shield, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { VFTag } from '../../../../shared/ui/VFTag';
+import { VFText } from '../../../../ui/VFText';
 
 interface PlanOption {
   code: string;
@@ -53,23 +54,23 @@ const PlanSelector: React.FC<PlanSelectorProps> = ({ value, onChange, plans }) =
 
               {/* 中间计划详情 - T4 Title + T5 Body */}
               <div className="flex flex-col gap-0.5 min-w-0 pr-4">
-                <h4 className={`text-[16px] font-semibold m-0 transition-colors leading-tight ${isSelected ? 'text-brand' : 'text-text-primary'}`}>
+                <VFText variant="t4" color={isSelected ? 'brand' : 'primary'} className="m-0 transition-colors leading-tight">
                   {plan.name}
-                </h4>
-                <p className="text-[14px] text-text-secondary font-normal m-0 opacity-70 truncate leading-relaxed">
+                </VFText>
+                <VFText variant="t5" color="secondary" className="m-0 opacity-70 truncate leading-relaxed">
                   {plan.description}
-                </p>
+                </VFText>
               </div>
             </div>
 
             {/* 右侧价格 - T3 Section Title 级别对齐 */}
             <div className="flex flex-col items-end gap-1.5 shrink-0 ml-4">
               <div className="flex items-baseline gap-1">
-                <span className={`text-[20px] font-bold tabular-nums tracking-tight transition-colors ${isSelected ? 'text-brand' : 'text-text-primary'}`}>
+                <VFText variant="t3" color={isSelected ? 'brand' : 'primary'} tabularNums className="tracking-tight transition-colors">
                   {plan.price}
-                </span>
+                </VFText>
                 {plan.interval && (
-                  <span className="text-[14px] font-medium text-text-tertiary opacity-60">{plan.interval}</span>
+                  <VFText variant="t5" color="tertiary" className="font-medium opacity-60">{plan.interval}</VFText>
                 )}
               </div>
               
@@ -124,12 +125,12 @@ export const PricingStep: React.FC = () => {
     <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
       {/* 1. 页面标题区 - V1.4 T3 Section Title (20px) + 装饰条 */}
       <div className="flex flex-col gap-1 border-l-[3px] border-brand pl-5 mb-10">
-        <h3 className="text-[20px] font-semibold text-text-primary m-0 tracking-tight leading-tight">
+        <VFText variant="t3" as="h3" color="primary" className="m-0 tracking-tight leading-tight">
           {t('marketplace.seller.wizard.pricing.title')}
-        </h3>
-        <p className="text-[14px] text-text-secondary m-0 mt-1 font-normal opacity-80 max-w-[600px] leading-relaxed">
+        </VFText>
+        <VFText variant="t5" color="secondary" className="m-0 mt-1 font-normal opacity-80 max-w-[600px] leading-relaxed">
           {t('marketplace.seller.wizard.pricing.subtitle')}
-        </p>
+        </VFText>
       </div>
 
       {/* 2. Plan 选择列表 */}
@@ -141,28 +142,6 @@ export const PricingStep: React.FC = () => {
       >
         <PlanSelector plans={plans} />
       </Form.Item>
-
-      {/* 3. 底部 Callout - T5 Body (14px) 配合图标 */}
-      <div className="mt-12 p-6 rounded-card bg-bg-page/10 border border-divider border-dashed flex items-start gap-5 transition-all hover:bg-bg-page/30">
-         <div className="w-10 h-10 rounded-full bg-bg-card border border-divider flex items-center justify-center text-text-tertiary shrink-0 shadow-none">
-            <Info size={18} strokeWidth={1.5} />
-         </div>
-         <div className="flex flex-col gap-2 min-w-0">
-           <p className="text-[14px] text-text-primary m-0 font-medium leading-relaxed">
-             {t('marketplace.seller.wizard.pricing.supportTitle')} 
-             <a href="#" className="text-brand hover:underline font-bold ml-2 inline-flex items-center gap-0.5 group/link">
-               {t('marketplace.seller.wizard.pricing.supportLink')}
-               <span className="group-hover/link:translate-x-0.5 transition-transform">→</span>
-             </a>
-           </p>
-           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-             <span className="text-[12px] text-text-tertiary italic font-normal opacity-70">
-               {t('marketplace.seller.wizard.pricing.feeNote')}
-             </span>
-             <span className="text-[10px] text-brand/50 font-bold uppercase tracking-widest ml-auto">• {t('marketplace.seller.wizard.pricing.sellerTerms')}</span>
-           </div>
-         </div>
-      </div>
     </div>
   );
 };

@@ -71,7 +71,7 @@ export const ConfigSummaryPanel: React.FC<Props> = ({ device, loading = false })
                     <div className="text-sm font-semibold text-text-primary truncate leading-tight mb-0.5">{stream.name}</div>
                     <div className="text-xs text-text-tertiary truncate flex items-center gap-1.5">
                       <span className="opacity-80">{stream.workflow}</span>
-                      <span className="opacity-40">•</span>
+                      <span className="opacity-40">{"\u2022"}</span>
                       <span className="font-mono text-xs">{stream.id}</span>
                     </div>
                   </div>

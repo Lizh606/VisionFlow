@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { AlertCircle, AlertTriangle, Info, ChevronRight } from 'lucide-react';
 import { VFCard } from '../../../../../shared/ui/VFCard';
 import { Alert } from '../../model/types';
+import { VFText } from '../../../../../ui/VFText';
 
 interface Props {
   alerts: Alert[];
@@ -28,7 +29,7 @@ const SeverityTag: React.FC<{ severity: string }> = ({ severity }) => {
       h-6 w-24 select-none
     `}>
       <Icon size={12} strokeWidth={2.5} />
-      <span className="text-[11px] font-bold uppercase tracking-wide leading-none pt-[1px]">
+      <span className="text-[10px] font-bold uppercase tracking-wider leading-none pt-[1px]">
         {t('selfhosted.overview.alerts.' + severity)}
       </span>
     </div>
@@ -42,33 +43,34 @@ const AlertListItem: React.FC<{ alert: Alert; isLast: boolean }> = ({ alert, isL
     <div className={`
       group relative flex items-start gap-4 p-4
       hover:bg-action-hover transition-colors cursor-pointer
-      ${!isLast ? 'border-b border-border' : ''}
+      ${!isLast ? 'border-b border-divider' : ''}
     `}>
       <div className="pt-0.5">
         <SeverityTag severity={alert.severity} />
       </div>
 
       <div className="flex-1 min-w-0 flex flex-col gap-1.5">
-        <div className="text-sm font-medium text-text-primary group-hover:text-brand transition-colors truncate">
+        {/* V1.4: Cell Primary = T5 Strong */}
+        <VFText variant="t5-strong" color="primary" className="group-hover:text-brand transition-colors truncate block">
           {alert.title}
-        </div>
+        </VFText>
         
         <div className="flex items-center gap-2">
-           <span className="text-xs text-text-tertiary">{t('selfhosted.overview.alerts.target')}:</span>
-           <code className="
-             px-1.5 py-0.5 rounded text-[11px] font-mono 
-             bg-bg-page border border-border text-text-secondary
-             group-hover:border-border-strong transition-colors
-           ">
+           <VFText variant="t6" color="tertiary" className="font-bold uppercase tracking-tighter opacity-60">
+             {t('selfhosted.overview.alerts.target')}
+           </VFText>
+           {/* V1.4: ID/Hash = T7 Mono */}
+           <VFText variant="t7" color="secondary" className="px-1.5 py-0.5 rounded bg-bg-page border border-border group-hover:border-border-strong transition-colors lowercase">
              {alert.target}
-           </code>
+           </VFText>
         </div>
       </div>
 
       <div className="flex flex-col items-end gap-1 shrink-0 pt-0.5">
-        <span className="text-xs text-text-tertiary tabular-nums group-hover:text-text-secondary transition-colors">
+        {/* V1.4: Meta = T6 tabular-nums */}
+        <VFText variant="t6" color="tertiary" tabularNums className="group-hover:text-text-secondary transition-colors font-medium">
           {alert.time}
-        </span>
+        </VFText>
         <div className="h-5 flex items-center justify-end">
            <ChevronRight 
              size={16} 

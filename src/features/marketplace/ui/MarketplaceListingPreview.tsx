@@ -3,7 +3,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Row, Col, Tabs, Button, Skeleton, Alert, Tooltip, App, Divider } from 'antd';
 import { 
   Eye, User, Calendar, Zap, AlertCircle, ShoppingCart, Layout,
-  Play, ArrowUpRight, ImageIcon, Lock, Info, RefreshCw
+  Play, ArrowUpRight, Image as ImageIcon, Lock, Info, RefreshCw
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { VFPageHeader } from '../../../shared/ui/VFPageHeader';
@@ -234,7 +234,16 @@ export const MarketplaceListingPreview: React.FC<{ listingId: string; onNavigate
         .vf-detail-tabs .ant-tabs-tab { padding: 14px 0 !important; margin-right: 32px !important; }
         .vf-detail-tabs .ant-tabs-tab-btn { font-weight: 600 !important; font-size: 14px !important; }
         .vf-detail-tabs .ant-tabs-ink-bar { height: 3px !important; border-radius: 3px 3px 0 0; }
-        .vf-detail-tabs .ant-tabs-content-holder { padding: 32px 32px 48px !important; }
+        
+        /* V1.4: 解决预览页主内容贴边问题 */
+        .vf-detail-tabs .ant-tabs-content-holder { 
+          padding: 32px !important; 
+        }
+        @media (max-width: 767px) {
+          .vf-detail-tabs .ant-tabs-content-holder { 
+            padding: 20px !important; 
+          }
+        }
       `}</style>
     </div>
   );

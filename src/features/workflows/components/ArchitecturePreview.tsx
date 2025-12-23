@@ -3,6 +3,7 @@ import React from 'react';
 import { Download, Upload, Zap, LucideIcon, ImageIcon, Type } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Template } from './WorkflowTemplateModal';
+import { VFText } from '../../../ui/VFText';
 
 interface Props {
   template: Template;
@@ -34,13 +35,15 @@ const NodeItem = ({
           <Icon size={18} strokeWidth={2} />
         </div>
         <div className="flex flex-col min-w-0">
-          <span className="text-[13px] font-bold text-text-primary truncate">
+          {/* V1.4: Node Label = T5 Strong */}
+          <VFText variant="t5-strong" color="primary" truncate>
             {title}
-          </span>
+          </VFText>
           {active && (
-            <span className="text-[11px] font-mono text-text-tertiary font-medium opacity-70 tracking-tighter">
+            /* V1.4: Technical Meta = T7 Mono */
+            <VFText variant="t7" color="tertiary" className="opacity-70 tracking-tighter lowercase">
               {title.toLowerCase().replace(/ /g, '-')}
-            </span>
+            </VFText>
           )}
         </div>
       </div>
@@ -50,7 +53,9 @@ const NodeItem = ({
           {badges.map((b, i) => (
             <div key={i} className="flex items-center gap-1 px-1.5 py-0.5 rounded-tag bg-bg-page border border-border">
               <b.icon size={10} className="text-text-tertiary opacity-60" />
-              <span className="text-[10px] font-bold text-text-secondary">{b.value}</span>
+              <VFText variant="t6" color="secondary" className="font-bold tabular-nums">
+                {b.value}
+              </VFText>
             </div>
           ))}
         </div>
@@ -64,14 +69,14 @@ export const ArchitecturePreview: React.FC<Props> = ({ template }) => {
   return (
     <div className="flex flex-col h-full animate-in fade-in duration-500">
       <div className="mb-4">
-        <h4 className="m-0 text-[11px] font-bold text-text-tertiary uppercase tracking-[0.12em] opacity-60">
+        {/* V1.4: Section Header = T6 Caption Strong */}
+        <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-[0.12em] opacity-60">
           {t('workflows.templates.architecture')}
-        </h4>
+        </VFText>
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center relative py-6">
         <div className="w-full max-w-[320px] flex flex-col items-center relative z-10">
-          
           <NodeItem 
             icon={Download} 
             title="Inputs" 
@@ -80,23 +85,18 @@ export const ArchitecturePreview: React.FC<Props> = ({ template }) => {
               { icon: Type, value: 0 }
             ]}
           />
-
           <div className="h-8 md:h-10 w-px border-l border-dashed border-divider opacity-60" />
-
           <NodeItem 
             icon={Zap} 
             title={template.id === 'build-my-own' ? 'Custom Inference' : 'Model Processor'} 
             active={true}
           />
-
           <div className="h-8 md:h-10 w-px border-l border-dashed border-divider opacity-60" />
-
           <NodeItem 
             icon={Upload} 
             title="Outputs" 
             badges={[{ icon: ImageIcon, value: 1 }]}
           />
-          
         </div>
       </div>
     </div>

@@ -1,11 +1,12 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { Steps, Button, Form, App, Divider } from 'antd';
-import { ChevronRight, Save, Send, Layout, Database, Image as ImageIcon, Package, Check, LucideIcon, ArrowLeft, X } from 'lucide-react';
+import { ChevronRight, Save, Send, Layout, Database, Image as ImageIcon, Package, Check, LucideIcon, ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { VFPageHeader } from '../../../shared/ui/VFPageHeader';
 import { sellerService } from '../services/sellerService';
 import { useResponsive } from '../../../shared/hooks/useResponsive';
+import { VFText } from '../../../ui/VFText';
 
 // Steps
 import { GeneralStep } from './wizard/GeneralStep';
@@ -108,7 +109,12 @@ export const MarketplaceSellerWizard: React.FC<{ listingId?: string; onNavigate:
         onBack={handleBack}
         actions={
           <div className="flex items-center gap-4">
-            {lastSaved && !isMobile && <span className="text-[11px] font-bold text-text-tertiary uppercase">{t('common.lastSaved', { time: lastSaved })}</span>}
+            {lastSaved && !isMobile && (
+              /* V1.4: Meta Hint = T6 Caption */
+              <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-wider">
+                {t('common.lastSaved', { time: lastSaved })}
+              </VFText>
+            )}
             <Button 
               loading={loading}
               icon={<Save size={16} />} 
@@ -122,14 +128,15 @@ export const MarketplaceSellerWizard: React.FC<{ listingId?: string; onNavigate:
       />
 
       <div className={`bg-bg-card border border-border rounded-card shadow-sm ${isMobile ? 'p-4' : 'p-8'}`}>
-        <div className="mb-10 pt-4 overflow-x-auto custom-scrollbar">
+        <div className="mb-10 pt-4 overflow-x-auto custom-scrollbar no-scrollbar">
           <Steps 
             current={current} 
             responsive={false}
             size={isMobile ? 'small' : 'default'}
             labelPlacement={isMobile ? 'vertical' : 'horizontal'}
             items={STEP_CONFIG.map((s, idx) => ({
-              title: isMobile && current !== idx ? '' : <span className="text-[13px] font-bold">{s.title}</span>,
+              /* V1.4: Step Label = T6 Body Strong */
+              title: isMobile && current !== idx ? '' : <VFText variant="t5-strong" color={current >= idx ? 'primary' : 'disabled'} className="text-[13px]">{s.title}</VFText>,
               icon: <StepIcon index={idx} current={current} icon={s.icon} />
             }))}
           />

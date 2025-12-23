@@ -90,7 +90,7 @@ export const SellerListingCard: React.FC<Props> = ({ listing, onAction }) => {
       meta={
         <div className="flex items-center gap-2">
           <span className="font-bold">{listing.type}</span>
-          <span className="opacity-30">•</span>
+          <span className="opacity-30">{"\u2022"}</span>
           <span className="opacity-60">{dayjs(listing.lastUpdated).fromNow()}</span>
         </div>
       }

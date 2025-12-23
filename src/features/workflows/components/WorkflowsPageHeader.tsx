@@ -4,6 +4,7 @@ import { Button, Avatar, Tooltip } from 'antd';
 import { HelpCircle, UserPlus, ChevronLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useResponsive } from '../../../shared/hooks/useResponsive';
+import { VFText } from '../../../ui/VFText';
 
 interface Props {
   title: string;
@@ -27,17 +28,19 @@ export const WorkflowsPageHeader: React.FC<Props> = ({ title, folderName, onBack
           />
         )}
         
-        <div className="flex items-center gap-2">
-          <h1 className="text-xl md:text-2xl font-semibold text-text-primary m-0 tracking-tight">
+        <div className="flex items-center gap-1.5">
+          {/* V1.4: Page Title = T2 (24px Semibold) */}
+          <VFText variant="t2" color="primary" className="tracking-tight">
             {title}
-          </h1>
+          </VFText>
           
           {folderName && (
-            <div className="flex items-center gap-2">
-              <span className="text-xl text-text-tertiary font-normal px-1">/</span>
-              <span className="text-lg font-semibold text-text-primary mt-0.5">
+            <div className="flex items-center gap-1.5 ml-1">
+              <VFText variant="t2" color="tertiary" className="font-normal opacity-40">/</VFText>
+              {/* V1.4: Secondary level title in path stays significant but color changes */}
+              <VFText variant="t2" color="primary" className="opacity-80">
                 {folderName}
-              </span>
+              </VFText>
             </div>
           )}
 
@@ -52,9 +55,10 @@ export const WorkflowsPageHeader: React.FC<Props> = ({ title, folderName, onBack
       <div className="flex items-center gap-2 md:gap-4">
         <Button 
           icon={<UserPlus size={16} />} 
-          className="flex items-center gap-2 font-medium border-border text-text-secondary hover:!text-brand hover:!border-brand h-9 px-3"
+          className="flex items-center gap-2 border-border text-text-secondary hover:!text-brand hover:!border-brand h-9 px-3"
         >
-          {!isMobile && t('workflows.inviteTeam')}
+          {/* V1.4: Button text defaults to T5 Strong semantics via antdTheme, but icon spacing is manual */}
+          {!isMobile && <VFText variant="t5-strong" color="inherit">{t('workflows.inviteTeam')}</VFText>}
         </Button>
         <Avatar 
           size={isMobile ? 32 : 36} 

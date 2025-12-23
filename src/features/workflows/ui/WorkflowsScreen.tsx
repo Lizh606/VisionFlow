@@ -14,6 +14,7 @@ import { WorkflowTemplateModal } from '../components/WorkflowTemplateModal';
 import { VFEmptyState } from '../../../shared/ui/VFEmptyState';
 import { useWorkflows } from '../hooks/useWorkflows';
 import { useResponsive } from '../../../shared/hooks/useResponsive';
+import { VFText } from '../../../ui/VFText';
 
 /**
  * WorkflowsScreen - V1.4 Refined Layout
@@ -91,9 +92,10 @@ export const WorkflowsScreen: React.FC = () => {
       {!activeFolderId && !search && folders.length > 0 && (
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2 px-1">
-            <span className="text-[11px] font-bold text-text-tertiary uppercase tracking-wider">
+            {/* V1.4: Section Meta = T6 Caption Strong */}
+            <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-widest">
               {t('menu.folders', { defaultValue: 'Folders' })}
-            </span>
+            </VFText>
             <div className="h-px flex-1 bg-divider opacity-60" />
           </div>
           <FolderGrid 
