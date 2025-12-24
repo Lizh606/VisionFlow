@@ -59,11 +59,9 @@ export const MarketplaceHome: React.FC<{ onNavigate: (p: string) => void }> = ({
         
         <div className="max-w-2xl relative z-10 flex flex-col gap-6">
           <div className="flex flex-col gap-2">
-            {/* V1.4: Hero Title = T1 Display */}
             <VFText variant="t1" color="primary" className="leading-tight">
               {t('marketplace.home.heroTitle')}
             </VFText>
-            {/* V1.4: Description = T5 Body */}
             <VFText variant="t5" color="secondary" className="max-w-[500px] leading-relaxed">
               {t('marketplace.home.heroDesc')}
             </VFText>
@@ -86,7 +84,6 @@ export const MarketplaceHome: React.FC<{ onNavigate: (p: string) => void }> = ({
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
-            {/* V1.4: Meta Label = T6 Caption Strong */}
             <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-wider">
               {t('marketplace.search.trending')}:
             </VFText>
@@ -109,18 +106,25 @@ export const MarketplaceHome: React.FC<{ onNavigate: (p: string) => void }> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
              <TrendingUp size={18} className="text-brand" />
-             {/* V1.4: Section Title = T3 */}
              <VFText variant="t3" color="primary">
                {t('marketplace.home.featuredTitle')}
              </VFText>
           </div>
-          <Button 
-            type="link" 
-            className="font-bold flex items-center gap-1 text-sm p-0"
+          
+          {/* V1.4: Link UI using VFText to ensure theme color consistency and no blue tint */}
+          <div 
             onClick={handleSearchClick}
+            className="group flex items-center gap-1.5 cursor-pointer select-none"
           >
-            {t('marketplace.home.viewAll')} <ArrowRight size={14} />
-          </Button>
+            <VFText 
+              variant="t5-strong" 
+              color="brand" 
+              className="group-hover:opacity-80 transition-opacity"
+            >
+              {t('marketplace.home.viewAll')}
+            </VFText>
+            <ArrowRight size={14} className="text-brand group-hover:translate-x-0.5 transition-all" />
+          </div>
         </div>
 
         <Row gutter={[20, 20]}>

@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Button, Dropdown } from 'antd';
+import { Button, Dropdown, Tooltip } from 'antd';
 import { RefreshCw, MoreVertical, Plus, Calendar, ShieldCheck } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import dayjs from '../../../../config/dayjsConfig';
@@ -13,6 +14,7 @@ import { VFEmptyState } from '../../../../shared/ui/VFEmptyState';
 import { mockLicenses } from '../../common/mockData';
 import { License } from '../../common/types';
 import { useResponsive } from '../../../../shared/hooks/useResponsive';
+import { VFText } from '../../../../ui/VFText';
 
 export const LicensesPage: React.FC = () => {
   const { t } = useTranslation();
@@ -23,21 +25,31 @@ export const LicensesPage: React.FC = () => {
       title: t('selfhosted.license.cols.name'),
       dataIndex: 'name',
       key: 'name',
-      width: '20%',
-      render: (text: string) => <span className="text-text-primary font-medium text-sm">{text}</span>
+      // Auto-adaptive width for Name
+      render: (text: string) => (
+        <span className="text-text-primary font-vf-semibold truncate block">
+          {text}
+        </span>
+      )
     },
     {
       title: t('selfhosted.license.cols.key'),
       dataIndex: 'license_key_masked',
       key: 'key',
-      width: '20%',
-      render: (text: string) => <span className="font-mono text-xs text-text-tertiary bg-bg-page px-1.5 py-0.5 rounded border border-border/50">{text}</span>
+      width: 220,
+      render: (text: string) => (
+        <Tooltip title={text}>
+          <span className="font-mono text-[11px] text-text-tertiary block truncate">
+            {text}
+          </span>
+        </Tooltip>
+      )
     },
     {
       title: t('selfhosted.license.cols.type'),
       dataIndex: 'type',
       key: 'type',
-      width: '12%',
+      width: 120,
       render: (type: string) => (
          <VFTag variant={type === 'CLOUD' ? 'brand' : 'info'} filled={false}>{type}</VFTag>
       )
@@ -46,22 +58,26 @@ export const LicensesPage: React.FC = () => {
       title: t('selfhosted.license.cols.billing'),
       dataIndex: 'billing_mode',
       key: 'billing',
-      width: '12%',
-      render: (text: string) => <span className="text-text-secondary text-sm">{text}</span>
+      width: 140,
+      render: (text: string) => <span className="text-text-secondary text-sm font-medium">{text}</span>
     },
     {
       title: t('selfhosted.license.cols.usage'),
       key: 'usage',
-      width: '15%',
+      width: 180,
       render: (_: any, r: License) => {
         const usagePct = (r.used_devices / r.total_quota) * 100;
         return (
-          <div className="flex flex-col max-w-[120px]">
-            <div className="flex justify-between items-end mb-1">
-               <span className="text-xs font-bold text-text-primary leading-none">{r.used_devices} / {r.total_quota}</span>
-               <span className="text-xs text-text-tertiary leading-none">{Math.round(usagePct)}%</span>
+          <div className="flex flex-col max-w-[140px]">
+            <div className="flex justify-between items-end mb-1.5">
+               <span className="text-[11px] font-bold text-text-primary leading-none tabular-nums">
+                 {r.used_devices} / {r.total_quota}
+               </span>
+               <span className="text-[10px] text-text-tertiary font-bold leading-none tabular-nums">
+                 {Math.round(usagePct)}%
+               </span>
             </div>
-            <div className="w-full h-1 bg-bg-page rounded-full overflow-hidden border border-border/20">
+            <div className="w-full h-1 bg-bg-page rounded-full overflow-hidden border border-divider/50">
                <div 
                  className={`h-full transition-all duration-500 ${usagePct > 90 ? 'bg-error' : 'bg-brand'}`} 
                  style={{ width: `${Math.min(usagePct, 100)}%` }} 
@@ -75,16 +91,20 @@ export const LicensesPage: React.FC = () => {
       title: t('selfhosted.license.cols.expiry'),
       dataIndex: 'expiry_date',
       key: 'expiry',
-      width: '15%',
+      width: 160,
       render: (d: string) => {
         const daysLeft = dayjs(d).diff(dayjs(), 'day');
         const isLow = daysLeft < 30;
         return (
-          <div className="flex flex-col">
-            <span className={`text-sm ${isLow ? 'text-error font-bold' : 'text-text-secondary'}`}>
+          <div className="flex flex-col gap-0.5">
+            <span className={`text-sm tabular-nums ${isLow ? 'text-error font-vf-semibold' : 'text-text-secondary font-medium'}`}>
               {dayjs(d).format('YYYY-MM-DD')}
             </span>
-            {isLow && <span className="text-xs text-error opacity-80 uppercase font-bold tracking-tight">{t('selfhosted.license.daysLeft', { count: daysLeft })}</span>}
+            {isLow && (
+              <span className="text-[10px] text-error font-bold uppercase tracking-tight">
+                {t('selfhosted.license.daysLeft', { count: daysLeft })}
+              </span>
+            )}
           </div>
         );
       }
@@ -93,12 +113,13 @@ export const LicensesPage: React.FC = () => {
       title: '',
       key: 'actions',
       width: 60,
+      align: 'right' as const,
       render: () => (
         <Dropdown menu={{ items: [
           { key: '1', label: t('selfhosted.license.actions.viewUsage') }, 
           { key: '2', label: t('selfhosted.license.actions.extend') }
-        ] }}>
-          <Button type="text" size="small" icon={<MoreVertical size={16} />} className="text-text-tertiary hover:bg-action-hover rounded-control" />
+        ] }} placement="bottomRight">
+          <Button type="text" size="small" icon={<MoreVertical size={16} />} className="text-text-tertiary" />
         </Dropdown>
       )
     }
@@ -110,10 +131,10 @@ export const LicensesPage: React.FC = () => {
         title={t('selfhosted.license.title')}
         actions={
           <div className="flex gap-3">
-             <Button icon={<RefreshCw size={16} />} className="h-10 rounded-control">
+             <Button icon={<RefreshCw size={16} />} className="h-10 rounded-control font-vf-medium">
                {t('common.refresh')}
              </Button>
-             <Button type="primary" icon={<Plus size={16} />} className="h-10 rounded-control font-bold">
+             <Button type="primary" icon={<Plus size={16} />} className="h-10 rounded-control font-vf-semibold shadow-md">
                {t('selfhosted.license.upload')}
              </Button>
           </div>
@@ -131,33 +152,33 @@ export const LicensesPage: React.FC = () => {
                       <ShieldCheck size={20} />
                     </div>
                     <div>
-                      <div className="font-bold text-text-primary text-base">{license.name}</div>
-                      <div className="text-xs font-mono text-text-tertiary">{license.license_key_masked}</div>
+                      <div className="font-vf-semibold text-text-primary text-base leading-tight mb-1">{license.name}</div>
+                      <div className="font-mono text-[11px] text-text-tertiary">{license.license_key_masked}</div>
                     </div>
                   </div>
-                  <VFTag variant={license.type === 'CLOUD' ? 'brand' : 'info'} filled={false} className="text-xs h-5">
+                  <VFTag variant={license.type === 'CLOUD' ? 'brand' : 'info'} filled={false} className="text-[10px] h-5 px-1.5 font-bold">
                     {license.type}
                   </VFTag>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4 py-3 border-t border-divider/50">
                   <div className="flex flex-col gap-1">
-                    <span className="text-xs text-text-tertiary uppercase font-bold tracking-wider">{t('selfhosted.license.cols.usage')}</span>
+                    <span className="text-[10px] text-text-tertiary uppercase font-bold tracking-wider">{t('selfhosted.license.cols.usage')}</span>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-text-primary">{license.used_devices} / {license.total_quota}</span>
+                      <span className="text-sm font-vf-semibold text-text-primary tabular-nums">{license.used_devices} / {license.total_quota}</span>
                     </div>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <span className="text-xs text-text-tertiary uppercase font-bold tracking-wider">{t('selfhosted.license.cols.expiry')}</span>
-                    <div className="flex items-center gap-1.5 text-sm text-text-secondary">
-                      <Calendar size={12} />
+                    <span className="text-[10px] text-text-tertiary uppercase font-bold tracking-wider">{t('selfhosted.license.cols.expiry')}</span>
+                    <div className="flex items-center gap-1.5 text-sm text-text-secondary font-medium tabular-nums">
+                      <Calendar size={12} className="opacity-50" />
                       <span>{dayjs(license.expiry_date).format('YYYY-MM-DD')}</span>
                     </div>
                   </div>
                 </div>
                 
                 <div className="pt-3 border-t border-divider/50 flex justify-end">
-                  <Button type="link" size="small" className="font-bold text-brand p-0 h-auto text-xs">{t('selfhosted.license.actions.viewUsage')}</Button>
+                  <Button type="link" size="small" className="font-vf-semibold text-brand p-0 h-auto text-xs">{t('selfhosted.license.actions.viewUsage')}</Button>
                 </div>
               </VFCard>
             ))}
@@ -182,17 +203,6 @@ export const LicensesPage: React.FC = () => {
           />
         )}
       </div>
-
-      <style>{`
-        .ant-table-thead > tr > th {
-          color: rgba(var(--vf-text-secondary), 1) !important;
-          font-weight: 500 !important;
-        }
-        .ant-table-tbody > tr > td {
-          font-weight: 400 !important;
-          color: rgba(var(--vf-text-primary), 1) !important;
-        }
-      `}</style>
     </div>
   );
 };

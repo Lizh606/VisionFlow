@@ -58,7 +58,7 @@ export const selfhosted = {
     "offline": "离线",
     "maintenance": "排空中",
     "error": "异常",
-    "pending": "待许可",
+    "pending": "待绑定授权",
     "decommissioned": "已退役",
     "running": "运行中",
     "paused": "已暂停",
@@ -83,7 +83,7 @@ export const selfhosted = {
     "title": "边缘设备群",
     "searchPlaceholder": "搜索设备名称或 ID...",
     "noData": "未发现匹配设备",
-    "unbound": "需要绑定授权",
+    "unbound": "未绑定",
     "cols": {
       "name": "设备名称",
       "id": "设备 ID",

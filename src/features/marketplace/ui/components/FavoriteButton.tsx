@@ -13,7 +13,7 @@ interface FavoriteButtonProps {
 /**
  * Standardize Favorite Button - V1.4
  * Container: 28x28 rounded-md
- * Colors: Tertiary (Muted) -> Brand (Selected)
+ * Fixed: Explicitly override AntD default blue hover with !text-brand
  */
 export const FavoriteButton: React.FC<FavoriteButtonProps> = ({ 
   isFavorite = false, 
@@ -39,11 +39,10 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
       disabled={loading}
       onClick={handleClick}
       className={`
-        w-7 h-7 rounded-md border shadow-none flex items-center justify-center backdrop-blur-sm transition-all p-0
-        bg-white/80 border-border/40
+        w-7 h-7 rounded-md border shadow-none flex items-center justify-center transition-all p-0
         ${isFavorite 
-          ? 'text-brand' 
-          : 'text-text-tertiary hover:text-text-primary hover:border-border/60 hover:bg-white'}
+          ? '!text-brand bg-brand/10 border-brand/20 hover:!bg-brand/20' 
+          : '!text-text-tertiary bg-white/80 border-border/40 hover:!text-brand hover:!border-brand/40 hover:!bg-brand/5'}
         ${className}
       `}
       icon={
@@ -52,8 +51,9 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
         ) : (
           <Heart 
             size={size} 
-            strokeWidth={2.2}
+            strokeWidth={2.5}
             fill={isFavorite ? "currentColor" : "none"} 
+            className="transition-colors"
           />
         )
       }

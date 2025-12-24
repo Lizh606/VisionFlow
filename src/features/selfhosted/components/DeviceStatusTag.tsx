@@ -14,13 +14,13 @@ export const DeviceStatusTag: React.FC<Props> = ({ status, showText = true }) =>
   const { t } = useTranslation();
 
   /**
-   * V1.4 状态语义映射更新:
-   * - ONLINE: Success
-   * - PENDING: Warning
-   * - OFFLINE: Warning (从 Neutral 变更为 Warning，提示需要关注)
-   * - ERROR: Error
-   * - DRAINING: Info
-   * - DECOMMISSIONED: Neutral
+   * V1.4 状态语义映射更新 (严格对齐自托管管理逻辑):
+   * - ONLINE: Success - 绿色
+   * - PENDING_LICENSE: Warning - 橙色 (原 License Required 标签语义)
+   * - OFFLINE: Warning - 橙色 (离线作为告警项)
+   * - ERROR: Error - 红色
+   * - DRAINING: Info - 蓝色 (排空中，非紧急)
+   * - DECOMMISSIONED: Neutral - 灰色 (已失效/归档)
    */
   const config = {
     ONLINE: {
@@ -61,7 +61,7 @@ export const DeviceStatusTag: React.FC<Props> = ({ status, showText = true }) =>
     <VFTag 
       variant={current.variant} 
       icon={current.icon}
-      minWidth={84} // 状态列统一占位 84px
+      minWidth={110} // 宽度自适应新标签长度
     >
       {showText && current.label}
     </VFTag>

@@ -62,9 +62,10 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
       title: t('selfhosted.devices.cols.name'),
       dataIndex: 'name',
       key: 'name',
+      // No fixed width: Auto-adaptive to take remaining space
       render: (text: string, record: Device) => (
         <span 
-          className="text-text-primary font-normal hover:text-brand cursor-pointer transition-colors"
+          className="text-text-primary font-vf-semibold hover:text-brand cursor-pointer transition-colors truncate block"
           onClick={() => onDeviceClick?.(record.id)}
         >
           {text}
@@ -75,11 +76,12 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
       title: t('selfhosted.devices.cols.id'),
       dataIndex: 'device_id',
       key: 'device_id',
+      width: 220,
       responsive: ['lg'] as any,
       render: (text: string) => (
         <Tooltip title={text}>
-          <span className="font-mono text-xs text-text-tertiary bg-bg-page px-1.5 py-0.5 rounded border border-border">
-            {text.length > 12 ? text.substring(0, 12) + '...' : text}
+          <span className="font-mono text-[11px] text-text-tertiary block truncate">
+            {text}
           </span>
         </Tooltip>
       ),
@@ -88,23 +90,29 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
       title: t('selfhosted.devices.cols.status'),
       dataIndex: 'status',
       key: 'status',
-      width: 140,
+      width: 200,
       render: (status: DeviceStatus) => <DeviceStatusTag status={status} />,
     },
     {
       title: t('selfhosted.devices.cols.mode'),
       dataIndex: 'deployment_mode',
       key: 'mode',
+      width: 160,
       render: (mode: any) => <DeploymentModeTag mode={mode} />,
     },
     {
       title: t('selfhosted.devices.cols.license'),
       key: 'license',
+      width: 320, 
       render: (_: any, r: Device) => (
         r.license_name ? (
-          <span className="text-text-secondary text-sm font-medium">{r.license_name}</span>
+          <Tooltip title={r.license_name}>
+            <span className="font-mono text-[11px] text-text-tertiary block truncate">
+              {r.license_name}
+            </span>
+          </Tooltip>
         ) : (
-          <span className="text-error text-xs font-bold bg-error/5 px-1.5 py-0.5 rounded border border-error/10">
+          <span className="text-error text-[10px] font-vf-semibold bg-error/5 px-2 py-0.5 rounded border border-error/10 uppercase tracking-tight">
             {t('selfhosted.devices.unbound')}
           </span>
         )
@@ -114,6 +122,7 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
       title: '',
       key: 'actions',
       width: 60,
+      align: 'right' as const,
       render: (_: any, record: Device) => {
         const items = [
           { key: 'view', label: t('selfhosted.actions.view'), onClick: () => onDeviceClick?.(record.id) },
@@ -128,9 +137,11 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
         ].filter(Boolean);
 
         return (
-          <Dropdown menu={{ items: items as any }} trigger={['click']}>
-             <Button type="text" size="small" icon={<MoreVertical size={16} />} className="text-text-tertiary" />
-          </Dropdown>
+          <div onClick={(e) => e.stopPropagation()}>
+            <Dropdown menu={{ items: items as any }} trigger={['click']} placement="bottomRight">
+               <Button type="text" size="small" icon={<MoreVertical size={16} />} className="text-text-tertiary" />
+            </Dropdown>
+          </div>
         );
       }
     }
@@ -141,7 +152,7 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
       <PageHeader 
         title={t('selfhosted.devices.title')}
         actions={
-          <Button type="primary" icon={<Plus size={16} />} className="h-10 rounded-control font-bold shadow-md">
+          <Button type="primary" icon={<Plus size={16} />} className="h-10 rounded-control font-vf-semibold shadow-md">
             Register Device
           </Button>
         }
@@ -150,18 +161,18 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
       {pendingCount > 0 && (
         <div className="flex items-center justify-between px-4 py-3 bg-warning/5 border border-warning/20 rounded-card shadow-sm">
            <div className="flex items-center gap-3">
-              <span className="text-sm text-text-primary font-medium">
+              <span className="text-sm text-text-primary font-vf-medium">
                 <Trans 
                   i18nKey="selfhosted.devices.alert.pendingMessage" 
                   count={pendingCount}
-                  components={{ bold: <b className="text-text-primary font-bold" /> }}
+                  components={{ bold: <b className="text-text-primary font-vf-semibold" /> }}
                 />
               </span>
            </div>
            <Button 
              type="link" 
              size="small" 
-             className="!text-warning hover:opacity-75 font-bold p-0 transition-all underline underline-offset-4 text-xs"
+             className="!text-warning hover:opacity-75 font-vf-semibold p-0 transition-all underline underline-offset-4 text-xs"
              onClick={() => { setStatusFilter('PENDING_LICENSE'); setModeFilter('ALL'); }}
            >
              {t('selfhosted.devices.alert.filterAction')}
@@ -169,7 +180,6 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
         </div>
       )}
 
-      {/* 使用标准化的 VFTableToolbar */}
       <VFTableToolbar
         search={{
           value: searchText,
@@ -206,7 +216,7 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
         onRefresh={handleRefresh}
         refreshing={loading}
         actions={
-          <Button icon={<Download size={16} />} className="h-10 rounded-control font-semibold">
+          <Button icon={<Download size={16} />} className="h-10 rounded-control font-vf-medium">
             {t('common.export')}
           </Button>
         }
@@ -223,13 +233,15 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
               <VFCard key={device.id} noPadding className="p-4 flex flex-col gap-3" onClick={() => onDeviceClick?.(device.id)}>
                 <div className="flex justify-between items-start">
                   <div className="min-w-0 flex-1">
-                    <div className="font-semibold text-base text-text-primary mb-1.5 truncate">{device.name}</div>
+                    <div className="font-vf-semibold text-base text-text-primary mb-1.5 truncate">{device.name}</div>
                     <div className="flex flex-wrap gap-2">
                       <DeviceStatusTag status={device.status} /> 
                       <DeploymentModeTag mode={device.deployment_mode} />
                     </div>
                   </div>
-                  <Button type="text" icon={<MoreVertical size={18} className="text-text-tertiary" />} />
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <Button type="text" icon={<MoreVertical size={18} className="text-text-tertiary" />} />
+                  </div>
                 </div>
               </VFCard>
             ))}

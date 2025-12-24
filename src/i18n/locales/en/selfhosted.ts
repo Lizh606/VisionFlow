@@ -58,7 +58,7 @@ export const selfhosted = {
     "offline": "Offline",
     "maintenance": "Draining",
     "error": "Error",
-    "pending": "License Required",
+    "pending": "Pending License",
     "decommissioned": "Decommissioned",
     "running": "Running",
     "paused": "Paused",
@@ -83,7 +83,7 @@ export const selfhosted = {
     "title": "Device Fleet",
     "searchPlaceholder": "Search by name or device ID...",
     "noData": "No devices found",
-    "unbound": "License Required",
+    "unbound": "Unbound",
     "cols": {
       "name": "Device Name",
       "id": "Device ID",
