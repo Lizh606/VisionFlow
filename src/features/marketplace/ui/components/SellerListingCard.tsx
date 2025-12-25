@@ -3,8 +3,7 @@ import React, { useMemo } from 'react';
 import { Button, Tooltip } from 'antd';
 import { 
   Edit2, Eye, Send, ExternalLink, 
-  AlertTriangle, ShieldCheck, History, Info,
-  Ban, Archive
+  ShieldCheck, Ban, Archive, Info
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Listing, ListingStatus } from '../../types';
@@ -27,14 +26,14 @@ export const SellerListingCard: React.FC<Props> = ({ listing, onAction }) => {
   // 基于状态的 UI 配置引擎
   const statusConfig = useMemo(() => {
     const configs: Record<ListingStatus, {
-      variant: any;
-      label: string;
-      infoIcon?: React.ReactNode;
-      infoText?: string;
-      infoColor?: string;
-      primary: { label: string; icon: React.ReactNode; action: 'edit' | 'preview' | 'details'; btnType?: 'primary' | 'warning' };
-      secondary?: { label: string; action: 'edit' | 'preview' | 'submit' | 'details' };
-      tertiary?: { label: string; action: 'submit'; disabled?: boolean; tooltip?: string };
+      variant: any,
+      label: string,
+      infoIcon?: React.ReactNode,
+      infoText?: string,
+      infoColor?: string,
+      primary: { label: string, icon: React.ReactNode, action: 'edit' | 'preview' | 'details', btnType?: 'primary' | 'warning' },
+      secondary?: { label: string, action: 'edit' | 'preview' | 'submit' | 'details' },
+      tertiary?: { label: string, action: 'submit', disabled?: boolean, tooltip?: string },
     }> = {
       DRAFT: {
         variant: 'neutral',

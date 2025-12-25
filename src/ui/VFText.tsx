@@ -61,8 +61,9 @@ const colorMap: Record<VFTextColor, string> = {
 /**
  * VFText - VisionFlow Standard Typography Wrapper
  * Implementation of V1.4 Section 5.
+ * Using forwardRef to support Tooltip/Dropdown integration and fix StrictMode findDOMNode warnings.
  */
-export const VFText: React.FC<VFTextProps> = ({
+export const VFText = React.forwardRef<HTMLElement, VFTextProps>(({
   variant = 't5',
   color = 'primary',
   as: Component = 'span',
@@ -70,7 +71,7 @@ export const VFText: React.FC<VFTextProps> = ({
   className = '',
   truncate = false,
   tabularNums = false,
-}) => {
+}, ref) => {
   const combinedClasses = [
     variantMap[variant],
     colorMap[color],
@@ -80,8 +81,8 @@ export const VFText: React.FC<VFTextProps> = ({
   ].filter(Boolean).join(' ');
 
   return (
-    <Component className={combinedClasses}>
+    <Component ref={ref} className={combinedClasses}>
       {children}
     </Component>
   );
-};
+});

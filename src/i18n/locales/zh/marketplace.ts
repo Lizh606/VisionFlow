@@ -231,7 +231,7 @@ export const marketplace = {
       },
       "edge": {
         "title": "边缘部署",
-        "enabled": "授权在自托管 SHMgr 边缘设备上执行部署。",
+        "enabled": "授权在自托管设备上执行部署。",
         "disabled": "仅限云端执行，不支持本地化部署。"
       }
     }

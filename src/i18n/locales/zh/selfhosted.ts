@@ -37,7 +37,7 @@ export const selfhosted = {
     },
     "shortcuts": {
       "title": "快捷导航",
-      "viewDeviceList": "进入设备舰队",
+      "viewDeviceList": "查看设备列表",
       "manageLicenses": "管理授权证书",
       "recentDeployments": "查看部署历史"
     },
@@ -80,7 +80,7 @@ export const selfhosted = {
     "pause": "暂停"
   },
   "devices": {
-    "title": "边缘设备群",
+    "title": "设备列表",
     "searchPlaceholder": "搜索设备名称或 ID...",
     "noData": "未发现匹配设备",
     "unbound": "未绑定",

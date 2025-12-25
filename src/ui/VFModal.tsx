@@ -10,6 +10,7 @@ interface VFModalProps {
   onCancel: () => void;
   onConfirm?: () => void;
   confirmLoading?: boolean;
+  confirmText?: string;
   children: React.ReactNode;
   type?: 'default' | 'danger';
   width?: number;
@@ -21,6 +22,7 @@ export const VFModal: React.FC<VFModalProps> = ({
   onCancel,
   onConfirm,
   confirmLoading = false,
+  confirmText = "Confirm",
   children,
   type = 'default',
   width = 440
@@ -34,7 +36,10 @@ export const VFModal: React.FC<VFModalProps> = ({
       closable={false}
       footer={
         <Space size={12}>
-          <Button onClick={onCancel} className="px-6 h-10 font-medium border-none hover:bg-bg-page transition-all">
+          <Button 
+            onClick={onCancel} 
+            className="px-6 h-10 font-medium border-none hover:bg-bg-page hover:!text-brand transition-all"
+          >
             Cancel
           </Button>
           <Button 
@@ -44,7 +49,7 @@ export const VFModal: React.FC<VFModalProps> = ({
             onClick={onConfirm}
             className="px-8 h-10 font-bold shadow-md"
           >
-            Confirm
+            {confirmText}
           </Button>
         </Space>
       }
@@ -61,7 +66,7 @@ export const VFModal: React.FC<VFModalProps> = ({
           </div>
         )}
         <VFText variant="t2" color="primary">{title}</VFText>
-        <div className="text-sm text-text-secondary leading-relaxed font-normal">
+        <div className="text-sm text-text-secondary leading-relaxed font-normal w-full">
           {children}
         </div>
       </div>

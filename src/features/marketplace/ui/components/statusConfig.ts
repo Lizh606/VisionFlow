@@ -7,26 +7,26 @@ import {
 import { Listing, ListingStatus } from '../../types';
 
 export interface ActionDef {
-  label: string;
-  icon?: React.ReactNode;
-  action: 'edit' | 'preview' | 'submit' | 'details' | 'live' | 'submission_info';
-  disabled?: boolean;
-  tooltip?: string;
+  label: string,
+  icon?: React.ReactNode,
+  action: 'edit' | 'preview' | 'submit' | 'details' | 'live' | 'submission_info',
+  disabled?: boolean,
+  tooltip?: string,
 }
 
 export interface StatusConfigDef {
   tag: {
-    variant: 'neutral' | 'warning' | 'success' | 'error' | 'default';
-    label: string;
-  };
+    variant: 'neutral' | 'warning' | 'success' | 'error' | 'default',
+    label: string,
+  },
   info?: {
-    text: string;
-    icon?: React.ReactNode;
-    type: 'default' | 'error' | 'warning';
-  };
-  primary: ActionDef;
-  secondaryLeft: ActionDef;
-  secondaryRight: ActionDef;
+    text: string,
+    icon?: React.ReactNode,
+    type: 'default' | 'error' | 'warning',
+  },
+  primary: ActionDef,
+  secondaryLeft: ActionDef,
+  secondaryRight: ActionDef,
 }
 
 export const getStatusConfig = (listing: Listing, t: any): StatusConfigDef => {

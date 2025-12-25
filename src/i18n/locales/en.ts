@@ -3,6 +3,7 @@ import { common } from './en/common';
 import { workflows } from './en/workflows';
 import { selfhosted } from './en/selfhosted';
 import { marketplace } from './en/marketplace';
+import { admin } from './en/admin';
 
 export const en = {
   translation: {
@@ -26,10 +27,20 @@ export const en = {
       "accountSettings": "Account Settings",
       "logout": "Logout",
       "lightMode": "Light Mode",
-      "darkMode": "Dark Mode"
+      "darkMode": "Dark Mode",
+      "adminConsole": "Admin Console",
+      "adminOverview": "Overview",
+      "adminAlerts": "Alerts",
+      "adminStudio": "Studio Ops",
+      "adminQuota": "Quota Policy",
+      "adminMarketplace": "Marketplace Ops",
+      "adminAudit": "Audit",
+      "adminConfig": "Config",
+      "adminHealth": "System Health"
     },
     "workflows": workflows,
     "selfhosted": selfhosted,
-    "marketplace": marketplace
+    "marketplace": marketplace,
+    "admin": admin
   }
 };

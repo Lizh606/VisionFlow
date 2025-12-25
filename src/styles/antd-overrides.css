@@ -10,6 +10,42 @@
   border: 1px solid rgba(var(--vf-border), 0.5) !important;
 }
 
+/* === Global Link and Link Button Fix (Spec 5.4) === */
+/* 彻底移除默认蓝色，确保基础状态和交互状态均使用品牌色变量 */
+a, 
+.ant-btn-link:not(.ant-btn-dangerous) {
+  color: rgba(var(--vf-brand), 1) !important;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover, 
+.ant-btn-link:not(.ant-btn-dangerous):hover {
+  color: rgba(var(--vf-brand-hover), 1) !important;
+}
+
+a:active, 
+.ant-btn-link:not(.ant-btn-dangerous):active {
+  color: rgba(var(--vf-brand-active), 1) !important;
+}
+
+/* === Global Button Hover Fix (Spec 6.1) === */
+.ant-btn-default:not(.ant-btn-dangerous):hover {
+  color: rgba(var(--vf-brand), 1) !important;
+  border-color: rgba(var(--vf-brand), 1) !important;
+}
+
+/* 文本按钮 Hover 逻辑 */
+.ant-btn-text:not(.ant-btn-dangerous):hover {
+  color: rgba(var(--vf-brand), 1) !important;
+  background-color: rgba(var(--vf-hover), var(--vf-hover-alpha)) !important;
+}
+
+/* 链接按钮在 Hover 时通常不需要背景色，仅改变文字颜色 */
+.ant-btn-link:not(.ant-btn-dangerous):hover {
+  background-color: transparent !important;
+}
+
 /* 抽屉风格 (Spec 7.2) */
 .vf-drawer-standard .ant-drawer-content-holder {
   box-shadow: var(--vf-shadow-overlay) !important;
@@ -22,32 +58,27 @@
   border-inline-end: none !important;
 }
 
-/* 菜单项文字样式：对齐 T5 Body Strong */
 .vf-sidebar-menu .ant-menu-title-content {
   font-weight: 500 !important;
   font-size: 14px !important;
   letter-spacing: -0.01em;
 }
 
-/* 选中态：背景与文字颜色 */
 .vf-sidebar-menu .ant-menu-item-selected {
   background-color: rgba(var(--vf-brand), 0.06) !important;
   color: rgba(var(--vf-brand), 1) !important;
 }
 
-/* 选中态：图标颜色 */
 .vf-sidebar-menu .ant-menu-item-selected .ant-menu-item-icon {
   color: rgba(var(--vf-brand), 1) !important;
 }
 
-/* Hover 态 */
 .vf-sidebar-menu .ant-menu-item:not(.ant-menu-item-selected):hover,
 .vf-sidebar-menu .ant-menu-submenu-title:hover {
   background-color: rgba(var(--vf-hover), var(--vf-hover-alpha)) !important;
 }
 
-/* 侧边栏折叠后的弹出菜单 (Spec 4.3 & 7.1) */
-/* 确保弹出层 z-index 足够高，且拥有 VisionFlow 的卡片视觉 */
+/* 侧边栏弹出菜单 */
 .ant-menu-submenu-popup {
   z-index: 1050 !important;
 }
@@ -66,7 +97,6 @@
   border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
-/* 弹出菜单内的项间距优化 */
 .ant-menu-submenu-popup .ant-menu-item {
   margin-block: 2px !important;
   margin-inline: 4px !important;
@@ -74,7 +104,6 @@
   border-radius: var(--vf-radius-control) !important;
 }
 
-/* Button 样式强化 */
 .ant-btn-primary:not(.ant-btn-dangerous) {
   background-color: rgba(var(--vf-brand), 1) !important;
   border-color: rgba(var(--vf-brand), 1) !important;
@@ -82,7 +111,6 @@
   text-shadow: none !important;
 }
 
-/* Dropdown Submenu Alignment Fix */
 .ant-dropdown-menu-submenu-title {
   display: flex !important;
   align-items: center !important;

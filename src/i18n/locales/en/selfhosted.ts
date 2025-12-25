@@ -37,7 +37,7 @@ export const selfhosted = {
     },
     "shortcuts": {
       "title": "Quick Navigation",
-      "viewDeviceList": "View Device Fleet",
+      "viewDeviceList": "View Device List",
       "manageLicenses": "Manage Licenses",
       "recentDeployments": "Check Deployment History"
     },
@@ -80,7 +80,7 @@ export const selfhosted = {
     "pause": "Pause"
   },
   "devices": {
-    "title": "Device Fleet",
+    "title": "Device List",
     "searchPlaceholder": "Search by name or device ID...",
     "noData": "No devices found",
     "unbound": "Unbound",

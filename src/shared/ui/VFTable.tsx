@@ -8,11 +8,12 @@ export type VFTableProps<T> = TableProps<T> & {
 };
 
 /**
- * VFTable - VisionFlow V1.4 Standard Table
- * 1. Typography: Header T5 Body Strong (14/22, 500), Body T5 Body (14/22, 400).
- * 2. Layout: Added horizontal padding to pagination to prevent sticking to borders.
+ * Internal VFTable Implementation
  */
-export function VFTable<T extends object>({ className, ...props }: VFTableProps<T>) {
+function InternalVFTable<T extends object>(
+  { className, ...props }: VFTableProps<T>,
+  ref: React.ForwardedRef<HTMLDivElement>
+) {
   return (
     <ConfigProvider
       theme={{
@@ -39,7 +40,7 @@ export function VFTable<T extends object>({ className, ...props }: VFTableProps<
         }
       }}
     >
-      <div className={`vf-table-container rounded-card border border-border bg-bg-card overflow-hidden shadow-card ${className || ''}`}>
+      <div ref={ref} className={`vf-table-container rounded-card border border-border bg-bg-card overflow-hidden shadow-card ${className || ''}`}>
         <Table<T>
           {...props}
           className="vf-standard-table"
@@ -57,40 +58,58 @@ export function VFTable<T extends object>({ className, ...props }: VFTableProps<
           }
         />
         <style>{`
-          /* === V1.4 Standard Table Typography Overrides === */
+          /* === V1.4 Standard Table Typography & Layout Overrides === */
           
           .vf-standard-table {
             background-color: #fff !important;
           }
 
-          /* Header: T5 Body Strong (14/22, 500) */
-          .vf-standard-table .ant-table-thead > tr > th {
-            height: 44px !important;
+          /* Header Styling: T5 Body Strong (14/22, 500) */
+          /* 排除测量行，确保表头不被撑开 */
+          .vf-standard-table .ant-table-thead > tr:not(.ant-table-measure-row) > th {
             padding: 11px 16px !important;
             font-size: var(--vf-font-size-t5) !important;
             line-height: var(--vf-lh-t5) !important;
             font-weight: var(--vf-font-weight-medium) !important;
             border-bottom: 1px solid rgba(var(--vf-divider), var(--vf-divider-alpha)) !important;
+            background-color: rgba(var(--vf-bg-card), 1) !important;
+            vertical-align: middle !important;
           }
 
-          /* Body: T5 Body (14/22, 400) */
-          .vf-standard-table .ant-table-tbody > tr > td {
-            height: 44px !important; 
+          /* Body Styling: T5 Body (14/22, 400) */
+          /* CRITICAL FIX: 使用 :not(.ant-table-measure-row) 排除测量行 */
+          .vf-standard-table .ant-table-tbody > tr:not(.ant-table-measure-row) > td {
             padding: 11px 16px !important;
             font-size: var(--vf-font-size-t5) !important;
             line-height: var(--vf-lh-t5) !important;
             font-weight: var(--vf-font-weight-regular) !important;
             color: rgba(var(--vf-text-primary), 1) !important;
             border-bottom: 1px solid rgba(var(--vf-divider), var(--vf-divider-alpha)) !important;
+            vertical-align: middle !important;
           }
 
-          /* First column weight fallback */
-          .vf-standard-table .ant-table-tbody > tr > td:first-child {
-            font-weight: var(--vf-font-weight-regular) !important;
+          /* CRITICAL RESET: 彻底消除测量行占位 */
+          .vf-standard-table .ant-table-measure-row,
+          .vf-standard-table .ant-table-measure-row td {
+            padding: 0 !important;
+            height: 0 !important;
+            line-height: 0 !important;
+            border: 0 !important;
+            visibility: hidden !important;
+            font-size: 0 !important;
           }
 
-          /* === Pagination Alignment Fix (Spec V1.4 Section 6.3) === */
-          /* 为分页器增加右侧边距 (24px) 和上下边距，确保不贴边 */
+          /* 固定列对齐微调：移除 shadow 改用可见 border (V1.4 Canvas 感) */
+          .vf-standard-table .ant-table-cell-fix-left-last::after,
+          .vf-standard-table .ant-table-cell-fix-right-first::after {
+            display: none !important;
+          }
+          
+          .vf-standard-table .ant-table-cell-fix-right-first {
+             border-left: 1px solid rgba(var(--vf-divider), var(--vf-divider-alpha)) !important;
+          }
+
+          /* 分页器对齐 (Spec V1.4 Section 6.3) */
           .vf-standard-table .ant-table-pagination.ant-pagination {
             margin: 16px 24px !important; 
             padding: 0 !important;
@@ -108,3 +127,7 @@ export function VFTable<T extends object>({ className, ...props }: VFTableProps<
     </ConfigProvider>
   );
 }
+
+export const VFTable = React.forwardRef(InternalVFTable) as <T extends object>(
+  props: VFTableProps<T> & { ref?: React.ForwardedRef<HTMLDivElement> }
+) => React.ReactElement;

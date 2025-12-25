@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import { Button, Select, Tooltip, Dropdown } from 'antd';
 import { 
-  Download, MoreVertical, Link, XCircle, Plus
+  Download, MoreVertical, Link, XCircle, Plus, AlertCircle
 } from 'lucide-react';
 import { useTranslation, Trans } from 'react-i18next';
 import dayjs from '../../../../config/dayjsConfig';
@@ -62,7 +62,6 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
       title: t('selfhosted.devices.cols.name'),
       dataIndex: 'name',
       key: 'name',
-      // No fixed width: Auto-adaptive to take remaining space
       render: (text: string, record: Device) => (
         <span 
           className="text-text-primary font-vf-semibold hover:text-brand cursor-pointer transition-colors truncate block"
@@ -151,16 +150,13 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
     <div className="flex flex-col gap-4 md:gap-6 pb-20 w-full animate-in fade-in duration-500">
       <PageHeader 
         title={t('selfhosted.devices.title')}
-        actions={
-          <Button type="primary" icon={<Plus size={16} />} className="h-10 rounded-control font-vf-semibold shadow-md">
-            Register Device
-          </Button>
-        }
       />
 
+      {/* UC-SH-Alert: 待许可设备提醒 Banner */}
       {pendingCount > 0 && (
-        <div className="flex items-center justify-between px-4 py-3 bg-warning/5 border border-warning/20 rounded-card shadow-sm">
+        <div className="flex items-center justify-between px-4 py-3 bg-warning/10 border border-warning/20 rounded-card shadow-sm animate-in slide-in-from-top-2 duration-300">
            <div className="flex items-center gap-3">
+              <AlertCircle size={18} className="text-warning shrink-0" />
               <span className="text-sm text-text-primary font-vf-medium">
                 <Trans 
                   i18nKey="selfhosted.devices.alert.pendingMessage" 
@@ -172,7 +168,7 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
            <Button 
              type="link" 
              size="small" 
-             className="!text-warning hover:opacity-75 font-vf-semibold p-0 transition-all underline underline-offset-4 text-xs"
+             className="vf-warning-link-btn hover:opacity-75 font-vf-semibold p-0 h-[44px] flex items-center transition-all underline underline-offset-4 text-xs"
              onClick={() => { setStatusFilter('PENDING_LICENSE'); setModeFilter('ALL'); }}
            >
              {t('selfhosted.devices.alert.filterAction')}
@@ -249,7 +245,7 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
         ) : (
           <VFTable 
             dataSource={filteredData} 
-            columns={columns} 
+            columns={columns as any} 
             rowKey="id"
             pagination={{ pageSize: 10 }}
             locale={{ emptyText: <div className="py-12"><VFEmptyState description={t('selfhosted.devices.noData')} /></div> }}
@@ -262,6 +258,16 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
       </div>
 
       <LicenseSelectModal open={bindModalOpen} onCancel={() => setBindModalOpen(false)} onSelect={() => setBindModalOpen(false)} />
+
+      <style>{`
+        /* V1.4 Local Specificity Override to beat global !important rules in overrides.css */
+        .vf-warning-link-btn.ant-btn-link {
+          color: rgba(var(--vf-warning), 1) !important;
+        }
+        .vf-warning-link-btn.ant-btn-link:hover {
+          color: rgba(var(--vf-warning), 0.8) !important;
+        }
+      `}</style>
     </div>
   );
 };

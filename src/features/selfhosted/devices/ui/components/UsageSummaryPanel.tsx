@@ -21,11 +21,9 @@ export const UsageSummaryPanel: React.FC<Props> = ({ deviceId }) => {
   const [loading] = useState(false);
   const { isMobile } = useResponsive();
 
-  // 根据 ID 获取设备状态
   const device = mockDevices.find(d => d.id === deviceId);
   const isUnbound = device?.status === 'PENDING_LICENSE';
 
-  // Mock Trend Data
   const trendData = useMemo(() => {
     if (isUnbound) return [];
     return [
@@ -45,9 +43,11 @@ export const UsageSummaryPanel: React.FC<Props> = ({ deviceId }) => {
     return sum.toLocaleString();
   }, [trendData, isUnbound]);
 
+  // Resolved colors for Canvas
   const COLORS = {
     edge: '#22C1C3',
-    cloud: '#818CF8'
+    cloud: '#818CF8',
+    divider: 'rgba(226, 232, 240, 0.5)'
   };
 
   const chartOptions = {
@@ -70,9 +70,9 @@ export const UsageSummaryPanel: React.FC<Props> = ({ deviceId }) => {
     },
     xAxis: {
       type: 'category',
-      data: trendData.map(d => d.time),
+      data: trendData.map(d => d.time || ''),
       boundaryGap: false,
-      axisLine: { lineStyle: { color: 'rgba(var(--vf-divider), 0.5)' } }
+      axisLine: { lineStyle: { color: COLORS.divider } }
     },
     yAxis: { type: 'value' },
     series: [
@@ -81,7 +81,7 @@ export const UsageSummaryPanel: React.FC<Props> = ({ deviceId }) => {
         type: 'line',
         smooth: true,
         showSymbol: false,
-        data: trendData.map(d => d.edge),
+        data: trendData.map(d => d.edge || 0),
         lineStyle: { color: COLORS.edge, width: 2.5 },
         areaStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
@@ -95,7 +95,7 @@ export const UsageSummaryPanel: React.FC<Props> = ({ deviceId }) => {
         type: 'line',
         smooth: true,
         showSymbol: false,
-        data: trendData.map(d => d.cloud),
+        data: trendData.map(d => d.cloud || 0),
         lineStyle: { color: COLORS.cloud, width: 2.5 },
         areaStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [

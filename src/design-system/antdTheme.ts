@@ -67,6 +67,10 @@ export function getAntdTheme(mode: VFMode): ThemeConfig {
       colorTextDisabled: colors.textDisabled,
       colorBorder: colors.border,
       colorSplit: colors.divider,
+      // Global Link Token
+      colorLink: colors.brand,
+      colorLinkHover: colors.brandHover,
+      colorLinkActive: colors.brandActive,
       borderRadius: 8,
       controlHeight: 40,
       fontFamily: `var(--vf-font-sans)`,
@@ -84,6 +88,16 @@ export function getAntdTheme(mode: VFMode): ThemeConfig {
         borderRadius: 8,
         primaryShadow: 'none',
         fontWeight: 500,
+        defaultColor: colors.textSecondary,
+        defaultHoverColor: colors.brand,
+        defaultHoverBorderColor: colors.brand,
+        defaultActiveColor: colors.brandActive,
+        defaultActiveBorderColor: colors.brandActive,
+        ghostBg: 'transparent',
+        // Component-level Link Colors
+        colorLink: colors.brand,
+        colorLinkHover: colors.brandHover,
+        colorLinkActive: colors.brandActive,
       },
       Card: {
         borderRadiusLG: 12,
@@ -106,7 +120,7 @@ export function getAntdTheme(mode: VFMode): ThemeConfig {
         itemBorderRadius: 8,
         itemMarginInline: 8, 
         iconMarginInlineEnd: 12,
-        itemHeight: 44, // 增加点击面积
+        itemHeight: 44,
         fontSize: 14,
       },
       Table: {

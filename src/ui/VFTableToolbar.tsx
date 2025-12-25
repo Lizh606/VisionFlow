@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Input, Space, Button } from 'antd';
+import { Input, Button } from 'antd';
 import { Search, RefreshCw, SlidersHorizontal } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useResponsive } from '../shared/hooks/useResponsive';
@@ -20,6 +20,7 @@ interface VFTableToolbarProps {
 
 /**
  * VFTableToolbar - 遵循规范 6.3 的标准列表/表格工具条
+ * V1.4 修正：移除强制溢出滚动，允许内容自然排布或通过外部控制换行
  */
 export const VFTableToolbar: React.FC<VFTableToolbarProps> = ({
   search,
@@ -34,7 +35,7 @@ export const VFTableToolbar: React.FC<VFTableToolbarProps> = ({
 
   return (
     <div className={`
-      flex flex-col md:flex-row md:items-center justify-between gap-4 
+      flex flex-col lg:flex-row lg:items-center justify-between gap-4 
       bg-bg-card p-4 rounded-card border border-border shadow-sm 
       ${className}
     `}>
@@ -46,19 +47,19 @@ export const VFTableToolbar: React.FC<VFTableToolbarProps> = ({
             placeholder={search.placeholder || t('common.search')}
             value={search.value}
             onChange={(e) => search.onChange(e.target.value)}
-            className="h-10 rounded-control border-border bg-bg-page/20 w-full sm:max-w-[320px] hover:border-brand/40 transition-all"
+            className="h-10 rounded-control border-border bg-bg-page/20 w-full sm:max-w-[280px] hover:border-brand/40 transition-all shrink-0"
             allowClear
           />
         )}
         {filters && (
-          <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto custom-scrollbar no-scrollbar pb-0.5">
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
             {filters}
           </div>
         )}
       </div>
 
       {/* 右侧：操作区 */}
-      <div className="flex items-center gap-3 shrink-0">
+      <div className="flex items-center gap-3 shrink-0 ml-auto lg:ml-0">
         {actions}
         
         {(onRefresh || isMobile) && (

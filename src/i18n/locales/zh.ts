@@ -3,6 +3,7 @@ import { common } from './zh/common';
 import { workflows } from './zh/workflows';
 import { selfhosted } from './zh/selfhosted';
 import { marketplace } from './zh/marketplace';
+import { admin } from './zh/admin';
 
 export const zh = {
   translation: {
@@ -26,10 +27,20 @@ export const zh = {
       "accountSettings": "账号设置",
       "logout": "退出登录",
       "lightMode": "浅色模式",
-      "darkMode": "深色模式"
+      "darkMode": "深色模式",
+      "adminConsole": "管理控制台",
+      "adminOverview": "跨域概览看板",
+      "adminAlerts": "告警中心",
+      "adminStudio": "Studio 运维",
+      "adminQuota": "配额策略",
+      "adminMarketplace": "Marketplace 运营",
+      "adminAudit": "审计",
+      "adminConfig": "配置",
+      "adminHealth": "系统健康"
     },
     "workflows": workflows,
     "selfhosted": selfhosted,
-    "marketplace": marketplace
+    "marketplace": marketplace,
+    "admin": admin
   }
 };

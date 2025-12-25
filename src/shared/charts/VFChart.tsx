@@ -14,6 +14,8 @@ interface VFChartProps {
 
 const deepMerge = (target: any, source: any) => {
   if (!source) return target;
+  if (typeof source !== 'object' || Array.isArray(source)) return source;
+  
   const output = { ...target };
   Object.keys(source).forEach(key => {
     if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
@@ -49,11 +51,12 @@ export const VFChart: React.FC<VFChartProps> = ({
     let final = { ...themeConfig, ...options };
 
     const processAxis = (axis: any) => {
-      if (!axis) return axis;
+      if (!axis) return undefined;
       const applyTemplate = (a: any) => {
+        if (!a) return a;
         const type = a.type || 'category';
         const template = type === 'category' ? themeConfig.categoryAxis : themeConfig.valueAxis;
-        return deepMerge(template, a);
+        return deepMerge(template || {}, a);
       };
 
       if (Array.isArray(axis)) {
@@ -62,13 +65,12 @@ export const VFChart: React.FC<VFChartProps> = ({
       return applyTemplate(axis);
     };
 
-    final.xAxis = processAxis(options.xAxis || final.xAxis);
-    final.yAxis = processAxis(options.yAxis || final.yAxis);
+    final.xAxis = processAxis(options.xAxis);
+    final.yAxis = processAxis(options.yAxis);
     
-    final.grid = deepMerge(themeConfig.grid, options.grid || {});
-    final.tooltip = deepMerge(themeConfig.tooltip, options.tooltip || {});
-    // 显式合并 Legend
-    final.legend = deepMerge(themeConfig.legend, options.legend || {});
+    final.grid = deepMerge(themeConfig.grid || {}, options.grid || {});
+    final.tooltip = deepMerge(themeConfig.tooltip || {}, options.tooltip || {});
+    final.legend = deepMerge(themeConfig.legend || {}, options.legend || {});
 
     return final;
   };

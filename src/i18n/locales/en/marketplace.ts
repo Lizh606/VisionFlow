@@ -219,7 +219,7 @@ export const marketplace = {
       },
       "edge": {
         "title": "Edge Deployment",
-        "enabled": "Authorized for deployment on self-hosted SHMgr Edge devices.",
+        "enabled": "Authorized for deployment on self-hosted devices.",
         "disabled": "Cloud-only execution policy applied."
       }
     }

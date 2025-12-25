@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { Modal, Button, Slider, Divider, App, Upload, Tooltip, Segmented, InputNumber } from 'antd';
+import { Modal, Button, Slider, Divider, App, Upload, Tooltip, Segmented, Input } from 'antd';
 import { 
   X, Play, RotateCcw, ImageIcon, 
   Settings2, Activity, Info, AlertCircle, 
@@ -11,6 +11,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { Listing, InferenceResult, ParamSchema } from '../../types';
 import { marketplaceService } from '../../../../services/marketplaceService';
+import { VFText } from '../../../../ui/VFText';
 
 interface Props {
   open: boolean;
@@ -66,27 +67,49 @@ export const CloudTestModal: React.FC<Props> = ({ open, onCancel, listing }) => 
     const val = paramValues[p.id] ?? p.default;
 
     return (
-      <div key={p.id} className="flex flex-col gap-4">
+      <div key={p.id} className="flex flex-col gap-4 mb-6">
         <div className="flex items-center justify-between">
           <label className="text-[13px] font-bold text-text-primary flex items-center gap-2">
             {p.label}
             {p.help && <Tooltip title={p.help}><Info size={14} className="text-text-tertiary" /></Tooltip>}
           </label>
-          <span className="text-[13px] font-bold text-brand tabular-nums">
+          <VFText variant="t5-strong" color="brand" tabularNums>
             {typeof val === 'number' && val < 1 ? `${Math.round(val * 100)}%` : val}
-          </span>
+          </VFText>
         </div>
 
         {p.type === 'SLIDER' && (
-          <Slider min={p.min} max={p.max} step={p.step} value={Number(val)} onChange={(v) => setParamValues(prev => ({ ...prev, [p.id]: v }))} disabled={state === 'RUNNING' || state === 'QUEUED'} />
+          <Slider 
+            min={p.min} 
+            max={p.max} 
+            step={p.step} 
+            value={Number(val)} 
+            onChange={(v) => setParamValues(prev => ({ ...prev, [p.id]: v }))} 
+            disabled={state === 'RUNNING' || state === 'QUEUED'} 
+          />
         )}
 
         {p.type === 'SEGMENTED' && (
-          <Segmented block options={p.options || []} value={val} onChange={(v) => setParamValues(prev => ({ ...prev, [p.id]: v }))} disabled={state === 'RUNNING' || state === 'QUEUED'} />
+          <Segmented 
+            block 
+            options={p.options || []} 
+            value={val} 
+            onChange={(v) => setParamValues(prev => ({ ...prev, [p.id]: v }))} 
+            disabled={state === 'RUNNING' || state === 'QUEUED'} 
+          />
         )}
 
         {p.type === 'INPUT_NUMBER' && (
-          <InputNumber className="w-full h-10" min={p.min} max={p.max} value={Number(val)} onChange={(v) => setParamValues(prev => ({ ...prev, [p.id]: v }))} disabled={state === 'RUNNING' || state === 'QUEUED'} />
+          <Input 
+            className="h-10 rounded-control font-mono font-bold" 
+            placeholder="0"
+            value={val}
+            onChange={(e) => {
+               const v = e.target.value.replace(/\D/g, '');
+               setParamValues(prev => ({ ...prev, [p.id]: v }));
+            }}
+            disabled={state === 'RUNNING' || state === 'QUEUED'} 
+          />
         )}
       </div>
     );
@@ -98,7 +121,7 @@ export const CloudTestModal: React.FC<Props> = ({ open, onCancel, listing }) => 
         <header className="h-[64px] px-6 border-b border-divider flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
              <Activity size={22} className="text-brand" />
-             <h2 className="m-0 text-[16px] font-bold">Cloud Test Sandbox</h2>
+             <VFText variant="t4" color="primary">Cloud Test Sandbox</VFText>
           </div>
           <Button type="text" icon={<X size={20} />} onClick={onCancel} />
         </header>
@@ -117,12 +140,21 @@ export const CloudTestModal: React.FC<Props> = ({ open, onCancel, listing }) => 
                </div>
              )}
           </div>
-          <div className="flex-1 p-8 flex flex-col gap-8">
-             <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 p-8 flex flex-col gap-8 overflow-hidden">
+             <div className="flex-1 overflow-y-auto custom-scrollbar pr-2">
+                <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-widest block mb-6">Inference Parameters</VFText>
                 {listing.allowed_params?.map(p => renderParamField(p))}
              </div>
-             <Button type="primary" block size="large" icon={<Play size={18} />} className="h-12 font-bold" disabled={!selectedImage || state === 'RUNNING'} onClick={handleRun}>
-               {state === 'RUNNING' ? 'Running...' : 'Run Inference'}
+             <Button 
+                type="primary" 
+                block 
+                size="large" 
+                icon={state === 'RUNNING' ? <Loader2 size={18} className="animate-spin" /> : <Play size={18} />} 
+                className="h-12 font-bold rounded-control shadow-md" 
+                disabled={!selectedImage || state === 'RUNNING' || state === 'QUEUED'} 
+                onClick={handleRun}
+             >
+               {state === 'RUNNING' ? 'Running Inference...' : state === 'QUEUED' ? 'Queueing Task...' : 'Run Inference'}
              </Button>
           </div>
         </div>

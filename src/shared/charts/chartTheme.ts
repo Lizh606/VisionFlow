@@ -12,17 +12,19 @@ const PALETTE = [
   '#F59E0B', // Amber (Non-warning usage)
 ];
 
-const getCssVar = (name: string) => {
-  if (typeof window === 'undefined') return '';
+/**
+ * Robustly get a CSS variable's value. 
+ * If it's a comma-separated RGB list, returns a valid rgb() string.
+ */
+const getCssVar = (name: string, fallback: string = '') => {
+  if (typeof window === 'undefined') return fallback;
   const val = getComputedStyle(document.body).getPropertyValue(name).trim();
-  return val.includes(',') ? `rgb(${val})` : val;
-};
-
-const getCssVarRGBA = (name: string, alpha: number) => {
-  if (typeof window === 'undefined') return '';
-  const val = getComputedStyle(document.body).getPropertyValue(name).trim();
-  const clean = val.split(',').join(' ');
-  return `rgba(${clean}, ${alpha})`;
+  if (!val) return fallback;
+  // If the variable is just numbers (like our RGB tokens), wrap it.
+  if (/^[\d\s,]+$/.test(val)) {
+    return `rgb(${val})`;
+  }
+  return val;
 };
 
 export const useChartTheme = () => {
@@ -34,16 +36,18 @@ export const useChartTheme = () => {
     const timer = setTimeout(() => {
       const isDark = mode === 'dark';
       
-      const textSecondary = getCssVar('--vf-text-secondary');
-      const textTertiary = getCssVar('--vf-text-tertiary');
-      const dividerColor = getCssVarRGBA('--vf-divider', isDark ? 0.15 : 0.8);
-      const bgCard = getCssVar('--vf-bg-card');
+      const textPrimary = getCssVar('--vf-text-primary', isDark ? '#FFFFFF' : '#0F172A');
+      const textSecondary = getCssVar('--vf-text-secondary', isDark ? 'rgba(255,255,255,0.85)' : '#475569');
+      const textTertiary = getCssVar('--vf-text-tertiary', isDark ? 'rgba(255,255,255,0.65)' : '#64748B');
+      const dividerColor = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(226,232,240,0.8)';
+      const brandColor = getCssVar('--vf-brand', '#6D29D9');
 
       setThemeConfig({
         color: PALETTE,
         backgroundColor: 'transparent',
         textStyle: {
-          fontFamily: 'var(--vf-font-sans)',
+          // Canvas cannot resolve CSS variables in fontFamily. Use the actual name.
+          fontFamily: 'Inter, system-ui, sans-serif',
           fontSize: 12,
         },
         tooltip: {
@@ -55,9 +59,9 @@ export const useChartTheme = () => {
           borderRadius: 8,
           shadowColor: 'rgba(0,0,0,0.1)',
           shadowBlur: 10,
-          textStyle: { color: getCssVar('--vf-text-primary'), fontSize: 13 },
+          textStyle: { color: textPrimary, fontSize: 13 },
           axisPointer: {
-            lineStyle: { color: getCssVar('--vf-brand'), width: 1, type: 'dashed' }
+            lineStyle: { color: brandColor, width: 1, type: 'dashed' }
           }
         },
         legend: {
@@ -69,7 +73,7 @@ export const useChartTheme = () => {
         },
         grid: {
           top: 40,
-          bottom: 48, // 预留给 Legend
+          bottom: 48,
           left: 10,
           right: 10,
           containLabel: true,
