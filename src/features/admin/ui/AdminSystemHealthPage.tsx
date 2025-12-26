@@ -73,8 +73,9 @@ export const AdminSystemHealthPage: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-500 w-full pb-24">
+      {/* V1.4 对齐菜单文案 */}
       <VFPageHeader 
-        title={t('admin.health.title')} 
+        title={t('menu.adminHealth')} 
         description={t('admin.health.subtitle')}
         actions={
           <Space size={12}>

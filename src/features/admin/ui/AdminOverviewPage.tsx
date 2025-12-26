@@ -54,8 +54,9 @@ export const AdminOverviewPage: React.FC<{ onNavigate?: (p: string) => void }> =
 
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-500 w-full pb-20">
+      {/* V1.4 对齐菜单文案 */}
       <VFPageHeader 
-        title={t('admin.overview.title')} 
+        title={t('menu.adminOverview')} 
         description={t('admin.overview.description')}
         actions={
           <Badge count={unreadCount} size="small" offset={[-2, 2]}>

@@ -68,9 +68,9 @@ export const WorkflowsScreen: React.FC = () => {
   return (
     <div className="flex flex-col gap-4 md:gap-6 pb-20 w-full animate-in fade-in duration-500">
       
-      {/* 1. Page Header: 标题与页面级动作 */}
+      {/* 1. Page Header: 标题与页面级动作 - V1.4 对齐菜单文案 */}
       <WorkflowsPageHeader 
-        title={t('workflows.title')} 
+        title={t('menu.workflows')} 
         folderName={activeFolder?.name}
         onBack={activeFolderId ? () => setActiveFolderId(null) : undefined}
       />

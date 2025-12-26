@@ -148,8 +148,9 @@ export const DevicesPage: React.FC<DevicesPageProps> = ({ onDeviceClick }) => {
 
   return (
     <div className="flex flex-col gap-4 md:gap-6 pb-20 w-full animate-in fade-in duration-500">
+      {/* V1.4 对齐菜单文案 */}
       <PageHeader 
-        title={t('selfhosted.devices.title')}
+        title={t('menu.devices')}
       />
 
       {/* UC-SH-Alert: 待许可设备提醒 Banner */}
