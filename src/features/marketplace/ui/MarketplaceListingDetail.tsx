@@ -27,7 +27,7 @@ import { PricingPanel } from './tabs/PricingPanel';
 export const MarketplaceListingDetail: React.FC<{ listingId: string; onNavigate: (p: string) => void }> = ({ listingId, onNavigate }) => {
   const { t } = useTranslation();
   const { message } = App.useApp();
-  const { isMobile } = useResponsive();
+  const { isMobile, isDesktop } = useResponsive();
   
   const [listing, setListing] = useState<Listing | null>(null);
   const [loading, setLoading] = useState(true);
@@ -79,11 +79,11 @@ export const MarketplaceListingDetail: React.FC<{ listingId: string; onNavigate:
 
   if (loading) {
     return (
-      <div className="flex flex-col gap-8 p-4">
+      <div className="flex flex-col gap-6 w-full animate-in fade-in duration-500">
         <Skeleton active title={{ width: '30%' }} />
         <Row gutter={24}>
-           <Col lg={16} xs={24}><Skeleton.Button active block className="!h-[400px] rounded-card" /></Col>
-           <Col lg={8} xs={24}><Skeleton active paragraph={{ rows: 6 }} /></Col>
+           <Col xl={16} xs={24}><Skeleton.Button active block className="!h-[400px] rounded-card" /></Col>
+           <Col xl={8} xs={24}><Skeleton active paragraph={{ rows: 6 }} /></Col>
         </Row>
       </div>
     );
@@ -96,7 +96,6 @@ export const MarketplaceListingDetail: React.FC<{ listingId: string; onNavigate:
       <VFCard className="border-border shadow-none">
          <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-1">
-              {/* V1.4: Sub Section Header = T6 Caption Strong */}
               <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-wider">
                 {listing.purchased ? t('marketplace.purchase.status.ready') : t('marketplace.search.selection')}
               </VFText>
@@ -111,7 +110,6 @@ export const MarketplaceListingDetail: React.FC<{ listingId: string; onNavigate:
               ) : (
                 <div className="flex flex-col gap-0.5">
                   <div className="flex items-baseline gap-2">
-                     {/* V1.4: Price = T1 Display */}
                      <VFText variant="t1" color="primary" tabularNums>
                        {activePlan ? (activePlan.price === 0 ? t('common.free') : `$${activePlan.price.toFixed(2)}`) : '---'}
                      </VFText>
@@ -184,7 +182,6 @@ export const MarketplaceListingDetail: React.FC<{ listingId: string; onNavigate:
       <VFCard title={t('marketplace.detail.sections.details')} className="border-border shadow-none">
          <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
-              {/* V1.4: Detail Row Label = T6 Strong */}
               <VFText variant="t6" color="tertiary" className="flex items-center gap-2 font-bold uppercase tracking-tight">
                 <User size={14} /> {t('marketplace.detail.author')}
               </VFText>
@@ -217,7 +214,7 @@ export const MarketplaceListingDetail: React.FC<{ listingId: string; onNavigate:
   );
 
   return (
-    <div className="flex flex-col gap-6 animate-in fade-in duration-500 pb-20 max-w-[1280px] mx-auto">
+    <div className="flex flex-col gap-6 animate-in fade-in duration-500 pb-20 w-full">
       <VFPageHeader 
         title={listing.name}
         onBack={() => onNavigate('marketplace')}
@@ -228,13 +225,13 @@ export const MarketplaceListingDetail: React.FC<{ listingId: string; onNavigate:
       />
 
       <Row gutter={[24, 24]}>
-        <Col xs={24} lg={16}>
+        <Col xs={24} xl={16}>
           <div className="flex flex-col gap-6">
             <div className="aspect-video bg-bg-page rounded-card border border-border flex items-center justify-center text-text-tertiary/10">
                <ImageIcon size={isMobile ? 60 : 100} strokeWidth={1} />
             </div>
 
-            {isMobile && <div className="mt-2">{RightSidebar}</div>}
+            {!isDesktop && <div className="mt-2">{RightSidebar}</div>}
 
             <VFCard noPadding className="border-border shadow-none overflow-hidden">
               <Tabs 
@@ -247,7 +244,7 @@ export const MarketplaceListingDetail: React.FC<{ listingId: string; onNavigate:
           </div>
         </Col>
 
-        {!isMobile && <Col xs={0} lg={8}><div className="sticky top-6">{RightSidebar}</div></Col>}
+        {isDesktop && <Col xs={0} xl={8}><div className="sticky top-6">{RightSidebar}</div></Col>}
       </Row>
 
       <AuthModal open={authModalOpen} onCancel={() => setAuthModalOpen(false)} />
@@ -259,7 +256,6 @@ export const MarketplaceListingDetail: React.FC<{ listingId: string; onNavigate:
         .vf-detail-tabs .ant-tabs-tab-btn { font-weight: 600 !important; font-size: 14px !important; }
         .vf-detail-tabs .ant-tabs-ink-bar { height: 3px !important; border-radius: 3px 3px 0 0; }
         
-        /* V1.4: 解决主内容贴边问题 */
         .vf-detail-tabs .ant-tabs-content-holder { 
           padding: 32px !important; 
         }

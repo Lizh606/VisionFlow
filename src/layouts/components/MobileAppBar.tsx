@@ -8,10 +8,14 @@ interface MobileAppBarProps {
   onBrandClick?: () => void;
 }
 
+/**
+ * MobileAppBar - V1.4 Mobile Sticky Header (height: 56px)
+ * Only rendered when isMobile is true in MainLayout.
+ */
 export const MobileAppBar: React.FC<MobileAppBarProps> = ({ onOpenMenu, onBrandClick }) => {
   return (
     <header 
-      className="md:hidden sticky top-0 z-[100] w-full h-header bg-bg-card border-b border-divider flex items-center justify-between px-4"
+      className="sticky top-0 z-[100] w-full h-header bg-bg-card border-b border-divider flex items-center justify-between px-4 shrink-0"
     >
       {/* Brand Entrance */}
       <div 
@@ -30,7 +34,7 @@ export const MobileAppBar: React.FC<MobileAppBarProps> = ({ onOpenMenu, onBrandC
         </span>
       </div>
 
-      {/* Hamburger Menu - Fixed size container to ensure menu button stability */}
+      {/* Hamburger Menu */}
       <div className="flex-shrink-0 flex items-center justify-end w-11 h-11">
         <Button 
           type="text" 

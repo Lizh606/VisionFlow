@@ -16,9 +16,10 @@ interface MainLayoutProps {
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ children, activePath = 'workflows', onNavigate }) => {
   const { isMobile, shouldCollapseSidebar } = useResponsive();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(shouldCollapseSidebar);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Sync internal collapsed state with responsive hook
   useEffect(() => {
     setCollapsed(shouldCollapseSidebar);
   }, [shouldCollapseSidebar]);
@@ -32,33 +33,56 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children, activePath = '
     handleNavigate('workflows');
   };
 
+  /**
+   * Layout Implementation - VisionFlow V1.4 Standard
+   * Tablet (>=768) and Desktop (>=1200) share the same Dual-Column skeleton.
+   * Mobile (<768) uses Top Bar + Navigation Drawer.
+   */
   return (
-    <Layout className="h-screen w-screen overflow-hidden bg-bg-page flex flex-col md:flex-row">
-      {/* 1. Mobile AppBar */}
-      <MobileAppBar 
-        onOpenMenu={() => setMobileOpen(true)} 
-        onBrandClick={handleBrandClick}
-      />
-
-      {/* 2. Desktop/Tablet Sidebar (>= 768px) */}
-      {!isMobile && (
-        <Sider
-          trigger={null}
-          collapsible
-          collapsed={collapsed}
-          width={vfLayout.siderWidthExpanded}
-          collapsedWidth={vfLayout.siderWidthCollapsed}
-          className="!bg-bg-card border-r border-border h-full flex flex-col shrink-0"
-        >
-          <Sidebar 
-            collapsed={collapsed} 
-            activeKey={activePath} 
-            onNavigate={handleNavigate} 
-          />
-        </Sider>
+    <Layout className="h-screen w-screen overflow-hidden bg-bg-page">
+      {/* 1. Mobile-only App Bar (Strict JS conditional) */}
+      {isMobile && (
+        <MobileAppBar 
+          onOpenMenu={() => setMobileOpen(true)} 
+          onBrandClick={handleBrandClick}
+        />
       )}
 
-      {/* 3. Mobile Navigation Drawer */}
+      <Layout className="flex-1 flex flex-row overflow-hidden">
+        {/* 2. Desktop/Tablet Sidebar (>= 768px) */}
+        {!isMobile && (
+          <Sider
+            trigger={null}
+            collapsible
+            collapsed={collapsed}
+            width={vfLayout.siderWidthExpanded}
+            collapsedWidth={vfLayout.siderWidthCollapsed}
+            className="!bg-bg-card border-r border-divider h-full flex flex-col shrink-0 z-50 shadow-sm"
+          >
+            <Sidebar 
+              collapsed={collapsed} 
+              activeKey={activePath} 
+              onNavigate={handleNavigate} 
+            />
+          </Sider>
+        )}
+
+        {/* 3. Main Content Area */}
+        <Layout className="flex-1 flex flex-col bg-bg-page relative overflow-hidden">
+          <Content 
+            className="flex-1 overflow-y-auto overflow-x-hidden relative custom-scrollbar bg-bg-page"
+            style={{ 
+              padding: isMobile ? '16px' : '24px',
+            }}
+          >
+            <div className="w-full min-h-full">
+              {children}
+            </div>
+          </Content>
+        </Layout>
+      </Layout>
+
+      {/* 4. Mobile Navigation Drawer (Right Side per V1.4) */}
       <Drawer
         placement="right"
         onClose={() => setMobileOpen(false)}
@@ -79,20 +103,6 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children, activePath = '
           />
         </div>
       </Drawer>
-      
-      {/* 4. Content Area: 移除 max-w 限制，真正实现 Canvas 效果 */}
-      <Layout className="flex-1 flex flex-col bg-bg-page relative overflow-hidden">
-        <Content 
-          className="flex-1 overflow-y-auto overflow-x-hidden relative custom-scrollbar bg-bg-page"
-          style={{ 
-            padding: isMobile ? '16px' : '24px',
-          }}
-        >
-          <div className="w-full min-h-full">
-            {children}
-          </div>
-        </Content>
-      </Layout>
     </Layout>
   );
 };

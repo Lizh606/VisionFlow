@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { Input, Button, Row, Col, Select, Slider, Checkbox, Divider, Skeleton, Drawer, Badge } from 'antd';
 import { Search, Filter, RefreshCcw, SlidersHorizontal, X } from 'lucide-react';
@@ -66,9 +67,7 @@ export const MarketplaceSearch: React.FC<{ onNavigate: (p: string) => void }> = 
     setPriceRange([0, 1000]);
   };
 
-  // Fix: Made children optional to suppress TypeScript error where JSX fails to correctly infer children prop in nested render variables.
   const FilterLabel = ({ children }: { children?: React.ReactNode }) => (
-    /* V1.4: Sidebar Filter Title = T6 Strong (Uppercase) */
     <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-widest mb-4 block">
       {children}
     </VFText>
@@ -116,7 +115,7 @@ export const MarketplaceSearch: React.FC<{ onNavigate: (p: string) => void }> = 
   );
 
   return (
-    <div className="flex flex-col gap-6 md:gap-8 animate-in fade-in duration-500 pb-20 max-w-[1400px] mx-auto">
+    <div className="flex flex-col gap-6 animate-in fade-in duration-500 pb-20 w-full">
       <VFPageHeader 
         title={t('marketplace.search.title')}
         onBack={() => onNavigate('marketplace')}
@@ -134,7 +133,6 @@ export const MarketplaceSearch: React.FC<{ onNavigate: (p: string) => void }> = 
           <Col xs={0} lg={6}>
             <div className="bg-bg-card rounded-card border border-border overflow-hidden">
               <div className="px-5 py-4 border-b border-divider flex items-center justify-between bg-bg-page/30">
-                {/* V1.4: Card Subhead = T4 (16px) */}
                 <VFText variant="t4" color="primary" className="flex items-center gap-2">
                   <SlidersHorizontal size={16} /> {t('marketplace.filters.title')}
                 </VFText>

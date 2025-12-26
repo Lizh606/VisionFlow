@@ -156,12 +156,17 @@ export const marketplace = {
     "docs": "Documentation",
     "pricing": "Pricing",
     "author": "Developer",
+    "category": "Category",
+    "published": "Published",
     "cta": {
       "openStudio": "Open in Studio",
       "deploy": "Deploy to Self-hosted",
       "buyNow": "Buy Now",
       "getFree": "Get for Free",
       "cloudTest": "Cloud Test"
+    },
+    "sections": {
+      "details": "Resource Details"
     },
     "supportedDevices": "Supported Devices"
   },

@@ -35,8 +35,9 @@ export const VFCard = React.forwardRef<HTMLDivElement, VFCardProps>((props, ref)
       ${onClick ? 'cursor-pointer hover:border-brand/30 active:scale-[0.99] active:bg-action-hover' : ''}
       ${className}
     `}>
+      {/* V1.4 Standard Card Structure with Keys to prevent reconciliation warnings */}
       {(title || extra) ? (
-        <div key="card-header" className="
+        <div key="vf-card-header" className="
           flex items-center justify-between 
           px-4 sm:px-6 
           border-b border-divider 
@@ -59,7 +60,7 @@ export const VFCard = React.forwardRef<HTMLDivElement, VFCardProps>((props, ref)
           )}
         </div>
       ) : null}
-      <div key="card-body" className={`${noPadding ? '' : 'p-4 sm:p-6'} flex-1 text-text-primary h-full`}>
+      <div key="vf-card-body" className={`${noPadding ? '' : 'p-4 sm:p-6'} flex-1 text-text-primary h-full`}>
         {children}
       </div>
     </div>

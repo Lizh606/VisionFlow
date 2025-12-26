@@ -30,7 +30,7 @@ export const MarketplaceCheckout: React.FC<{ listingId: string; initialPlanCode?
   if (loading || !listing) return <div className="p-10"><Skeleton active /></div>;
 
   return (
-    <div className="flex flex-col gap-6 animate-in fade-in duration-500 max-w-[1200px] mx-auto pb-20">
+    <div className="flex flex-col gap-6 animate-in fade-in duration-500 w-full pb-20">
       <VFPageHeader title="Checkout" onBack={() => onNavigate(`marketplace-listing-${listingId}`)} />
 
       <Row gutter={[24, 24]}>
@@ -41,7 +41,6 @@ export const MarketplaceCheckout: React.FC<{ listingId: string; initialPlanCode?
                 <ShieldCheck size={24} />
               </div>
               <div className="flex flex-col min-w-0">
-                {/* V1.4: Title = T4 */}
                 <VFText variant="t4" color="primary" truncate className="leading-tight">{listing.name}</VFText>
                 <VFText variant="t6" color="tertiary" className="font-bold uppercase tracking-wider opacity-60">Developer: {listing.author.name}</VFText>
               </div>
@@ -59,7 +58,6 @@ export const MarketplaceCheckout: React.FC<{ listingId: string; initialPlanCode?
                       className={`p-5 rounded-card border transition-all flex items-center justify-between cursor-pointer ${isSelected ? 'border-brand bg-brand/[0.02] ring-1 ring-brand/10' : 'border-border bg-bg-card hover:border-border-strong'}`}
                     >
                       <div className="flex flex-col gap-1">
-                        {/* V1.4: Item Title = T5 Strong */}
                         <VFText variant="t5-strong" color={isSelected ? 'brand' : 'primary'}>{plan.name}</VFText>
                         <div className="flex gap-4 mt-1">
                           {plan.features.slice(0, 2).map((f, i) => (
@@ -90,7 +88,6 @@ export const MarketplaceCheckout: React.FC<{ listingId: string; initialPlanCode?
                 <Divider className="m-0 opacity-40" />
                 <div className="flex justify-between items-center">
                    <VFText variant="t5-strong" color="primary" className="font-bold">Total Amount</VFText>
-                   {/* V1.4: Highlight Value = T3 (20px) */}
                    <VFText variant="t3" color="brand" tabularNums className="font-bold">
                      ${selectedPlan ? selectedPlan.price.toFixed(2) : '0.00'}
                    </VFText>

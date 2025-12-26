@@ -14,7 +14,7 @@ import { VFText } from '../../../ui/VFText';
 
 export const MarketplaceHome: React.FC<{ onNavigate: (p: string) => void }> = ({ onNavigate }) => {
   const { t } = useTranslation();
-  const { isMobile } = useResponsive();
+  const { isMobile, isTablet } = useResponsive();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -54,7 +54,7 @@ export const MarketplaceHome: React.FC<{ onNavigate: (p: string) => void }> = ({
       {/* Hero Section */}
       <div className="bg-bg-card rounded-card border border-border p-6 md:p-10 relative overflow-hidden">
         <div className="absolute -top-10 -right-10 opacity-[0.03] pointer-events-none text-brand">
-           <Zap size={isMobile ? 120 : 240} strokeWidth={1.5} />
+           <Zap size={isMobile ? 120 : isTablet ? 180 : 240} strokeWidth={1.5} />
         </div>
         
         <div className="max-w-2xl relative z-10 flex flex-col gap-6">
@@ -111,7 +111,6 @@ export const MarketplaceHome: React.FC<{ onNavigate: (p: string) => void }> = ({
              </VFText>
           </div>
           
-          {/* V1.4: Link UI using VFText to ensure theme color consistency and no blue tint */}
           <div 
             onClick={handleSearchClick}
             className="group flex items-center gap-1.5 cursor-pointer select-none"
@@ -127,19 +126,26 @@ export const MarketplaceHome: React.FC<{ onNavigate: (p: string) => void }> = ({
           </div>
         </div>
 
-        <Row gutter={[20, 20]}>
+        {/* 
+          V1.4 Grid Adjustment for Tablet: 
+          - Mobile (xs): 1 col
+          - Small Tablet (sm: 576px+): 2 cols
+          - Tablet (md: 768px+): 3 cols (Previously lg)
+          - Desktop (xl: 1200px+): 4 cols
+        */}
+        <Row gutter={[24, 24]}>
           {loading ? (
             [1, 2, 3, 4, 5, 6].map(i => (
-              <Col xs={24} sm={12} lg={8} xl={6} xxl={4} key={i}>
-                <div className="bg-bg-card rounded-card border border-divider p-4 h-[340px] flex flex-col gap-4">
-                  <Skeleton.Button active block className="!h-44 rounded-lg" />
-                  <Skeleton active title={{ width: '60%' }} paragraph={{ rows: 2 }} />
+              <Col xs={24} sm={12} md={8} xl={6} key={i}>
+                <div className="bg-bg-card rounded-card border border-divider p-4 h-[440px] flex flex-col gap-4">
+                  <Skeleton.Button active block className="!h-48 rounded-lg" />
+                  <Skeleton active title={{ width: '60%' }} paragraph={{ rows: 3 }} />
                 </div>
               </Col>
             ))
           ) : (
             listings.map(item => (
-              <Col xs={24} sm={12} lg={8} xl={6} xxl={4} key={item.id}>
+              <Col xs={24} sm={12} md={8} xl={6} key={item.id}>
                 <ListingCard 
                   listing={item} 
                   onClick={(id) => onNavigate(`marketplace-listing-${id}`)}

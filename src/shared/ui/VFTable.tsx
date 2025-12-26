@@ -65,7 +65,7 @@ function InternalVFTable<T extends object>(
           }
 
           /* Header Styling: T5 Body Strong (14/22, 500) */
-          /* 排除测量行，确保表头不被撑开 */
+          /* Exclude measure rows to ensure headers are not stretched unexpectedly */
           .vf-standard-table .ant-table-thead > tr:not(.ant-table-measure-row) > th {
             padding: 11px 16px !important;
             font-size: var(--vf-font-size-t5) !important;
@@ -77,7 +77,6 @@ function InternalVFTable<T extends object>(
           }
 
           /* Body Styling: T5 Body (14/22, 400) */
-          /* CRITICAL FIX: 使用 :not(.ant-table-measure-row) 排除测量行 */
           .vf-standard-table .ant-table-tbody > tr:not(.ant-table-measure-row) > td {
             padding: 11px 16px !important;
             font-size: var(--vf-font-size-t5) !important;
@@ -88,7 +87,7 @@ function InternalVFTable<T extends object>(
             vertical-align: middle !important;
           }
 
-          /* CRITICAL RESET: 彻底消除测量行占位 */
+          /* CRITICAL RESET: Eliminate measure row spacing */
           .vf-standard-table .ant-table-measure-row,
           .vf-standard-table .ant-table-measure-row td {
             padding: 0 !important;
@@ -99,7 +98,7 @@ function InternalVFTable<T extends object>(
             font-size: 0 !important;
           }
 
-          /* 固定列对齐微调：移除 shadow 改用可见 border (V1.4 Canvas 感) */
+          /* Fixed Column Alignment Adjustments */
           .vf-standard-table .ant-table-cell-fix-left-last::after,
           .vf-standard-table .ant-table-cell-fix-right-first::after {
             display: none !important;
@@ -109,7 +108,7 @@ function InternalVFTable<T extends object>(
              border-left: 1px solid rgba(var(--vf-divider), var(--vf-divider-alpha)) !important;
           }
 
-          /* 分页器对齐 (Spec V1.4 Section 6.3) */
+          /* Pagination Alignment (Spec V1.4 Section 6.3) */
           .vf-standard-table .ant-table-pagination.ant-pagination {
             margin: 16px 24px !important; 
             padding: 0 !important;
