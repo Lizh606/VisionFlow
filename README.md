@@ -17,3 +17,29 @@ View your app in AI Studio: https://ai.studio/apps/drive/1a26Y-v8NPE0kZ1VZxjRiu9
    `npm install`
 2. Run the app:
    `npm run dev`
+
+## Docker Deploy
+
+This repo supports two Docker deployment modes via `docker-compose.yml`.
+
+### Mode A: Build image on server
+
+```bash
+docker compose --profile build up -d --build
+```
+
+### Mode B: Use local dist bundle
+
+1. Build static assets:
+   ```bash
+   npm run build
+   ```
+2. Start with dist volume:
+   ```bash
+   docker compose --profile dist up -d
+   ```
+
+### Access
+
+Default port mapping is `3000:80`, so open:
+`http://<server-ip>:3000`
