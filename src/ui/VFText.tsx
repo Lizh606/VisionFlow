@@ -23,7 +23,7 @@ export type VFTextColor =
   | 'error' 
   | 'success' 
   | 'warning'
-  | 'inherit'; // Added inherit to support parent-driven coloring (e.g. Menu high-lighting)
+  | 'inherit';
 
 interface VFTextProps {
   variant?: VFTextVariant;
@@ -33,6 +33,8 @@ interface VFTextProps {
   className?: string;
   truncate?: boolean;
   tabularNums?: boolean;
+  // V1.4 Fix: Add onClick support to enable interactive text (e.g. Subject Links)
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 const variantMap: Record<VFTextVariant, string> = {
@@ -61,7 +63,6 @@ const colorMap: Record<VFTextColor, string> = {
 /**
  * VFText - VisionFlow Standard Typography Wrapper
  * Implementation of V1.4 Section 5.
- * Using forwardRef to support Tooltip/Dropdown integration and fix StrictMode findDOMNode warnings.
  */
 export const VFText = React.forwardRef<HTMLElement, VFTextProps>(({
   variant = 't5',
@@ -71,17 +72,23 @@ export const VFText = React.forwardRef<HTMLElement, VFTextProps>(({
   className = '',
   truncate = false,
   tabularNums = false,
+  onClick,
 }, ref) => {
   const combinedClasses = [
     variantMap[variant],
     colorMap[color],
     truncate ? 'truncate block' : '',
     tabularNums ? 'tabular-nums' : '',
+    onClick ? 'cursor-pointer' : '', // Add visual feedback if interactive
     className
   ].filter(Boolean).join(' ');
 
   return (
-    <Component ref={ref} className={combinedClasses}>
+    <Component 
+      ref={ref} 
+      className={combinedClasses}
+      onClick={onClick}
+    >
       {children}
     </Component>
   );

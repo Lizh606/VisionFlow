@@ -77,7 +77,7 @@ export const AdminAlertsPage: React.FC<AdminAlertsPageProps> = ({ onNavigate }) 
     setAckLoading(true);
     setTimeout(() => {
       const opId = `OP-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
-      setOpResult({ adminOpId: opId, operatorId: 'admin-01', timestamp: new Date().toISOString(), status: 'SUCCESS' });
+      setOpResult({ adminOpId: opId, operatorId: 'admin-01', timestamp: new Date().toISOString(), status: 'SUCCESS' } as any);
       setData(prev => prev.map(a => a.id === ackTarget.id ? { ...a, status: 'ACKNOWLEDGED' } : a));
       setAckTarget(null);
       setAckLoading(false);
@@ -87,6 +87,25 @@ export const AdminAlertsPage: React.FC<AdminAlertsPageProps> = ({ onNavigate }) 
   const handleViewDetails = (alert: AdminAlert) => {
     if (onNavigate) {
       onNavigate(`admin-alerts/${alert.id}`);
+    }
+  };
+
+  /**
+   * UC-AC-001 Fix: Correct Subject Navigation
+   * 确保从告警列表直接跳转至业务主体详情。
+   */
+  const handleViewSubject = (alert: AdminAlert) => {
+    if (onNavigate) {
+      // 归一化映射：RUNTIME_POD -> device
+      const mapping: Record<string, string> = {
+        'RUNTIME_POD': 'device',
+        'DEVICE': 'device',
+        'ENTITLEMENT': 'entitlement',
+        'ORDER': 'order',
+        'RUN': 'run'
+      };
+      const type = mapping[alert.subjectType.toUpperCase()] || alert.subjectType.toLowerCase();
+      onNavigate(`admin-subjects/${type}/${alert.subjectId}`);
     }
   };
 
@@ -214,6 +233,7 @@ export const AdminAlertsPage: React.FC<AdminAlertsPageProps> = ({ onNavigate }) 
         visibleKeys={visibleColumns}
         onAck={setAckTarget}
         onViewDetails={handleViewDetails}
+        onViewSubject={handleViewSubject}
       />
 
       <AlertAckModal 

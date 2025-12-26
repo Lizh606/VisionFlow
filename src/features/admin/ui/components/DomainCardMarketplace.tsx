@@ -23,7 +23,8 @@ export const DomainCardMarketplace: React.FC<{ data: MarketplaceStats; onDrillDo
       err: (data?.orderAnomalies || 0) > 0 
     },
     { 
-      label: t('admin.overview.metrics.settlementMismatch'), 
+      // V1.4 Fix: Correct i18n key to match locales and MarketplaceStats model
+      label: t('admin.overview.metrics.settlementAnomalies'), 
       val: data?.settlementAnomalies || 0, 
       icon: Receipt, 
       err: (data?.settlementAnomalies || 0) > 0 

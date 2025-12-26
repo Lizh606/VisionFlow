@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import { Button, Tooltip, Dropdown, App } from 'antd';
 import { MoreVertical, CheckCircle, Eye, ShieldOff, Check, Copy, ArrowUpRight } from 'lucide-react';
@@ -14,9 +15,10 @@ interface Props {
   visibleKeys: string[];
   onAck: (alert: AdminAlert) => void;
   onViewDetails: (alert: AdminAlert) => void;
+  onViewSubject: (alert: AdminAlert) => void;
 }
 
-export const AlertsTable: React.FC<Props> = ({ data, loading, visibleKeys, onAck, onViewDetails }) => {
+export const AlertsTable: React.FC<Props> = ({ data, loading, visibleKeys, onAck, onViewDetails, onViewSubject }) => {
   const { t } = useTranslation();
   const { message } = App.useApp();
 
@@ -80,7 +82,20 @@ export const AlertsTable: React.FC<Props> = ({ data, loading, visibleKeys, onAck
             <VFText variant="t6" color="tertiary" className="uppercase font-bold tracking-tighter scale-90 origin-left opacity-70 mb-0.5">{r.subjectType}</VFText>
             <div className="flex items-center gap-1.5">
               <Tooltip title={t('admin.alerts.actions.viewContext')}>
-                <VFText variant="t7" color="brand" className="max-w-[170px] truncate leading-none pt-[1px] hover:underline font-bold">
+                {/* 
+                   Fix UC-AC-001: 
+                   1. VFText 现在支持 onClick，确保点击能正确捕获。
+                   2. 使用 e.stopPropagation() 彻底阻断 Table Row 的全局跳转逻辑。
+                */}
+                <VFText 
+                  variant="t7" 
+                  color="brand" 
+                  className="max-w-[170px] truncate leading-none pt-[1px] hover:underline font-bold cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onViewSubject(r);
+                  }}
+                >
                   {r.subjectId}
                 </VFText>
               </Tooltip>
@@ -141,7 +156,7 @@ export const AlertsTable: React.FC<Props> = ({ data, loading, visibleKeys, onAck
         render: (val: string) => <VFText variant="t7" color="tertiary" className="font-mono opacity-60">{val}</VFText>
       }
     };
-  }, [t]);
+  }, [t, onViewSubject, handleCopy]);
 
   const activeColumns = useMemo(() => {
     const cols = visibleKeys

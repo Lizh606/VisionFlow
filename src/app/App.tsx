@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { AppProviders } from './providers/AppProviders';
 import { MainLayout } from '../layouts/MainLayout';
@@ -84,7 +85,9 @@ const App: React.FC = () => {
             <AdminSubjectDetailPage 
               subjectType={parts[1] as any} 
               subjectId={parts[2]} 
-              onBack={() => window.history.back()}
+              // Fix: Subject Detail Back button should navigate to Alert Center 
+              // instead of window history (SPA state routing consistency)
+              onBack={() => setCurrentPath('admin-alerts')}
               onNavigate={setCurrentPath}
             />
           );
