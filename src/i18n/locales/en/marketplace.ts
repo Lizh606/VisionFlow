@@ -13,6 +13,12 @@ export const marketplace = {
     "viewAll": "View All",
     "browseAll": "Browse All"
   },
+  "search": {
+    "title": "Resource Search",
+    "placeholder": "Search name, description or tags...",
+    "trending": "Trending",
+    "selection": "Current Selection"
+  },
   "type": {
     "workflow": "Workflow",
     "model": "Model",
