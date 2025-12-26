@@ -69,6 +69,8 @@ export const marketplace = {
       "ctaDisabled": "Action Disabled in Preview"
     },
     "wizard": {
+      "newTitle": "Create New Listing",
+      "editTitle": "Edit Listing Details",
       "draftSaved": "Draft saved successfully",
       "submitTitle": "Preview & Submit",
       "submitDesc": "Your resource details are ready. Please preview the storefront to ensure all metadata and documents are correct before sending for approval.",

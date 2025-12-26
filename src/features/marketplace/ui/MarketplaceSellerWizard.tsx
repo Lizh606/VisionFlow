@@ -103,7 +103,7 @@ export const MarketplaceSellerWizard: React.FC<{ listingId?: string; onNavigate:
   };
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-[1200px] mx-auto pb-32 animate-in fade-in">
+    <div className="flex flex-col gap-6 w-full pb-32 animate-in fade-in">
       <VFPageHeader 
         title={listingId ? t('marketplace.seller.wizard.editTitle') : t('marketplace.seller.wizard.newTitle')}
         onBack={handleBack}
@@ -127,7 +127,7 @@ export const MarketplaceSellerWizard: React.FC<{ listingId?: string; onNavigate:
         }
       />
 
-      <div className={`bg-bg-card border border-border rounded-card shadow-sm ${isMobile ? 'p-4' : 'p-8'}`}>
+      <div className={`bg-bg-card border border-border rounded-card shadow-sm ${isMobile ? 'p-4' : 'p-6'}`}>
         <div className="mb-10 pt-4 overflow-x-auto custom-scrollbar no-scrollbar">
           <Steps 
             current={current} 
