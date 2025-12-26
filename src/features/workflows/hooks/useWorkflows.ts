@@ -3,6 +3,8 @@ import { useState, useMemo, useEffect } from 'react';
 import { Workflow, WorkflowsViewMode, Folder } from '../model/types';
 import { mockWorkflows, mockFolders } from '../model/mock';
 
+export type WorkflowsScenario = 'DEFAULT' | 'EMPTY_ALL' | 'EMPTY_FOLDER';
+
 export const useWorkflows = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -12,6 +14,9 @@ export const useWorkflows = () => {
     const saved = localStorage.getItem('vf.workflows.viewMode');
     return (saved === 'grid' ? 'grid' : 'list') as WorkflowsViewMode;
   });
+
+  // Mock Scenario Logic for UI Preview
+  const [scenario, setScenario] = useState<WorkflowsScenario>('DEFAULT');
 
   // State for dynamic workflow properties (favorite/selected)
   const [workflowItems, setWorkflowItems] = useState<Workflow[]>(mockWorkflows);
@@ -25,9 +30,10 @@ export const useWorkflows = () => {
   }, [viewMode]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 800);
+    setLoading(true);
+    const timer = setTimeout(() => setLoading(false), 600);
     return () => clearTimeout(timer);
-  }, []);
+  }, [scenario]);
 
   const activeFolder = useMemo(() => 
     folders.find(f => f.id === activeFolderId) || null
@@ -46,6 +52,10 @@ export const useWorkflows = () => {
   };
 
   const filteredItems = useMemo(() => {
+    // Apply Scenario Overrides
+    if (scenario === 'EMPTY_ALL') return [];
+    if (scenario === 'EMPTY_FOLDER' && activeFolderId) return [];
+
     return workflowItems
       .filter(wf => {
         // 1. Filter by Folder
@@ -59,13 +69,11 @@ export const useWorkflows = () => {
         return matchSearch;
       })
       .sort((a, b) => {
-        // Sorting Logic: Favorites first
         if (a.isFavorite && !b.isFavorite) return -1;
         if (!a.isFavorite && b.isFavorite) return 1;
-        // Then by updated time (desc)
         return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
       });
-  }, [workflowItems, search, activeFolderId]);
+  }, [workflowItems, search, activeFolderId, scenario]);
 
   const paginatedItems = useMemo(() => {
     const start = (page - 1) * pageSize;
@@ -102,6 +110,9 @@ export const useWorkflows = () => {
     setActiveFolderId,
     activeFolder,
     addFolder,
+    // Scenario
+    scenario,
+    setScenario,
     error: null,
   };
 };
