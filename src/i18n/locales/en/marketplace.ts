@@ -246,5 +246,6 @@ export const marketplace = {
     "priceRange": "Price Range",
     "showResults": "Show Results"
   },
-  "installs": "installs"
+  "installs": "installs",
+  "rating": "rating"
 };

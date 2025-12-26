@@ -16,6 +16,13 @@ interface Props {
   onFavorite: (id: string, e: React.MouseEvent) => Promise<void>;
 }
 
+/**
+ * ListingCard - Marketplace Buyer Context
+ * V1.4 Alignment:
+ * - Card Padding: 16px (vf-4)
+ * - Meta: T6 Caption
+ * - Price: T4 Strong Tabular
+ */
 export const ListingCard: React.FC<Props> = ({ listing, onClick, onFavorite }) => {
   const { t } = useTranslation();
 
@@ -31,7 +38,7 @@ export const ListingCard: React.FC<Props> = ({ listing, onClick, onFavorite }) =
       title={listing.name}
       meta={
         <div className="flex items-center gap-2">
-          {/* T6 Caption for Developer Name */}
+          {/* V1.4: Meta Row Developer = T6 Caption */}
           <VFText variant="t6" color="tertiary" className="font-bold uppercase tracking-tighter opacity-70">
             {listing.author.name}
           </VFText>
@@ -45,6 +52,7 @@ export const ListingCard: React.FC<Props> = ({ listing, onClick, onFavorite }) =
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5 text-warning">
              <Star size={12} fill="currentColor" />
+             {/* V1.4: Rating = T6 Tabular */}
              <VFText variant="t6" color="inherit" className="font-bold" tabularNums>
                {(listing.rating || 0).toFixed(1)}
              </VFText>
@@ -53,12 +61,14 @@ export const ListingCard: React.FC<Props> = ({ listing, onClick, onFavorite }) =
                {(listing.installCount || 0).toLocaleString()} {t('marketplace.installs')}
              </VFText>
           </div>
+          
           {listing.purchased ? (
-            <VFTag variant="success" icon={<CheckCircle2 />} className="h-5 px-1.5 text-[10px] font-bold">
+            <VFTag variant="success" icon={<CheckCircle2 />} className="h-5 px-1.5 text-[10px] font-bold uppercase tracking-tight">
               {t('marketplace.purchase.status.ready')}
             </VFTag>
           ) : (
             <div className="flex items-center gap-1">
+              {/* V1.4: Price = T4 Semibold Tabular */}
               <VFText variant="t4" color="brand" tabularNums className="font-bold">
                 {listing.price === 0 ? t('common.free') : `$${listing.price}`}
               </VFText>
