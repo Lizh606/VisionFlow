@@ -73,8 +73,9 @@ export const AdminAuditPage: React.FC<Props> = ({ path }) => {
 
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-500 w-full pb-20">
+      {/* V1.4 对齐菜单文案 */}
       <VFPageHeader 
-        title={t('admin.audit.title')} 
+        title={t('menu.adminAudit')} 
         description={t('admin.audit.description')}
         actions={
           <div className="flex items-center gap-3">

@@ -13,7 +13,7 @@ import { UsageTrendChartCard } from './components/UsageTrendChartCard';
 import { ActiveAlertsCard } from './components/ActiveAlertsCard';
 import { ShortcutsCard } from './components/ShortcutsCard';
 
-import { mockDashboardData } from '../model/mock';
+import { mockDashboardData } from '../model/mock.ts';
 
 interface Props {
   onNavigate: (key: string) => void;
@@ -30,9 +30,10 @@ export const SelfHostedOverviewScreen: React.FC<Props> = ({ onNavigate, onOpenMe
            style={{ backgroundImage: 'linear-gradient(var(--vf-text-secondary) 1px, transparent 1px), linear-gradient(90deg, var(--vf-text-secondary) 1px, transparent 1px)', backgroundSize: '40px 40px' }} 
       />
 
+      {/* V1.4 对齐菜单文案 */}
       <PageHeader 
         onOpenMenu={onOpenMenu}
-        title={t('selfhosted.overview.title')}
+        title={t('menu.overview')}
         actions={<TimeRangeFilter />}
       />
 

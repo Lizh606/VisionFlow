@@ -149,8 +149,9 @@ export const AdminAlertsPage: React.FC<AdminAlertsPageProps> = ({ onNavigate }) 
 
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-500 w-full pb-20">
+      {/* V1.4 对齐菜单文案 */}
       <VFPageHeader 
-        title={t('admin.alerts.title')} 
+        title={t('menu.adminAlerts')} 
         description={t('admin.alerts.description')} 
       />
 
